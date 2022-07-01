@@ -1,0 +1,68 @@
+<script setup lang="ts">
+import { LP_MINT_CONT } from '@/contracts/address';
+import { useRead, useWrite } from '@hooks/useAction';
+import LpToken from '@/contractsApi/LpToken';
+import { watchEffect } from 'vue';
+import { useRoute } from 'vue-router';
+const lpContract = new LpToken(LP_MINT_CONT);
+
+const [checkInfo, { datas: myBalan, loading }] = useRead(async () => {
+  const p1 = lpContract.errFunc();
+  const p2 = lpContract.errFunc();
+  const p3 = lpContract.errFunc();
+
+  /*  for (let i = 0, len = 50; i < len; i++) {
+    await lpContract.getBalance();
+    await lpContract.getBalance();
+    await lpContract.getBalance();
+    await lpContract.getBalance();
+  } */
+
+  const result = await Promise.all([p1, p2, p3]);
+  console.log('result...', result);
+  return result;
+});
+
+watchEffect(() => {
+  console.log('数据变化了。。。', myBalan);
+});
+
+async function init() {
+  const resp1 = await checkInfo();
+  console.log('resp1111', resp1, myBalan);
+  const resp2 = await checkInfo();
+  console.log('resp2222', resp2, myBalan);
+}
+
+init();
+const route = useRoute();
+console.log('route222....', route);
+const [handleAuth] = useWrite(async () => {
+  lpContract.auth('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21');
+});
+
+const [handleClick, loadWrite] = useWrite(() => {
+  console.log('这是写啊');
+});
+</script>
+
+<template>
+  <div class="test-page-wrap">
+    <h2>this is a test page...</h2>
+    <div>loading: {{ loading }}</div>
+    <div v-loading="loading">myBalance: {{ myBalan }}</div>
+
+    <button @click="handleAuth">写操作</button>
+
+    <BpButton class="click-box" @click="handleClick">bp写操作</BpButton>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.test-page-wrap {
+  .click-box {
+    width: 150px;
+    height: 150px;
+  }
+}
+</style>

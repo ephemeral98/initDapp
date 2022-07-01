@@ -1,0 +1,157 @@
+/**
+ * 弹性盒子
+ * 参数：主轴排列、交叉轴排列
+ * eg：@include (center, flex-start);
+ */
+ @mixin flexPos($posX: center, $posY: center) {
+  display: flex;
+  justify-content: $posX;
+  align-items: $posY;
+}
+
+/**
+ * 绝对定位居中
+ * eg：@include absCenter;
+ */
+@mixin absCenter {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/**
+ * 绝对定位
+ * 参数顺序：上右下左
+ * eg：@include absPos(50%, '', '' , 50%);
+ */
+@mixin absPos($top: '', $right: '', $bottom: '', $left: '') {
+  position: absolute;
+
+  @if ($left != '') {
+    left: $left;
+  }
+
+  @if ($right != '') {
+    right: $right;
+  }
+
+  @if ($top != '') {
+    top: $top;
+  }
+
+  @if ($bottom != '') {
+    bottom: $bottom;
+  }
+}
+
+
+/**
+ * 响应式布局
+ * 参数：视口尺寸($phone、$pad、$pc)，属性名，属性值
+ * eg：@include -media($phone, display, flex)
+ * tips1: 如果想在 移动端(1280px) 以内，display: flex, 可以单独对 $pc 设置：-media($pc, display, flex);
+ * tips2: 如果想在某个尺寸下 设置了属性，还想持续利用 @mixin，可以：-media($phone, color, red) { @include flexPos(); }
+ * tips3：如果 只想 某个尺寸下使用 @mixin，还是利用回 @media 吧，：@media (max-width: $pc) { @include flexPos(); }
+ * tips4: 不允许写法：@media(这里没有值) { @include flexPos(); }
+ */
+@mixin -media($size, $name, $val) {
+  @if ($size == $phone) {
+    @media (max-width: $phone) {
+      #{$name}: $val;
+      @content;
+    }
+  }
+
+  @if ($size == $pad) {
+    @media (min-width: $phone) and (max-width: $pad) {
+      #{$name}: $val;
+      @content;
+    }
+  }
+
+  @if ($size == $pc) {
+    @media (min-width: $pad) {
+      #{$name}: $val;
+      @content;
+    }
+  }
+}
+
+/**
+ * 多行溢出打点
+ * 参数：行数，n行，默认2行
+ * eg：@include overDots(3);
+ */
+@mixin overDots($n: 2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $n; //行数
+  -webkit-box-orient: vertical;
+}
+
+/**
+ * 选中目标行的下划线
+ * 参数：下划线宽度
+ * eg：@include targetLine(3);
+ */
+@mixin targetLine($w: 100%) {
+  content: '';
+  display: block;
+  width: $w;
+  height: 3px;
+  background-color: #ffd101;
+}
+
+/**
+ * 清除浮动
+ * eg：@include clearfix;
+ */
+@mixin clearfix {
+  &::after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+}
+
+/**
+ * 铺满
+ */
+@mixin fullEle {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+// nftMarket 的图片背景
+@mixin coverNftBg {
+  content: '';
+  position: absolute;
+  width: 101%;
+  height: 101%;
+  left: -1%;
+  top: -1%;
+}
+@mixin nftImgBg {
+  position: relative;
+
+  &::before {
+    @include coverNftBg();
+    opacity: 1;
+    z-index: -1;
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+
+  &::after {
+    @include coverNftBg();
+
+    background-image: url('https://bovine-verse.oss-cn-shenzhen.aliyuncs.com/slideShow/bg-home.png');
+    background-size: cover;
+    background-position: center center;
+    z-index: -2;
+  }
+}

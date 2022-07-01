@@ -1,0 +1,210 @@
+/* TB重置样式改版 */
+body,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+pre,
+form,
+fieldset,
+input,
+p,
+blockquote,
+th,
+td {
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h4,
+h5 {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #ffffff;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  text-align: left;
+  color: #00044a;
+}
+
+select {
+  font-size: 12px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+fieldset,
+img {
+  border: 0 none;
+}
+
+img {
+  display: block;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+fieldset p {
+  margin: 0;
+  padding: 0 0 0 8px;
+}
+
+legend {
+  display: none;
+}
+
+address,
+caption,
+em,
+th,
+i {
+  font-style: normal;
+  font-weight: 400;
+}
+
+table caption {
+  margin-left: -1px;
+}
+
+hr {
+  border-bottom: 1px solid #ffffff;
+  border-top: 1px solid #e4e4e4;
+  border-width: 1px 0;
+  clear: both;
+  height: 2px;
+  margin: 5px 0;
+  overflow: hidden;
+}
+
+ol,
+ul,
+li {
+  list-style-image: none;
+  list-style-position: outside;
+  list-style-type: none;
+}
+
+caption,
+th {
+  text-align: left;
+}
+
+q:before,
+q:after,
+blockquote:before,
+blockquote:after {
+  content: ””;
+}
+
+a {
+  display: block;
+  text-decoration: none;
+  color: #000;
+  outline: none;
+  cursor: pointer;
+  /* FF Opera */
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  /* 给移动端页面加上:active伪类,js中给body绑定touchstart事件，处理函数为空即可 */
+}
+
+body,
+dl,
+dd,
+ul,
+ol,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+form,
+p {
+  -webkit-tap-highlight-color: transparent;
+}
+
+input,
+textarea {
+  outline: none;
+}
+
+div,
+section {
+  box-sizing: border-box;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+
+:root {
+  /* height: 100vh; */
+  /* overflow: auto; */
+}
+body {
+  /* background-color: #008c8c; */
+}
+
+/* #app {
+  width: 100vw;
+  overflow: auto;
+} */
+
+/*滚动条 start*/
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+
+  /* @media (min-width: $pad) {
+        &:hover {
+          width: 15px;
+          height: 15px;
+        }
+      } */
+}
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
+}
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
+  background-color: rgba(63, 76, 96, 0.7);
+}
+::-webkit-scrollbar-thumb:hover {
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
+  background-color: rgba(63, 76, 96, 1);
+}
+
+#app {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button { 
+    -webkit-appearance: none; 
+}

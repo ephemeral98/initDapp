@@ -1,25 +1,52 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
+import { useAppStore } from '@/store/appStore';
+import $load from '@cps/GlobalLoading';
+import { checkRightChain } from './routerHelp';
 
 const routes: Array<RouteRecordRaw> = [
   {
+    path: '/TestPage',
+    name: 'testPage',
+    component: () => import(/* webpackChunkName: "testPage" */ '@/views/TestPage/index.vue'),
+    meta: {
+      requireAccount: true, // 依赖钱包
+      needChains: ['0x38'], // 依赖的链
+      needTips: false, // 链不对的时候，需不需要提示
+    },
+  },
+
+  {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: () => import(/* webpackChunkName: "home" */ '@/views/Home/index.vue'),
+    meta: {
+      requireAccount: false,
+    },
   },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
-]
+];
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
-})
+  routes,
+});
 
-export default router
+router.beforeEach(async (to, from, next) => {
+  // 每次进来，先确定是否拿到钱包
+  const appStore = useAppStore();
+  if (appStore.defaultAccount || !to.meta.requireAccount) {
+    // 进入的时候不依赖钱包拿链上数据的，先放用户进去，再不阻塞地获取钱包
+    appStore.linkWallet();
+  } else {
+    $load({ isShow: true });
+    await appStore.linkWallet();
+    $load({ isShow: false });
+  }
+  next(true);
+  try {
+    checkRightChain(to, from);
+  } catch (error) {
+    console.log('error..', error);
+  }
+});
+
+export default router;

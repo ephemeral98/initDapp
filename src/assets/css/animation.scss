@@ -1,0 +1,118 @@
+// 一些过渡动画
+
+@keyframes fold-in {
+  0% {
+    // transform: translate3d(0, 100%, 0);
+    // transform: translateY(-100%);
+    opacity: 0;
+    height: 0;
+    font-size: 0 !important;
+  }
+
+  50% {
+    height: auto;
+  }
+
+  100% {
+    // transform: translateY(0);
+    opacity: 1;
+    font-size: 0 !important;
+  }
+}
+
+@keyframes fold-out {
+  0% {
+    // transform: translateY(0);
+    height: 150px;
+    font-size: 0 !important;
+  }
+
+  /* 50% {
+    opacity: 0;
+  } */
+
+  100% {
+    // transform: translateY(-100%);
+    opacity: 0;
+    height: 0;
+
+    // font-size: 18px;
+  }
+}
+
+.bp-enter {
+  /* top: 0; */
+}
+.bp-enter-active {
+  animation-name: fold-in;
+  animation-duration: 0.5s;
+}
+.bp-leave-active {
+  animation-name: fold-out;
+  animation-duration: 0.5s;
+}
+
+@keyframes panel-slide-in {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  /* 50% {
+    height: auto;
+  } */
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes panel-slide-out {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+// nft市场 手机端侧边栏面板动画
+.market-panel-enter-active {
+  animation-name: panel-slide-in;
+  animation-duration: 0.5s;
+}
+.market-panel-leave-active {
+  animation-name: panel-slide-out;
+  animation-duration: 0.5s;
+}
+
+// nft市场 手机端侧边栏面板动画，主内容跟着滑出
+@keyframes market-main-slide-in {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes market-main-slide-out {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.market-main-enter-active {
+  animation-name: market-main-slide-in;
+  animation-duration: 0.7s;
+}
+
+.market-main-leave-active {
+  animation-name: market-main-slide-out;
+  animation-duration: 0.7s;
+}

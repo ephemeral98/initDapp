@@ -1,0 +1,60 @@
+// 通用盒子
+.cm-box {
+  background-color: #eaf4ff;
+  border: solid 1.5px #fff;
+  padding: 0.24rem 0;
+  border-radius: 0.1rem;
+  box-shadow: 0 0 0.1rem 0 #eaf4ff;
+  color: #060a78;
+
+  // 左右间隙
+  &.gap {
+    padding: 0.24rem 0.3rem;
+  }
+
+  header {
+    font-size: 0.24rem;
+    font-weight: bold;
+    color: #060a78;
+    padding-bottom: 0.11rem;
+
+    &.border {
+      border-bottom: solid 1px #b2c0ea;
+    }
+
+    &.gap {
+      padding: 0 0.3rem 0.1rem;
+    }
+  }
+
+  .record-wrap {
+    margin-top: 0.28rem;
+  }
+
+  .record-container {
+    margin-top: 0.15rem;
+    overflow: auto;
+
+    th {
+      font-weight: bold;
+      font-size: 0.15rem;
+    }
+
+    th,
+    td {
+      white-space: nowrap;
+      text-align: center;
+      padding: 0.1rem 0.5rem;
+    }
+
+    .return-btn {
+      background-color: #4e92ff;
+      color: #fff;
+      padding: 0.05rem 0.2rem;
+      border-radius: 0.1rem;
+    }
+  }
+}
+
+.flow-mint-wrap {
+}

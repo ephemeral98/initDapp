@@ -1,0 +1,97 @@
+// 字体图标
+.iconfont {
+  display: block;
+}
+
+// element plus
+.el-message {
+  z-index: 99999 !important;
+}
+
+.el-popper {
+  z-index: 99;
+
+  .el-dropdown-menu__item {
+    @include flexPos(center);
+    color: #00044a;
+  }
+}
+
+.cate-wrap {
+  .el-dropdown-menu__item {
+    font-weight: bold;
+  }
+}
+
+// vant
+
+// 通用弹窗
+.em-pop-wrap {
+  width: 3.45rem;
+  border-radius: 0.1rem;
+  background-color: #eaf4ff !important;
+  border: solid 2px #fff;
+}
+
+// 按钮再底部
+@mixin btnBottom {
+  flex: 1;
+  color: #fff;
+  width: 100%;
+  height: 0.45rem;
+  font-size: 0.16rem;
+}
+// 蓝色按钮
+.blue-btn {
+  background-color: #2c90ff;
+
+  &.bottom {
+    @include btnBottom();
+  }
+
+  &.disable {
+    background-color: #898989;
+  }
+}
+
+// 红色按钮
+.red-btn {
+  background-color: #de3636;
+
+  &.bottom {
+    @include btnBottom();
+  }
+
+  &.disable {
+    background-color: #898989;
+  }
+}
+
+// 紫色按钮
+.purple-btn {
+  background-color: #ab75ea;
+
+  &.bottom {
+    @include btnBottom();
+  }
+
+  &.disable {
+    background-color: #898989;
+  }
+}
+
+.disableBtn {
+  background-color: #898989 !important;
+}
+
+// 箭头
+.icon-arrow {
+  cursor: pointer;
+}
+
+// 加载中和空数据
+.loading,
+.empty {
+  text-align: center;
+  margin: 0.1rem 0;
+}

@@ -1,0 +1,264 @@
+// (三频段 等比缩放）不同屏幕的 不同单位，750以内用 rem, 其他用vw
+
+@mixin -templateUnit($name, $px) {
+  @media (max-width: $phone) {
+    #{$name}: svw($px);
+  }
+
+  @media (min-width: $phone) and (max-width: $pad) {
+    #{$name}: mvw($px);
+  }
+
+  @media (min-width: $pad) {
+    #{$name}: vw($px);
+  }
+}
+
+/**
+ * 宽度 width
+ */
+@mixin -width-a($px) {
+  @include -templateUnit(width, $px);
+}
+
+/**
+ * 高度 height
+ */
+@mixin -height-a($px) {
+  @include -templateUnit(height, $px);
+}
+
+/**
+ * 字体大小 font-size
+ */
+@mixin -font-size-a($px) {
+  @include -templateUnit(font-size, $px);
+}
+
+/**
+ * 上内边距 padding-top
+ */
+@mixin -padding-top-a($px) {
+  @include -templateUnit(padding-top, $px);
+}
+
+/**
+ * 右内边距 padding-right
+ */
+@mixin -padding-right-a($px) {
+  @include -templateUnit(padding-right, $px);
+}
+
+/**
+ * 下内边距 padding-bottom
+ */
+@mixin -padding-bottom-a($px) {
+  @include -templateUnit(padding-bottom, $px);
+}
+
+/**
+ * 左内边距 padding-left
+ */
+@mixin -padding-left-a($px) {
+  @include -templateUnit(padding-left, $px);
+}
+
+/**
+ * 上外边距 margin-top
+ */
+@mixin -margin-top-a($px) {
+  @include -templateUnit(margin-top, $px);
+}
+
+/**
+ * 右外边距 padding-right
+ */
+@mixin -margin-right-a($px) {
+  @include -templateUnit(margin-right, $px);
+}
+
+/**
+ * 下外边距 margin-bottom
+ */
+@mixin -margin-bottom-a($px) {
+  @include -templateUnit(margin-bottom, $px);
+}
+
+/**
+ * 左外边距 margin-left
+ */
+@mixin -margin-left-a($px) {
+  @include -templateUnit(margin-left, $px);
+}
+
+/**
+ * 圆角 border-radius
+ */
+@mixin -border-radius-a($px) {
+  @include -templateUnit(border-radius, $px);
+}
+
+/**
+ * top
+ */
+@mixin -top-a($px) {
+  @include -templateUnit(top, $px);
+}
+
+/**
+ * right
+ */
+@mixin -right-a($px) {
+  @include -templateUnit(right, $px);
+}
+
+/**
+ * bottom
+ */
+@mixin -bottom-a($px) {
+  @include -templateUnit(bottom, $px);
+}
+
+/**
+ * left
+ */
+@mixin -left-a($px) {
+  @include -templateUnit(left, $px);
+}
+
+/**
+ * margin 支持1、2、3、4个组合
+ */
+@mixin -margin-a($px1: '', $px2: '', $px3: '', $px4: '') {
+  // 四个方向
+  @if ($px1 != '' and $px2 == '' and $px3 == '' and $px4 == '') {
+    @media (max-width: $phone) {
+      margin: svw($px1);
+    }
+
+    @media (min-width: $phone) and (max-width: $pad) {
+      margin: mvw($px1);
+    }
+
+    @media (min-width: $pad) {
+      margin: vw($px1);
+    }
+  }
+
+  // 上下 左右
+  @if ($px1 != '' and $px2 != '' and $px3 == '' and $px4 == '') {
+    @media (max-width: $phone) {
+      margin: svw($px1) svw($px2);
+    }
+
+    @media (min-width: $phone) and (max-width: $pad) {
+      margin: mvw($px1) mvw($px2);
+    }
+
+    @media (min-width: $pad) {
+      margin: vw($px1) vw($px2);
+    }
+  }
+
+  // 上 左右 下
+  @if ($px1 != '' and $px2 != '' and $px3 != '' and $px4 == '') {
+    @media (max-width: $phone) {
+      margin: svw($px1) svw($px2) svw($px3);
+    }
+
+    @media (min-width: $phone) and (max-width: $pad) {
+      margin: mvw($px1) mvw($px2) mvw($px3);
+    }
+
+    @media (min-width: $pad) {
+      margin: vw($px1) vw($px2) vw($px3);
+    }
+  }
+
+  // 上 右 下 左
+  @if ($px1 != '' and $px2 != '' and $px3 != '' and $px4 != '') {
+    @media (max-width: $phone) {
+      margin: svw($px1) svw($px2) svw($px3) svw($px4);
+    }
+
+    @media (min-width: $phone) and (max-width: $pad) {
+      margin: mvw($px1) mvw($px2) mvw($px3) mvw($px4);
+    }
+
+    @media (min-width: $pad) {
+      margin: vw($px1) vw($px2) vw($px3) vw($px4);
+    }
+  }
+}
+
+/**
+ * padding 支持1、2、3、4个组合
+ */
+ @mixin -padding-a($px1: '', $px2: '', $px3: '', $px4: '') {
+  // 四个方向
+  @if ($px1 != '' and $px2 == '' and $px3 == '' and $px4 == '') {
+    @media (max-width: $phone) {
+      padding: svw($px1);
+    }
+
+    @media (min-width: $phone) and (max-width: $pad) {
+      padding: mvw($px1);
+    }
+
+    @media (min-width: $pad) {
+      padding: vw($px1);
+    }
+  }
+
+  // 上下 左右
+  @if ($px1 != '' and $px2 != '' and $px3 == '' and $px4 == '') {
+    @media (max-width: $phone) {
+      padding: svw($px1) svw($px2);
+    }
+
+    @media (min-width: $phone) and (max-width: $pad) {
+      padding: mvw($px1) mvw($px2);
+    }
+
+    @media (min-width: $pad) {
+      padding: vw($px1) vw($px2);
+    }
+  }
+
+  // 上 左右 下
+  @if ($px1 != '' and $px2 != '' and $px3 != '' and $px4 == '') {
+    @media (max-width: $phone) {
+      padding: svw($px1) svw($px2) svw($px3);
+    }
+
+    @media (min-width: $phone) and (max-width: $pad) {
+      padding: mvw($px1) mvw($px2) mvw($px3);
+    }
+
+    @media (min-width: $pad) {
+      padding: vw($px1) vw($px2) vw($px3);
+    }
+  }
+
+  // 上 右 下 左
+  @if ($px1 != '' and $px2 != '' and $px3 != '' and $px4 != '') {
+    @media (max-width: $phone) {
+      padding: svw($px1) svw($px2) svw($px3) svw($px4);
+    }
+
+    @media (min-width: $phone) and (max-width: $pad) {
+      padding: mvw($px1) mvw($px2) mvw($px3) mvw($px4);
+    }
+
+    @media (min-width: $pad) {
+      padding: vw($px1) vw($px2) vw($px3) vw($px4);
+    }
+  }
+}
+
+/**
+ * eg:
+ * .box {
+ *    @include -width-a(20);
+ * }
+ */

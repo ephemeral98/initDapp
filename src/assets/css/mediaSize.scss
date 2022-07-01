@@ -1,0 +1,134 @@
+// (三频段 分段尺寸) 不同屏幕的 不同的尺寸，尺寸生效的视口依次为：750px、1280px、1920px
+@mixin -templateSize($name, $px1, $px2, $px3) {
+  @media (max-width: $phone) {
+    #{$name}: $px1;
+  }
+
+  @media (min-width: $phone) and (max-width: $pad) {
+    #{$name}: $px2;
+  }
+
+  @media (min-width: $pad) {
+    #{$name}: $px3;
+  }
+}
+
+/**
+ * 宽度 width
+ */
+@mixin -width($px1, $px2, $px3) {
+  @include -templateSize(width, $px1, $px2, $px3);
+}
+
+/**
+ * 高度 height
+ */
+@mixin -height($px1, $px2, $px3) {
+  @include -templateSize(height, $px1, $px2, $px3);
+}
+
+/**
+ * 字体大小 font-size
+ */
+@mixin -font-size($px1, $px2, $px3) {
+  @include -templateSize(font-size, $px1, $px2, $px3);
+}
+
+/**
+ * 上内边距 padding-top
+ */
+@mixin -padding-top($px1, $px2, $px3) {
+  @include -templateSize(padding-top, $px1, $px2, $px3);
+}
+
+/**
+ * 右内边距 padding-right
+ */
+@mixin -padding-right($px1, $px2, $px3) {
+  @include -templateSize(padding-right, $px1, $px2, $px3);
+}
+
+/**
+ * 下内边距 padding-bottom
+ */
+@mixin -padding-bottom($px1, $px2, $px3) {
+  @include -templateSize(padding-bottom, $px1, $px2, $px3);
+}
+
+/**
+ * 左内边距 padding-left
+ */
+@mixin -padding-left($px1, $px2, $px3) {
+  @include -templateSize(padding-left, $px1, $px2, $px3);
+}
+
+/**
+ * 上外边距 margin-top
+ */
+@mixin -margin-top($px1, $px2, $px3) {
+  @include -templateSize(margin-top, $px1, $px2, $px3);
+}
+
+/**
+ * 右外边距 padding-right
+ */
+@mixin -margin-right($px1, $px2, $px3) {
+  @include -templateSize(margin-right, $px1, $px2, $px3);
+}
+
+/**
+ * 下外边距 margin-bottom
+ */
+@mixin -margin-bottom($px1, $px2, $px3) {
+  @include -templateSize(margin-bottom, $px1, $px2, $px3);
+}
+
+/**
+ * 左外边距 margin-left
+ */
+@mixin -margin-left($px1, $px2, $px3) {
+  @include -templateSize(margin-left, $px1, $px2, $px3);
+}
+
+/**
+ * 圆角 border-radius
+ */
+@mixin -border-radius($px1, $px2, $px3) {
+  @include -templateSize(border-radius, $px1, $px2, $px3);
+}
+
+/**
+ * top
+ */
+ @mixin -top($px1, $px2, $px3) {
+  @include -templateSize(top, $px1, $px2, $px3);
+}
+
+/**
+ * right
+ */
+ @mixin -right($px1, $px2, $px3) {
+  @include -templateSize(right, $px1, $px2, $px3);
+}
+
+/**
+ * bottom
+ */
+ @mixin -bottom($px1, $px2, $px3) {
+  @include -templateSize(bottom, $px1, $px2, $px3);
+}
+
+/**
+ * left
+ */
+ @mixin -left($px1, $px2, $px3) {
+  @include -templateSize(left, $px1, $px2, $px3);
+}
+
+/**
+ * eg:
+ * .box {
+ *    @include -width(svw(20), mvw(30), vw(40));
+ * }
+ */
+ 
