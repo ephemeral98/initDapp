@@ -77,6 +77,9 @@ export function handleThrottle(callback, duration = 70) {
  * @returns
  */
 export function getChainData(chainId) {
+  if (!chainId) {
+    return supportedChains[0];
+  }
   return supportedChains.find((chain) => chain.chainId === chainId);
 }
 

@@ -11,10 +11,9 @@ import { getChainData } from '@/utils/tools';
 const INIT_ETHERS = {
   ethers: ethers,
   instance: null,
-  provider: null,
+  provider: {},
   signerValue: null, // 这个导出的时候是 proxy，需要用vue的toRaw转一下signer
   connected: false,
-  networkId: '0x38',
   cachedProvider: null,
   baseGasPrice: 0, // 基础gasPrice，后面设置gasPrice的时候，+= 此值
   chainId: '',
@@ -32,6 +31,7 @@ const useAppStore = defineStore('app', {
     rightChain: true, // 当前页面是否在对的链
     loadRead: '', // 是否在读取链上方法中
     ethersObj: INIT_ETHERS,
+    lockUpdate: true, // 是否锁住，禁止更新所有组件和store
   }),
 
   actions: {
@@ -39,6 +39,12 @@ const useAppStore = defineStore('app', {
      * 连接小狐狸钱包
      */
     async linkWallet() {
+      // 没有安装小狐狸
+      if (!window.ethereum) {
+        return false;
+      }
+
+      // 已经连接了钱包
       if (this.defaultAccount) {
         return true;
       }
@@ -59,6 +65,12 @@ const useAppStore = defineStore('app', {
             type: 'error',
           });
         });
+
+      // 获取链id
+      this.ethersObj.chainId = toRaw(provider).provider.chainId;
+
+      // 添加一系列钱包监听
+      this.subscribeProvider(provider);
     },
 
     /**
@@ -111,7 +123,6 @@ const useAppStore = defineStore('app', {
 
       const provider = new ethers.providers.Web3Provider(ethereum, 'any');
       const chainData = getChainData(chainId);
-      debugger
       const tx = provider.provider
         .request({ method: 'wallet_addEthereumChain', params: [chainData] })
         .then(() => {
@@ -130,20 +141,6 @@ const useAppStore = defineStore('app', {
     setLang(lang) {
       this.lang = lang;
       window.localStorage.setItem('lang', lang);
-    },
-
-    /**
-     * 控制是否显示语言栏面板
-     */
-    setIsShowUserPanel(payload) {
-      this.isShowUserPanel = payload;
-    },
-
-    /**
-     * 控制是否显示语言栏面板
-     */
-    setIsShowLangPanel(payload) {
-      this.isShowLangPanel = payload;
     },
 
     /**
@@ -219,6 +216,41 @@ const useAppStore = defineStore('app', {
      */
     setLoadRead(status) {
       this.loadRead = status;
+    },
+
+    /**
+     * 监听钱包状态
+     * @param {*} provider
+     * @returns
+     */
+    async subscribeProvider(provider) {
+      // const { provider } = this.ethersObj;
+      // console.log('provider.on....', provider.on);
+
+      // 监听切账号
+      window.ethereum?.on('accountsChanged', (accounts) => {
+        console.log('账号切换了...', accounts);
+        this.lockUpdate = false;
+        this.defaultAccount = accounts[0];
+      });
+
+      // 监听切链
+      window.ethereum?.on('chainChanged', async (chainId) => {
+        console.log('链切换了...', chainId);
+        this.lockUpdate = false;
+        this.ethersObj.chainId = chainId;
+      });
+
+      /* // 监听连接钱包
+      window.ethereum?.on('connect', (error, payload) => {
+        console.log('钱包连接了...', error, payload);
+      });
+
+      // 监听断开连接钱包
+      window.ethereum?.on('disconnect', (error) => {});
+
+      // 断开连接
+      window.ethereum?.on('close', () => {}); */
     },
 
     /**

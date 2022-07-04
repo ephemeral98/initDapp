@@ -10,7 +10,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "testPage" */ '@/views/TestPage/index.vue'),
     meta: {
       requireAccount: true, // 依赖钱包
-      needChains: ['0x38'], // 依赖的链
+      needChains: ['0x61'], // 依赖的链
       needTips: false, // 链不对的时候，需不需要提示
     },
   },

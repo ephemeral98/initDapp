@@ -8,6 +8,9 @@ import { IAddressObj } from './types';
 import i18n from '@/locales/i18n';
 import { bpFormat, bpGt, bpGte, bpMul } from '@/utils/bpMath';
 import { bpRead, bpWrite } from '@/service/bpAction';
+import { getChainData } from '@/utils/tools';
+import { useRoute } from 'vue-router';
+import useDefaultRpc from './useDefaultRpc';
 const $t = i18n.global.t;
 
 export default class {
@@ -34,9 +37,9 @@ export default class {
    * @returns 代币的信息
    */
   craeteCoinToken(addressObj) {
-    const appStore = useAppStore();
-    const { ethers, signerValue } = appStore.ethersObj;
-    const lpObj = new ethers.Contract(addressObj.address, addressObj.abi, toRaw(signerValue));
+    const signer = useDefaultRpc();
+
+    const lpObj = new ethers.Contract(addressObj.address, addressObj.abi, signer);
     this.lpObj = lpObj;
     return this.lpObj;
   }

@@ -8,6 +8,8 @@ import { IAddressObj } from './types';
 import i18n from '@/locales/i18n';
 import { bpFormat, bpGt, bpMul } from '@/utils/bpMath';
 import { bpRead, bpWrite } from '@/service/bpAction';
+import { getChainData } from '@/utils/tools';
+import { useRoute } from 'vue-router';
 const $t = i18n.global.t;
 
 export default class {
@@ -36,6 +38,10 @@ export default class {
   craeteCoinToken(addressObj) {
     const appStore = useAppStore();
     const { ethers, signerValue } = appStore.ethersObj;
+
+    console.log('appStore.ethersObj.chainId..', appStore.ethersObj.chainId);
+    // const tprovider = new ethers.providers.Web3Provider(appStore.ethersObj.chainId);
+
     const coinObj = new ethers.Contract(addressObj.address, addressObj.abi, toRaw(signerValue));
     this.coinObj = coinObj;
     return this.coinObj;

@@ -2,14 +2,17 @@
 import { LP_MINT_CONT } from '@/contracts/address';
 import { useRead, useWrite } from '@hooks/useAction';
 import LpToken from '@/contractsApi/LpToken';
+import { useTestStore } from '@store/testStore';
 import { watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 const lpContract = new LpToken(LP_MINT_CONT);
 
+const testStore = useTestStore();
+
 const [checkInfo, { datas: myBalan, loading }] = useRead(async () => {
-  const p1 = lpContract.errFunc();
-  const p2 = lpContract.errFunc();
-  const p3 = lpContract.errFunc();
+  const p1 = lpContract.getReserves();
+  const p2 = lpContract.getReserves();
+  const p3 = lpContract.getReserves();
 
   /*  for (let i = 0, len = 50; i < len; i++) {
     await lpContract.getBalance();
@@ -55,6 +58,8 @@ const [handleClick, loadWrite] = useWrite(() => {
     <button @click="handleAuth">写操作</button>
 
     <BpButton class="click-box" @click="handleClick">bp写操作</BpButton>
+
+    <h3>这个是testStore: {{ testStore.test1 }}</h3>
   </div>
 </template>
 
