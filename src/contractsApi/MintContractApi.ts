@@ -1,7 +1,8 @@
-import { LP_MINT_CONT } from '@/contracts/address';
+// 这个是用来测试的合约
+import { MINT_CONT } from '@/contracts/address';
 import { useAppStore } from '@store/appStore';
-import { toRaw } from 'vue';
 import i18n from '@/locales/i18n';
+import useDefaultRpc from './useDefaultRpc';
 const $t = i18n.global.t;
 
 export default class {
@@ -17,18 +18,21 @@ export default class {
    * 构建合约对象
    */
   async createContract() {
+    const signer = useDefaultRpc();
     const appStore = useAppStore();
     this.defaultAccount = appStore.defaultAccount;
-    const { ethers, signerValue } = appStore.ethersObj;
     this.baseGasPrice = appStore.ethersObj.baseGasPrice;
-    const signer = toRaw(signerValue);
     try {
-      this.mintObj = new ethers.Contract(LP_MINT_CONT.address, LP_MINT_CONT.abi, signer);
+      this.mintObj = new appStore.ethersObj.ethers.Contract(
+        MINT_CONT.address,
+        MINT_CONT.abi,
+        signer
+      );
     } catch (error) {
       console.log('构建质押合约对象失败', error);
     }
 
-    // const token = await ethers.getContractAt("Token", LP_MINT_CONT.address);
+    // const token = await ethers.getContractAt("Token", MINT_CONT.address);
   }
 
   /**
@@ -36,6 +40,10 @@ export default class {
    */
   async getInviter() {
     return '';
+  }
+
+  async startTime(){
+    return await this.mintObj.userInfo('0xbBAA0201E3c854Cd48d068de9BC72f3Bb7D26954');
   }
 
   /**

@@ -11,3 +11,5 @@ status 为 true 则该交易请求成功，false则失败
 }
 ```
 那么，在使用这两个hooks的时候，就能获取到错误消息
+
+3. 在每个合约对象构建```createContract```的时候，需要手动引入 ```useDefaultRpc```，目的是如果没有小狐狸，则使用预设好的rpc构建合约对象。

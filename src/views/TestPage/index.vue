@@ -5,14 +5,16 @@ import LpToken from '@/contractsApi/LpToken';
 import { useTestStore } from '@store/testStore';
 import { watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
+import MintContractApi from '@/contractsApi/MintContractApi';
 const lpContract = new LpToken(LP_MINT_CONT);
+const mintCont = new MintContractApi();
 
 const testStore = useTestStore();
 
 const [checkInfo, { datas: myBalan, loading }] = useRead(async () => {
-  const p1 = lpContract.getReserves();
-  const p2 = lpContract.getReserves();
-  const p3 = lpContract.getReserves();
+  const p1 = mintCont.startTime();
+  const p2 = mintCont.startTime();
+  const p3 = mintCont.startTime();
 
   /*  for (let i = 0, len = 50; i < len; i++) {
     await lpContract.getBalance();
@@ -44,8 +46,9 @@ const [handleAuth] = useWrite(async () => {
   lpContract.auth('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21');
 });
 
-const [handleClick, loadWrite] = useWrite(() => {
+const [handleClick, loadWrite] = useWrite(async () => {
   console.log('这是写啊');
+  await lpContract.auth('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21');
 });
 </script>
 
@@ -57,7 +60,7 @@ const [handleClick, loadWrite] = useWrite(() => {
 
     <button @click="handleAuth">写操作</button>
 
-    <BpButton class="click-box" @click="handleClick">bp写操作</BpButton>
+    <BpButton class="click-box" @click="handleClick" v-loading="loadWrite">bp写操作</BpButton>
 
     <h3>这个是testStore: {{ testStore.test1 }}</h3>
   </div>

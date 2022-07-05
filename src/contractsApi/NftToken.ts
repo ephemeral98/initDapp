@@ -24,7 +24,7 @@ export default class {
   constructor(addressObj: IAddressObj) {
     const appStore = useAppStore();
     const account = appStore.defaultAccount;
-    this.craeteCoinToken(addressObj);
+    this.createContract(addressObj);
     this.defaultAccount = account;
   }
 
@@ -34,7 +34,7 @@ export default class {
    * 例如 去旁边的 address.js 里拿 BVG_TOKEN_CONT 传入
    * @returns 代币的信息
    */
-  craeteCoinToken(addressObj) {
+  createContract(addressObj) {
     const appStore = useAppStore();
     const { ethers, signerValue } = appStore.ethersObj;
     const nftObj = new ethers.Contract(addressObj.address, addressObj.abi, toRaw(signerValue));

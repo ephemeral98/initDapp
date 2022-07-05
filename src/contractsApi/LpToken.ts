@@ -3,13 +3,10 @@
 // import { useAppStore } from '@store/appStore';
 import { ethers } from 'ethers';
 import { useAppStore } from '@/store/appStore';
-import { toRaw } from 'vue';
 import { IAddressObj } from './types';
 import i18n from '@/locales/i18n';
 import { bpFormat, bpGt, bpGte, bpMul } from '@/utils/bpMath';
 import { bpRead, bpWrite } from '@/service/bpAction';
-import { getChainData } from '@/utils/tools';
-import { useRoute } from 'vue-router';
 import useDefaultRpc from './useDefaultRpc';
 const $t = i18n.global.t;
 
@@ -26,7 +23,7 @@ export default class {
   constructor(addressObj: IAddressObj) {
     const appStore = useAppStore();
     const account = appStore.defaultAccount;
-    this.craeteCoinToken(addressObj);
+    this.createContract(addressObj);
     this.defaultAccount = account;
   }
 
@@ -36,11 +33,15 @@ export default class {
    * 例如 去旁边的 address.js 里拿 BVG_TOKEN_CONT 传入
    * @returns 代币的信息
    */
-  craeteCoinToken(addressObj) {
+  createContract(addressObj) {
     const signer = useDefaultRpc();
 
-    const lpObj = new ethers.Contract(addressObj.address, addressObj.abi, signer);
-    this.lpObj = lpObj;
+    try {
+      const lpObj = new ethers.Contract(addressObj.address, addressObj.abi, signer);
+      this.lpObj = lpObj;
+    } catch (err) {
+      console.log('构建LpToken合约对象失败...');
+    }
     return this.lpObj;
   }
 

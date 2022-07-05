@@ -8,8 +8,7 @@ import { IAddressObj } from './types';
 import i18n from '@/locales/i18n';
 import { bpFormat, bpGt, bpMul } from '@/utils/bpMath';
 import { bpRead, bpWrite } from '@/service/bpAction';
-import { getChainData } from '@/utils/tools';
-import { useRoute } from 'vue-router';
+import useDefaultRpc from './useDefaultRpc';
 const $t = i18n.global.t;
 
 export default class {
@@ -25,7 +24,7 @@ export default class {
   constructor(addressObj: IAddressObj) {
     const appStore = useAppStore();
     const account = appStore.defaultAccount;
-    this.craeteCoinToken(addressObj);
+    this.createContract(addressObj);
     this.defaultAccount = account;
   }
 
@@ -35,15 +34,15 @@ export default class {
    * 例如 去旁边的 address.js 里拿 BVG_TOKEN_CONT 传入
    * @returns 代币的信息
    */
-  craeteCoinToken(addressObj) {
-    const appStore = useAppStore();
-    const { ethers, signerValue } = appStore.ethersObj;
+  createContract(addressObj) {
+    const signer = useDefaultRpc();
 
-    console.log('appStore.ethersObj.chainId..', appStore.ethersObj.chainId);
-    // const tprovider = new ethers.providers.Web3Provider(appStore.ethersObj.chainId);
-
-    const coinObj = new ethers.Contract(addressObj.address, addressObj.abi, toRaw(signerValue));
-    this.coinObj = coinObj;
+    try {
+      const coinObj = new ethers.Contract(addressObj.address, addressObj.abi, signer);
+      this.coinObj = coinObj;
+    } catch (error) {
+      console.log('构建CoinToken合约对象失败...');
+    }
     return this.coinObj;
   }
 
