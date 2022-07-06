@@ -3,15 +3,17 @@ import { useAppStore } from '@store/appStore';
 
 const appStore = useAppStore();
 
-const props = defineProps<{
+// const props = defineProps<{}>();
+
+const emits = defineEmits<{
   click: () => MouseEvent; // 点击事件
 }>();
 </script>
 
 <template>
-  <button @click="props.click">
+  <button @click="emits.click">
     <!-- 链不对，文案显示连接钱包 -->
-    <template v-if="!appStore.rightChain" @click="appStore.linkWallet">
+    <template v-if="!appStore.rightChain" @click="appStore.switchChain">
       {{ $t('common.1') }}
     </template>
 

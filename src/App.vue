@@ -17,6 +17,7 @@
 import TopBar from '@cps/TopBar';
 import { useAppStore, storeToRefs } from '@store/appStore';
 import { useTestStore } from '@store/testStore';
+import { checkRightChain } from '@/router/routerHelp';
 
 import { ref, nextTick, watch } from 'vue';
 export default {
@@ -46,10 +47,11 @@ export default {
       () => [appStore.ethersObj.chainId, appStore.defaultAccount],
       () => {
         if (!appStore.lockUpdate) {
-          console.log('切换链or账号时更新了...');
-
           // 更新所有页面内所有组件
           update.value = !update.value;
+
+          // 更新当前链对不对
+          checkRightChain();
 
           // 初始化相关store
           resetStore();

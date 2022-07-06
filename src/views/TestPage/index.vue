@@ -6,22 +6,15 @@ import { useTestStore } from '@store/testStore';
 import { watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import MintContractApi from '@/contractsApi/MintContractApi';
-const lpContract = new LpToken(LP_MINT_CONT);
+const lpObj = new LpToken(LP_MINT_CONT);
 const mintCont = new MintContractApi();
 
 const testStore = useTestStore();
 
 const [checkInfo, { datas: myBalan, loading }] = useRead(async () => {
-  const p1 = mintCont.startTime();
-  const p2 = mintCont.startTime();
-  const p3 = mintCont.startTime();
-
-  /*  for (let i = 0, len = 50; i < len; i++) {
-    await lpContract.getBalance();
-    await lpContract.getBalance();
-    await lpContract.getBalance();
-    await lpContract.getBalance();
-  } */
+  const p1 = lpObj.getTokens();
+  const p2 = lpObj.getTokens();
+  const p3 = lpObj.getTokens();
 
   const result = await Promise.all([p1, p2, p3]);
   console.log('result...', result);
@@ -42,13 +35,14 @@ async function init() {
 init();
 const route = useRoute();
 console.log('route222....', route);
+
 const [handleAuth] = useWrite(async () => {
-  lpContract.auth('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21');
+  lpObj.auth('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21');
 });
 
 const [handleClick, loadWrite] = useWrite(async () => {
   console.log('这是写啊');
-  await lpContract.auth('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21');
+  await lpObj.auth('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21');
 });
 </script>
 
@@ -63,6 +57,7 @@ const [handleClick, loadWrite] = useWrite(async () => {
     <BpButton class="click-box" @click="handleClick" v-loading="loadWrite">bp写操作</BpButton>
 
     <h3>这个是testStore: {{ testStore.test1 }}</h3>
+
   </div>
 </template>
 

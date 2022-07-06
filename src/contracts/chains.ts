@@ -1,3 +1,4 @@
+import { clone } from '@/utils/tools';
 import { ConnectionInfo } from 'ethers/lib/utils';
 
 // 支持的链
@@ -13,7 +14,7 @@ export interface ISupportChains extends ConnectionInfo {
   blockExplorerUrls: string[];
 }
 
-const supportedChains: ISupportChains[] = [
+export const supportedChainsInfos: ISupportChains[] = [
   {
     chainId: '0x38',
     chainName: 'Binance Smart Chain',
@@ -52,4 +53,20 @@ const supportedChains: ISupportChains[] = [
   },
 ];
 
-export default supportedChains;
+// export const supportedUrls = supportedChainsInfos.map((item) => item.url);
+export const supportedChains = supportedChainsInfos.reduce((acc, item) => {
+  acc.push({
+    chainId: item.chainId,
+    chainName: item.chainName,
+    nativeCurrency: {
+      name: item.nativeCurrency.name,
+      symbol: item.nativeCurrency.symbol,
+      decimals: item.nativeCurrency.decimals,
+    },
+    rpcUrls: item.rpcUrls,
+    blockExplorerUrls: item.blockExplorerUrls,
+  });
+  return acc;
+}, []);
+
+console.log('supportedChains..',supportedChains);

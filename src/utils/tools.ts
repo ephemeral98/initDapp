@@ -1,5 +1,5 @@
 import i18n from '@/locales/i18n';
-import supportedChains from '@/contracts/chains';
+import { supportedChainsInfos, supportedChains } from '@/contracts/chains';
 const $t = i18n.global.t;
 
 /**
@@ -72,7 +72,19 @@ export function handleThrottle(callback, duration = 70) {
 }
 
 /**
- * 获取链的节点数据
+ * 获取链的节点数据 (包括url)
+ * @param chainId 链id
+ * @returns
+ */
+export function getChainInfoData(chainId) {
+  if (!chainId) {
+    return supportedChainsInfos[0];
+  }
+  return supportedChainsInfos.find((chain) => chain.chainId === chainId);
+}
+
+/**
+ * 获取链的节点数据 (除去url)
  * @param chainId 链id
  * @returns
  */

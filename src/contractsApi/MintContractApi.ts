@@ -42,9 +42,6 @@ export default class {
     return '';
   }
 
-  async startTime(){
-    return await this.mintObj.userInfo('0xbBAA0201E3c854Cd48d068de9BC72f3Bb7D26954');
-  }
 
   /**
    * 质押

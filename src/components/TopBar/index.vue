@@ -3,6 +3,7 @@ import { getCurrentInstance, reactive } from 'vue';
 import { useAppStore } from '@store/appStore';
 import { computed, ref } from '@vue/reactivity';
 import { plusXing } from '@/utils/tools';
+import Menu from './Menu.vue';
 
 const gThis = getCurrentInstance().appContext.config.globalProperties;
 const appStore = useAppStore();
@@ -55,7 +56,8 @@ function handleMenu() {
 <template>
   <div class="top-bar-wrap">
     <!-- 右边控制菜单显示和隐藏 -->
-    <div :class="['toggle-container', { close: isOpenMenu }]" @click="handleMenu">
+    <div :class="['toggle-container']" @click="handleMenu">
+      <div class="bar"></div>
       <div class="bar"></div>
       <div class="bar"></div>
     </div>
@@ -64,7 +66,7 @@ function handleMenu() {
       <div>这是顶部栏 《{{ $t('msg.1') }}》多语言</div>
 
       <!-- 已链接钱包展示钱包地址 -->
-      <div v-if="!appStore.defaultAccount" class="account-address">
+      <div v-if="appStore.defaultAccount" class="account-address">
         {{ plusXing(appStore.defaultAccount, 4, 4) }}
       </div>
 
@@ -85,15 +87,18 @@ function handleMenu() {
         </template>
       </el-dropdown>
     </div>
+
+    <Menu :isShowMenu="isOpenMenu" @hide="isOpenMenu = false" />
   </div>
 </template>
 
 <style lang="scss" scoped>
 .top-bar-wrap {
   width: 100%;
-  height: 0.8rem;
+  height: $mobTopBarHeight;
   background-color: skyblue;
   @include flexPos(space-between);
+  padding: 0 0.15rem;
 
   .lang-container {
     cursor: pointer;
@@ -102,7 +107,7 @@ function handleMenu() {
 
 .toggle-container {
   $boxHeight: 0.24rem;
-  $barHeight: 0.05rem;
+  $barHeight: 0.04rem;
   cursor: pointer;
 
   height: 0.24rem;
@@ -110,18 +115,13 @@ function handleMenu() {
   flex-direction: column;
   .bar {
     transition: 0.4s;
-
-    width: 0.48rem;
+    width: 0.3rem;
     height: $barHeight;
     background-color: #000;
     transform-origin: center;
-
-    &:nth-child(2) {
-      // margin-top: 0.2rem;
-    }
   }
 
-  &.close {
+  /* &.close {
     $y: calc($boxHeight / 2 - $barHeight / 2);
     .bar:nth-child(1) {
       transform: translateY($y) rotate(45deg);
@@ -130,6 +130,6 @@ function handleMenu() {
     .bar:nth-child(2) {
       transform: translateY(-$y) rotate(-45deg);
     }
-  }
+  } */
 }
 </style>
