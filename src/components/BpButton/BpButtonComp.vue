@@ -4,14 +4,17 @@ import { useAppStore } from '@store/appStore';
 const appStore = useAppStore();
 
 const props = defineProps<{
-  click: () => MouseEvent;
+  click: () => MouseEvent; // 点击事件
+  loading: boolean; // 加载中
 }>();
 </script>
 
 <template>
-  <button @click="props.click">
+  <button @click="props.click" v-loading="props.loading">
     <!-- 链不对，文案显示连接钱包 -->
-    <template v-if="!appStore.rightChain" @click="appStore.linkWallet"> {{ $t('common.1') }} </template>
+    <template v-if="!appStore.rightChain" @click="appStore.linkWallet">
+      {{ $t('common.1') }}
+    </template>
 
     <!-- 链对了，显示正常文案 -->
     <template v-else>
