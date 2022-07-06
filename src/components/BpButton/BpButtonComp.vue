@@ -5,12 +5,11 @@ const appStore = useAppStore();
 
 const props = defineProps<{
   click: () => MouseEvent; // 点击事件
-  loading: boolean; // 加载中
 }>();
 </script>
 
 <template>
-  <button @click="props.click" v-loading="props.loading">
+  <button @click="props.click">
     <!-- 链不对，文案显示连接钱包 -->
     <template v-if="!appStore.rightChain" @click="appStore.linkWallet">
       {{ $t('common.1') }}
