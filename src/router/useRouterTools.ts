@@ -4,7 +4,7 @@ import { RouteRecordRaw } from 'vue-router';
 
 /**
  * 获取当前路由项
- * @returns 
+ * @returns
  */
 export function useRouteItem(): RouteRecordRaw {
   // const routerInfo = router.getRoutes();
@@ -18,4 +18,13 @@ export function useRouteItem(): RouteRecordRaw {
   const curRouteItem = allRouter.find((item) => item.path === curRouterPath);
 
   return curRouteItem;
+}
+
+/**
+ * 获取当前路由项的 meta信息
+ * @returns
+ */
+export function useRouteMeta() {
+  const routeItem = useRouteItem();
+  return routeItem?.meta;
 }

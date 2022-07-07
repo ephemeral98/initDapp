@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useAppStore } from '@store/appStore';
+import { useRouteMeta } from '@/router/useRouterTools';
 
 const appStore = useAppStore();
+const meta = useRouteMeta();
 
 const props = defineProps<{
   disable?: boolean; // 置灰按钮
@@ -23,7 +25,7 @@ function handleClick() {
 <template>
   <!-- 链不对，文案显示连接钱包 -->
   <button :class="{ disableBtn: props.disable }">
-    <div v-if="!appStore.rightChain" @click="appStore.switchChain">
+    <div v-if="!appStore.rightChain" @click="appStore.switchChain(meta?.needChains?.[0])">
       {{ $t('common.1') }}
     </div>
 

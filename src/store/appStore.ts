@@ -107,7 +107,7 @@ const useAppStore = defineStore('app', {
      * @param chainId 链id
      * @returns
      */
-    switchChain(chainId) {
+    switchChain(chainId: string) {
       if (this.defaultAccount == null) {
         ElMessage({
           message: $t('msg.7'),
@@ -186,22 +186,18 @@ const useAppStore = defineStore('app', {
         });
       }
 
-      await _waiting().catch((err) => {
-        ElMessage({
-          message: $t('msg.17'),
-          type: 'error',
-        });
-      });
+      await _waiting().catch((err) => console.log(err));
 
       let provider, signer;
       try {
         provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
         signer = provider.getSigner();
 
-        provider.getGasPrice().then((price) => {
-          this.ethersObj.baseGasPrice = +price;
-        });
-      } catch (err) {}
+        const price = await provider.getGasPrice();
+        this.ethersObj.baseGasPrice = +price ?? 0;
+      } catch (err) {
+        console.log('err...', err);
+      }
 
       this.ethersObj = {
         ...this.ethersObj,
