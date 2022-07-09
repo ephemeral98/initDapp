@@ -211,7 +211,7 @@ export function bpFormat(num, digits = 0, dec = 18): string {
     // 小数向下约
     res = fixFloor(res, digi);
   }
-  return digits ? (+res).toFixed(digi) : res;
+  return digits ? (+res).toFixed(digi) : (+res).toFixed();
 }
 
 /**

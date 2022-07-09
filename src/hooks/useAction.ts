@@ -1,6 +1,6 @@
 import { ElMessage } from 'element-plus';
 import { ref, Ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRouteItem } from '@/router/useRouterTools';
 import { useAppStore } from '@store/appStore';
 import i18n from '@/locales/i18n';
 const $t = i18n.global.t;
@@ -15,7 +15,7 @@ const $t = i18n.global.t;
  *  });
  */
 export function useWrite(func): [any, Ref<boolean>] {
-  const route = useRoute();
+  const route = useRouteItem();
   const appStore = useAppStore();
   const loading = ref(false);
   async function help(...params) {
