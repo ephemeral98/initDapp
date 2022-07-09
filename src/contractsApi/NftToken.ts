@@ -2,11 +2,12 @@
 
 // import { useAppStore } from '@store/appStore';
 import { useAppStore } from '@/store/appStore';
-import { toRaw } from 'vue';
 import { IAddressObj, INft } from './types';
 import i18n from '@/locales/i18n';
 import { bpRead, bpWrite } from '@/service/bpAction';
 import { bpFormat } from '@/utils/bpMath';
+import useDefaultRpc from './useDefaultRpc';
+import { ethers } from 'ethers';
 
 const $t = i18n.global.t;
 
@@ -35,10 +36,14 @@ export default class {
    * @returns 代币的信息
    */
   createContract(addressObj) {
-    const appStore = useAppStore();
-    const { ethers, signerValue } = appStore.ethersObj;
-    const nftObj = new ethers.Contract(addressObj.address, addressObj.abi, toRaw(signerValue));
-    this.nftObj = nftObj;
+    const signer = useDefaultRpc();
+
+    try {
+      const nftObj = new ethers.Contract(addressObj.address, addressObj.abi, signer);
+      this.nftObj = nftObj;
+    } catch (err) {
+      console.log('构建 nftToken 合约对象失败...');
+    }
     return this.nftObj;
   }
 

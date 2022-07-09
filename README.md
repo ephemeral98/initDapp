@@ -4,7 +4,7 @@
 
 #### 1. BpButton
 
-使用按钮的时候，统一使用全局组件```BpButton```，需要有加载状态```loading```
+使用按钮的时候，与链上有交易的请求，统一使用全局组件```BpButton```，需要有加载状态```loading```。一些普通的操作DOM按钮可以不使用该组件。
 
 ```vue
 <BpButton class="click-box" @click="handleClick">bp写操作</BpButton>
@@ -113,15 +113,42 @@ const [checkInfo, { datas: myBalan, loading }] = useRead(async () => {
 
 
 
+## Tips:
+
+#### useWrite, useRead 和 bpWrite, bpRead 的区别：
+
+前者主要是各种拦截，以及loading的处理。不让调起钱包；
+
+后者是对成功调起钱包交易的 后续信息处理;
+
+
+
 ## useStake
 
 快速完成质押逻辑
 
+如果推荐人是单独一个页面的，则把 推荐人(inv)的逻辑 删除
 
 
 ## 路由守卫：
 
 可以在 routerHelp 文件中处理，如果链不对，弹窗还是message还是其他什么。。
+
+
+
+## contractsApi
+
+>  这个文件夹下面是放一些 合约api 的
+
+#### 1. CoinToken: 一些符合 ERC20的代币，直接导入address和api，new 出一个代币对象
+
+#### 2. LpToken: 一些 **通用** lp 币对对象，用法和 CoinToken 类似
+
+#### 3. NftToken: 一些 **通用** nft 对象，用法和CoinToken类似
+
+#### useDefaultRpc，每次构建对象的时候，在**createContract** 中，调用，获取预设的rpc，可参考 CoinToken
+
+### 如果有其他合约，请自行创建对应的文件！！
 
 
 

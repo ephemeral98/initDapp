@@ -3,7 +3,6 @@
 // import { useAppStore } from '@store/appStore';
 import { ethers } from 'ethers';
 import { useAppStore } from '@/store/appStore';
-import { toRaw } from 'vue';
 import { IAddressObj } from './types';
 import i18n from '@/locales/i18n';
 import { bpFormat, bpGt, bpMul } from '@/utils/bpMath';

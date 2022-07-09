@@ -19,6 +19,8 @@ export function useWrite(func): [any, Ref<boolean>] {
   const appStore = useAppStore();
   const loading = ref(false);
   async function help(...params) {
+    if (loading.value) return;
+
     // 没有小狐狸插件，则跳去下载
     if (!window.ethereum) {
       window.open('https://metamask.io/download/');
@@ -31,17 +33,21 @@ export function useWrite(func): [any, Ref<boolean>] {
       ElMessage.error($t('msg.6'));
 
       // 弹窗
-      appStore.switchChain(route.meta.needChains[0]);
+      loading.value = true;
+      await appStore.switchChain(route.meta.needChains[0]);
+      loading.value = false;
       return;
     }
 
     // 没有连接钱包
     if (!appStore.defaultAccount) {
       ElMessage.error($t('msg.7'));
+      loading.value = true;
+      await appStore.linkWallet();
+      loading.value = false;
       return;
     }
 
-    if (loading.value) return;
     loading.value = true;
     const resp = await func(...params);
     loading.value = false;

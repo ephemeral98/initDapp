@@ -17,28 +17,15 @@ export function useStakeInp() {
 
   // 质押数量
   const stakeNum = reactive({
-    origin: '',
-    value: '',
+    origin: '', // 数据源
+    show: '', // 展示
   });
 
+  /**
+   * 推荐人
+   */
   // 如没有推荐人,则输入推荐人
   const inpInv = ref('');
-
-  /**
-   * 手动输入质押量
-   */
-  function changeStakeNum(e) {
-    stakeNum.origin = e.target.value;
-    stakeNum.value = e.target.value;
-  }
-
-  /**
-   * 输入最大值
-   */
-  function handleMax(balance, balanceShow) {
-    stakeNum.origin = balance;
-    stakeNum.value = balanceShow;
-  }
 
   const inviter = ref(''); // 推荐人
   /**
@@ -48,6 +35,22 @@ export function useStakeInp() {
     inviter.value = await mintObj.getInviter();
   }
   getInviter();
+
+  /**
+   * 手动输入质押量
+   */
+  function changeStakeNum(e) {
+    stakeNum.origin = e.target.value;
+    stakeNum.show = e.target.value;
+  }
+
+  /**
+   * 输入最大值
+   */
+  function handleMax(balance, balanceShow) {
+    stakeNum.origin = balance;
+    stakeNum.show = balanceShow;
+  }
 
   const loadingStake = ref(false);
   /**
@@ -95,7 +98,7 @@ export function useStakeInp() {
     loadingStake.value = false;
     inpInv.value = '';
     stakeNum.origin = '';
-    stakeNum.value = '';
+    stakeNum.show = '';
 
     getInviter();
     callback();
