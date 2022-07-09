@@ -55,11 +55,22 @@ function handleMenu() {
   // 控制外部滚动条是否能滚动
   document.body.style.overflow = isOpenMenu.value ? 'hidden' : 'auto';
 }
+
+const loadLink = ref(false);
+/**
+ * 连接钱包
+ */
+async function handleLink() {
+  if (loadLink.value) return;
+  loadLink.value = true;
+  await appStore.linkWallet();
+  loadLink.value = false;
+}
 </script>
 
 <template>
   <div class="top-bar-wrap">
-    <!-- 右边控制菜单显示和隐藏 -->
+    <!-- 控制菜单显示和隐藏 按钮 -->
     <div :class="['toggle-container']" @click="handleMenu">
       <div class="bar"></div>
       <div class="bar"></div>
@@ -75,7 +86,9 @@ function handleMenu() {
       </div>
 
       <!-- 连接钱包 -->
-      <button v-else class="link-btn" @click="appStore.linkWallet()">{{ $t('common.1') }}</button>
+      <button v-loading="loadLink" v-else class="link-btn" @click="handleLink">
+        {{ $t('common.1') }}
+      </button>
 
       <!-- 选择语言 -->
       <el-dropdown trigger="click" @command="pickLang">
@@ -92,6 +105,7 @@ function handleMenu() {
       </el-dropdown>
     </div>
 
+    <!-- 移动端菜单 -->
     <Menu :isShowMenu="isOpenMenu" @hide="isOpenMenu = false" />
   </div>
 </template>
@@ -111,7 +125,7 @@ function handleMenu() {
 
 .toggle-container {
   $boxHeight: 0.24rem;
-  $barHeight: 0.04rem;
+  $barHeight: 3px;
   cursor: pointer;
 
   height: 0.24rem;

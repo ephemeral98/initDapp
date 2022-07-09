@@ -82,6 +82,8 @@ const slides = reactive({
 
 写入时，借助```useWrite```:
 
+记得里面是传入异步回调函数(async)
+
 ```js
 const [handleClick, loadWrite] = useWrite(async () => {
   await lpContract.auth('0x00000');
@@ -111,6 +113,12 @@ const [checkInfo, { datas: myBalan, loading }] = useRead(async () => {
 
 
 
+## useStake
+
+快速完成质押逻辑
+
+
+
 ## 路由守卫：
 
 可以在 routerHelp 文件中处理，如果链不对，弹窗还是message还是其他什么。。
@@ -120,7 +128,7 @@ const [checkInfo, { datas: myBalan, loading }] = useRead(async () => {
 ## 注意
 
 1. 所有合约方法，均放在 contractsApi 中，命名为: xxxContractApi
-2. 
+2. 不再使用```useRoute```获取路由信息，统一使用```useRouteTools```，
 
 
 

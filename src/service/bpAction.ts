@@ -25,7 +25,7 @@ export async function bpWrite(successMsg, func, ...param) {
     .then(async (resp) => {
       ElMessage({
         type: 'info',
-        message: $t('msg.12'),
+        message: $t('msg.8'),
       });
       const { events } = await resp?.wait?.();
 
@@ -72,7 +72,6 @@ export async function bpWrite(successMsg, func, ...param) {
 export async function bpRead(func, ...param) {
   if (!func) {
     console.log('没有这个 read 方法！！，请查询方法名是否正确！');
-    ElMessage.error('error');
     return;
   }
   return await func?.(...param)

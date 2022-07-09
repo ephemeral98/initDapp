@@ -4,24 +4,17 @@
 }
 
 // element plus
+
+// 消息
 .el-message {
   z-index: 99999 !important;
 }
 
-.el-popper {
-  z-index: 99;
-
-  .el-dropdown-menu__item {
-    @include flexPos(center);
-    color: #00044a;
-  }
+// 指令loading
+.el-loading-mask {
+  background-color: rgba(225, 225, 225, 0.4) !important;
 }
 
-.cate-wrap {
-  .el-dropdown-menu__item {
-    font-weight: bold;
-  }
-}
 
 // vant
 

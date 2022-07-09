@@ -28,10 +28,16 @@ export function useWrite(func): [any, Ref<boolean>] {
     // 链不对
     if (!appStore.rightChain) {
       // 提示
-      ElMessage($t('msg.6'));
+      ElMessage.error($t('msg.6'));
 
       // 弹窗
       appStore.switchChain(route.meta.needChains[0]);
+      return;
+    }
+
+    // 没有连接钱包
+    if (!appStore.defaultAccount) {
+      ElMessage.error($t('msg.7'));
       return;
     }
 
