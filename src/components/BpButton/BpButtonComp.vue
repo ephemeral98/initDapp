@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useAppStore } from '@store/appStore';
 import { useRouteMeta } from '@/router/useRouterTools';
+import { ref } from '@vue/reactivity';
 
 const appStore = useAppStore();
 const meta = useRouteMeta();
@@ -20,12 +21,23 @@ function handleClick() {
   if (props.disable) return;
   emits('click');
 }
+
+const loadSwitch = ref(false);
+/**
+ * 切换链
+ */
+async function handleSwitchChain() {
+  if (loadSwitch.value) return;
+  loadSwitch.value = true;
+  await appStore.switchChain(meta?.needChains?.[0]);
+  loadSwitch.value = false;
+}
 </script>
 
 <template>
   <!-- 链不对，文案显示连接钱包 -->
   <button :class="{ disableBtn: props.disable }">
-    <div v-if="!appStore.rightChain" @click="appStore.switchChain(meta?.needChains?.[0])">
+    <div v-loading="loadSwitch" v-if="!appStore.rightChain" @click="handleSwitchChain">
       {{ $t('common.1') }}
     </div>
 

@@ -107,7 +107,7 @@ const useAppStore = defineStore('app', {
      * @param chainId 链id
      * @returns
      */
-    switchChain(chainId: string) {
+    async switchChain(chainId: string) {
       if (this.defaultAccount == null) {
         ElMessage({
           message: $t('msg.7'),
@@ -123,16 +123,15 @@ const useAppStore = defineStore('app', {
 
       const provider = new ethers.providers.Web3Provider(ethereum, 'any');
       const chainData = getChainData(chainId);
-      const tx = provider.provider
+      await provider.provider
         .request({ method: 'wallet_addEthereumChain', params: [chainData] })
-        .then(() => {
+        .then((e) => {
           const providers: any = new ethers.providers.Web3Provider(window?.ethereum, 'any');
           this.ethersObj.chainId = providers?.provider?.chainId;
         })
         .catch((e) => {
-          console.log('chain..', e);
+          console.log('切换链错误..', e);
         });
-      console.log('chain tx..', tx);
     },
 
     /**
