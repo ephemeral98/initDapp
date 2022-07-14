@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import { useAppStore } from '@/store/appStore';
+import { isTest } from '@/contracts/address';
 import $load from '@cps/GlobalLoading';
 import { checkRightChain } from './routerHelp';
 
@@ -10,7 +11,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "testPage" */ '@/views/TestPage/index.vue'),
     meta: {
       requireAccount: true, // 依赖钱包
-      needChains: ['0x61'], // 依赖的链
+      needChains: isTest ? ['0x61'] : ['0x38'], // 依赖的链
       needTips: false, // 链不对的时候，需不需要提示
     },
   },

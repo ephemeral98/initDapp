@@ -3,7 +3,7 @@
   <TopBar />
 
   <!-- 各路由 -->
-  <div v-if="update">
+  <div class="mainContainer" v-if="update">
     <router-view v-slot="{ Component }">
       <keep-alive>
         <component :is="Component" v-if="$route.meta?.keepAlive" />
@@ -44,7 +44,7 @@ export default {
      * 切链or切账号，更新数据
      */
     watch(
-      () => [appStore.ethersObj.chainId, appStore.defaultAccount],
+      () => [appStore.updateTarget, appStore.defaultAccount],
       () => {
         if (!appStore.lockUpdate) {
           // 更新所有页面内所有组件
@@ -70,4 +70,8 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.mainContainer {
+  margin-top: $mobTopBarHeight;
+}
+</style>

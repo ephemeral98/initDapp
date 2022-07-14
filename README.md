@@ -7,7 +7,11 @@
 使用按钮的时候，与链上有交易的请求，统一使用全局组件```BpButton```，需要有加载状态```loading```。一些普通的操作DOM按钮可以不使用该组件。
 
 ```vue
-<BpButton class="click-box" @click="handleClick">bp写操作</BpButton>
+const [handleClick, loadClick] = useWrite(async () => {
+  await lpObj.claimAllReward();
+});
+
+<BpButton v-loading="loadClick" @click="handleClick" class="click-box">bp写操作</BpButton>
 ```
 
 #### 2. BpSwiper
@@ -80,19 +84,19 @@ const slides = reactive({
 
 ## useAction
 
-写入时，借助```useWrite```:
+#### 写入时，借助```useWrite```:
 
 记得里面是传入异步回调函数(async)
 
 ```js
 const [handleClick, loadWrite] = useWrite(async () => {
-  await lpContract.auth('0x00000');
+  await lpObj.auth('0x00000');
 });
 ```
 
 如果需要返回值，需要借助外部变量
 
-读取时，借助useRead:
+#### 读取时，借助useRead:
 
 ```js
 const [checkInfo, { datas: myBalan, loading }] = useRead(async () => {

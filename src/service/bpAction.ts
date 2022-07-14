@@ -56,7 +56,7 @@ export async function bpWrite(successMsg, func, ...param) {
         message: info,
       });
       return {
-        status: true,
+        status: false,
         datas: '0',
         message: err,
       };

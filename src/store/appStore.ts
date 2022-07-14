@@ -32,6 +32,7 @@ const useAppStore = defineStore('app', {
     loadRead: '', // 是否在读取链上方法中
     ethersObj: INIT_ETHERS,
     lockUpdate: true, // 是否锁住，禁止更新所有组件和store
+    updateTarget: false, // 更新所有组件数据的标记
   }),
 
   actions: {
@@ -39,15 +40,11 @@ const useAppStore = defineStore('app', {
      * 连接小狐狸钱包
      */
     async linkWallet() {
-      // 没有安装小狐狸
-      if (!window.ethereum) {
-        return false;
-      }
-
       // 已经连接了钱包
       if (this.defaultAccount) {
         return true;
       }
+
       await this.setEthersObj();
       const { provider } = this.ethersObj;
       await provider
@@ -108,30 +105,45 @@ const useAppStore = defineStore('app', {
      * @returns
      */
     async switchChain(chainId: string) {
-      if (this.defaultAccount == null) {
-        ElMessage({
-          message: $t('msg.7'),
-          type: 'error',
-        });
+      if (!window?.ethereum) {
+        window.alert(111);
+        ElMessage.error($t('msg.19'));
         return;
       }
+
+      if (!+this.defaultAccount) {
+        ElMessage.error($t('msg.7'));
+        // return;
+      }
+      // window.alert(333);
 
       let ethereum = window?.ethereum;
       if (this.ethersObj.cachedProvider === 'bitkeep') {
         ethereum = window?.bitkeep?.ethereum;
       }
 
-      const provider = new ethers.providers.Web3Provider(ethereum, 'any');
-      const chainData = getChainData(chainId);
-      await provider.provider
-        .request({ method: 'wallet_addEthereumChain', params: [chainData] })
-        .then((e) => {
-          const providers: any = new ethers.providers.Web3Provider(window?.ethereum, 'any');
-          this.ethersObj.chainId = providers?.provider?.chainId;
-        })
-        .catch((e) => {
-          console.log('切换链错误..', e);
-        });
+      try {
+        const providerWrap: any = new ethers.providers.Web3Provider(ethereum, 'any');
+        const chainData = getChainData(chainId);
+
+        await providerWrap.provider
+          .request({ method: 'wallet_addEthereumChain', params: [chainData] })
+          .then(async () => {
+            this.ethersObj.chainId = providerWrap?.provider?.chainId;
+
+            if (window.ethereum?.isTokenPocket) {
+              // 如果用的TP钱包，则直接刷新，因为tp不刷新的话，window.ethereum的rpc还是旧的
+              window.location.reload();
+            } else {
+              // 开锁，更新所有组件数据
+              this.lockUpdate = false;
+              this.updateTarget = !this.updateTarget;
+            }
+          });
+      } catch (error) {
+        ElMessage.error($t('msg.19'));
+        console.log('切换链错误..', error);
+      }
     },
 
     /**
@@ -229,11 +241,12 @@ const useAppStore = defineStore('app', {
         this.defaultAccount = accounts[0];
       });
 
-      // 监听切链
+      // 监听切链(TP不兼容)
       window.ethereum?.on('chainChanged', async (chainId) => {
         console.log('链切换了...', chainId);
         this.lockUpdate = false;
         this.ethersObj.chainId = chainId;
+        this.updateTarget = !this.updateTarget;
       });
 
       /* // 监听连接钱包
@@ -251,7 +264,8 @@ const useAppStore = defineStore('app', {
     /**
      * 设置是否为对的链
      */
-    setrightChain(status: boolean) {
+    setRightChain(status: boolean) {
+      console.log('status..', status);
       this.rightChain = status;
     },
   },

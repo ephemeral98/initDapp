@@ -7,7 +7,6 @@ import { RouteRecordRaw } from 'vue-router';
  */
 type IExtraParam = {
   query: Object;
-  
 };
 
 type ICurRoute = IExtraParam & RouteRecordRaw;
@@ -17,6 +16,25 @@ type ICurRoute = IExtraParam & RouteRecordRaw;
  * @returns
  */
 export function useRouteItem(): ICurRoute {
+  /**
+   * 解析地址栏信息
+   * @param url 地址栏
+   * @returns
+   */
+  function _queryURLparams(url) {
+    let obj = {};
+    if (url.indexOf('?') < 0) return obj;
+    let arr = url.split('?');
+    url = arr[1];
+    let array = url.split('&');
+    for (let i = 0; i < array.length; i++) {
+      let arr2 = array[i];
+      let arr3 = arr2.split('=');
+      obj[arr3[0]] = arr3[1];
+    }
+    return obj;
+  }
+
   // const routerInfo = router.getRoutes();
   // 获取当前地址栏路由
   const curRouterPath = router.options?.history?.state?.current;
@@ -52,23 +70,4 @@ export function useRouteMeta() {
 export function useRouteQuery() {
   const routeItem = useRouteItem();
   return routeItem?.query;
-}
-
-/**
- * 解析地址栏信息
- * @param url 地址栏
- * @returns
- */
-function _queryURLparams(url) {
-  let obj = {};
-  if (url.indexOf('?') < 0) return obj;
-  let arr = url.split('?');
-  url = arr[1];
-  let array = url.split('&');
-  for (let i = 0; i < array.length; i++) {
-    let arr2 = array[i];
-    let arr3 = arr2.split('=');
-    obj[arr3[0]] = arr3[1];
-  }
-  return obj;
 }
