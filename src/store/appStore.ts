@@ -105,12 +105,6 @@ const useAppStore = defineStore('app', {
      * @returns
      */
     async switchChain(chainId: string) {
-      if (!window?.ethereum) {
-        window.alert(111);
-        ElMessage.error($t('msg.19'));
-        return;
-      }
-
       if (!+this.defaultAccount) {
         ElMessage.error($t('msg.7'));
         // return;

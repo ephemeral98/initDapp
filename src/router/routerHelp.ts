@@ -16,9 +16,9 @@ export function checkRightChain(to, from) {
   const { chainId } = appStore.ethersObj;
   const inclu = targetRoute.meta.needChains?.includes(chainId);
   if (!inclu && targetRoute.meta?.needChains !== undefined) {
-    appStore.setrightChain(false);
+    appStore.setRightChain(false);
   } else {
-    appStore.setrightChain(true);
+    appStore.setRightChain(true);
   }
 
   // 如果链不对，弹窗切链 or 提示
