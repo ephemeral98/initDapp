@@ -5,4 +5,5 @@ declare interface Window {
   bpLoading;
   chainModalShow;
   bitkeep;
+  swi;
 }

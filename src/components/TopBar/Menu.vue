@@ -17,11 +17,11 @@ const $emits = defineEmits<{
  * 跳转到路由
  */
 function launchTo(menu) {
-  if (menu.url === '/') {
+  if (menu.urlName === '/') {
     ElMessage.info($t('msg.9'));
     return;
   }
-  router.push({ name: menu.url });
+  router.push({ name: menu.urlName });
   $emits('hide');
 }
 

@@ -5,6 +5,12 @@ import { ElMessage } from 'element-plus';
 import i18n from '@/locales/i18n';
 const $t = i18n.global.t;
 
+export interface ITransStatus {
+  status: boolean; // 请求是否成功
+  datas: any; // 请求的数据
+  message?: string; // 错误时候的消息
+}
+
 /**
  * 处理写交易动作,唤起交易之后的信息处理
  * @param {*} successMsg 交易成功的消息
@@ -69,7 +75,7 @@ export async function bpWrite(successMsg, func, ...param) {
  * @param 交易参数
  * eg: bpWrite(this.mintObj.funcName, 参数1, 参数2)
  */
-export async function bpRead(func, ...param) {
+export async function bpRead(func, ...param: any[]): Promise<ITransStatus> {
   if (!func) {
     console.log('没有这个 read 方法！！，请查询方法名是否正确！');
     return;

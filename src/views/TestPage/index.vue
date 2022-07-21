@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { LP_MINT_CONT } from '@/contracts/address';
-import { useRead, useWrite } from '@hooks/useAction';
+import { useRead, useWrite, useLayRead } from '@hooks/useAction';
 import LpToken from '@/contractsApi/LpToken';
 import { useTestStore } from '@store/testStore';
 import { watchEffect } from 'vue';
@@ -21,18 +21,29 @@ const [checkInfo, { datas: myBalan, loading }] = useRead(async () => {
   return result;
 });
 
+const [data, ex] = useLayRead(async () => {
+  const p1 = lpObj.getTokens();
+  const p2 = lpObj.getTokens();
+  const p3 = lpObj.getTokens();
+
+  const result: any = await Promise.all([p1, p2, p3]);
+  console.log('result...', result);
+  return result;
+});
+
 watchEffect(() => {
   console.log('数据变化了。。。', myBalan);
 });
 
-async function init() {
+/* async function init() {
   const resp1 = await checkInfo();
   console.log('resp1111', resp1, myBalan);
   const resp2 = await checkInfo();
   console.log('resp2222', resp2, myBalan);
-}
+} */
 
-init();
+// init();
+
 const route = useRoute();
 console.log('route222....', route);
 
@@ -58,6 +69,8 @@ const [handleClick, loadWrite] = useWrite(async () => {
 
     <h3>这个是testStore: {{ testStore.test1 }}</h3>
 
+    <div>读取中？ {{ ex.loading }}</div>
+    <button @click="ex.refetch">重新读</button>
   </div>
 </template>
 

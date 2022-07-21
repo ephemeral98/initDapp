@@ -12,7 +12,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requireAccount: true, // 依赖钱包
       needChains: isTest ? ['0x61'] : ['0x38'], // 依赖的链
-      needTips: false, // 链不对的时候，需不需要提示
+      needTips: true, // 链不对的时候，需不需要提示
     },
   },
 

@@ -3,6 +3,7 @@ import { ElMessage } from 'element-plus';
 import i18n from '@/locales/i18n';
 import { useRouteItem } from './useRouterTools';
 const $t = i18n.global.t;
+import { nextTick } from 'vue';
 
 /**
  * 检查是否账户或者链正确
@@ -24,7 +25,15 @@ export function checkRightChain(to, from) {
   // 如果链不对，弹窗切链 or 提示
   if (!inclu && targetRoute.meta?.needChains !== undefined && targetRoute.meta?.needTips) {
     ElMessage.error($t('msg.6'));
+    window.swi = appStore.switchChain;
+    console.log('bvbbbb');
 
-    appStore.switchChain(targetRoute.meta?.needChains[0]);
+    window.addEventListener('load', () => {
+      // appStore.switchChain(targetRoute.meta?.needChains[0]);
+    });
+
+    nextTick(() => {
+      appStore.switchChain(targetRoute.meta?.needChains[0]);
+    });
   }
 }

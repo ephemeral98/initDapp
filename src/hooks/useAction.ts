@@ -1,8 +1,9 @@
 import { ElMessage } from 'element-plus';
-import { ref, Ref } from 'vue';
+import { reactive, ref, Ref, watch } from 'vue';
 import { useRouteItem } from '@/router/useRouterTools';
 import { useAppStore } from '@store/appStore';
 import i18n from '@/locales/i18n';
+import { ITransStatus } from '@/service/bpAction';
 const $t = i18n.global.t;
 
 /**
@@ -101,4 +102,60 @@ export function useRead(func): [Function, { datas: Ref<any>; loading: Ref<boolea
   }
 
   return [help as any, { datas, loading }];
+}
+
+interface IUseRead {
+  loading: boolean; // 加载中
+  refetch: () => void; // 重新请求数据
+  status: null | boolean; // 请求结果
+  message: string; // 请求结果消息，如果成功，则为 '',
+}
+
+interface IEx {
+  interval?: number;
+  watcher?: number;
+}
+
+export function useLayRead(func: () => Promise<ITransStatus>, ex?: IEx): [Ref<any>, IUseRead] {
+  const datas = ref({}); // 返回值
+  const refetchStatus = ref(false);
+  /**
+   * 重新请求
+   */
+  function refetch() {
+    refetchStatus.value = !refetchStatus.value;
+  }
+
+  /**
+   * 返回状态结构
+   */
+  const result = reactive<IUseRead>({
+    loading: false,
+    refetch,
+    status: null,
+    message: '',
+  });
+
+  async function help() {
+    result.loading = true;
+    const resp = await func();
+    if (resp?.status === false) {
+      // 返回报错信息
+      result.message = resp?.message;
+    } else {
+      // 请求成功，返回数据
+      datas.value = resp;
+    }
+    result.loading = false;
+    result.status = resp.status;
+  }
+
+  watch(
+    () => refetchStatus.value,
+    async () => {
+      help();
+    }
+  );
+
+  return [datas, result];
 }

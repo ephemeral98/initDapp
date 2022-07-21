@@ -33,6 +33,7 @@ const useAppStore = defineStore('app', {
     ethersObj: INIT_ETHERS,
     lockUpdate: true, // 是否锁住，禁止更新所有组件和store
     updateTarget: false, // 更新所有组件数据的标记
+    chainTimer: null, // 切链timer
   }),
 
   actions: {
@@ -105,6 +106,13 @@ const useAppStore = defineStore('app', {
      * @returns
      */
     async switchChain(chainId: string) {
+      console.log('window000', window.ethereum?.rpc?.rpcUrl);
+
+      if (!window?.ethereum) {
+        ElMessage.error($t('msg.19'));
+        return;
+      }
+
       if (!+this.defaultAccount) {
         ElMessage.error($t('msg.7'));
         // return;
@@ -120,19 +128,45 @@ const useAppStore = defineStore('app', {
         const providerWrap: any = new ethers.providers.Web3Provider(ethereum, 'any');
         const chainData = getChainData(chainId);
 
+        // 记录旧的chainId
+        const oldChainId = this.ethersObj.chainId;
         await providerWrap.provider
           .request({ method: 'wallet_addEthereumChain', params: [chainData] })
           .then(async () => {
-            this.ethersObj.chainId = providerWrap?.provider?.chainId;
-
             if (window.ethereum?.isTokenPocket) {
-              // 如果用的TP钱包，则直接刷新，因为tp不刷新的话，window.ethereum的rpc还是旧的
-              window.location.reload();
-            } else {
-              // 开锁，更新所有组件数据
-              this.lockUpdate = false;
-              this.updateTarget = !this.updateTarget;
+              // TP钱包才给 loading提示，因为PC点了拒绝，也会到这里。。
+              ElMessage.info($t('common.2'));
             }
+
+            clearInterval(this.chainTimer);
+            this.chainTimer = setInterval(() => {
+              const newProviderWrap: any = new ethers.providers.Web3Provider(
+                window?.ethereum,
+                'any'
+              );
+              // 获取新的chainId
+              const newChainId = newProviderWrap.provider?.chainId;
+              // 根据判断俩chainId，判断是否成功切了链
+              if (+newChainId !== +oldChainId) {
+                // console.log('切完了链', window.ethereum);
+
+                this.ethersObj.chainId = newChainId;
+
+                if (window.ethereum?.isTokenPocket) {
+                  // TP钱包，iPhone有坑，切换了链，chainId变了，但是rpc没变。这里强行修改rpc。
+                  const chainData = getChainData(newChainId);
+                  window.ethereum.rpc.rpcUrl = chainData.rpcUrls;
+                }
+                // 确实成功切了链
+                ElMessage.success($t('msg.20'));
+
+                clearInterval(this.chainTimer);
+                // 开锁，更新所有组件数据
+                this.lockUpdate = false;
+                // 更新所有组件数据
+                this.updateTarget = !this.updateTarget;
+              }
+            }, 500);
           });
       } catch (error) {
         ElMessage.error($t('msg.19'));

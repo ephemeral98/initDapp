@@ -21,7 +21,7 @@ const menuListValue = reactive<IMemu[]>([
     id: 2,
     name: 'topBar.2',
     logo: require('@img/holder.png'),
-    urlName: '',
+    urlName: 'testPage',
     active: false,
   },
 ]);
