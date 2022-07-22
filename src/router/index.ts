@@ -1,8 +1,8 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import { useAppStore } from '@/store/appStore';
-import { isTest } from '@/contracts/address';
 import $load from '@cps/GlobalLoading';
 import { checkRightChain } from './routerHelp';
+import { getCurNeedChain } from '@/contracts/chains';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -11,7 +11,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "testPage" */ '@/views/TestPage/index.vue'),
     meta: {
       requireAccount: true, // 依赖钱包
-      needChains: isTest ? ['0x61'] : ['0x38'], // 依赖的链
+      needChains: getCurNeedChain(['bsc']), // 依赖的链
       needTips: true, // 链不对的时候，需不需要提示
     },
   },

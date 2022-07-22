@@ -1,5 +1,5 @@
-import { clone } from '@/utils/tools';
 import { ConnectionInfo } from 'ethers/lib/utils';
+import { isTest } from './address';
 
 // 支持的链
 export interface ISupportChains extends ConnectionInfo {
@@ -14,7 +14,7 @@ export interface ISupportChains extends ConnectionInfo {
   blockExplorerUrls: string[];
 }
 
-export const supportedChainsInfos: ISupportChains[] = [
+export const supportedChains: ISupportChains[] = [
   {
     chainId: '0x38',
     chainName: 'Binance Smart Chain',
@@ -53,20 +53,22 @@ export const supportedChainsInfos: ISupportChains[] = [
   },
 ];
 
-// export const supportedUrls = supportedChainsInfos.map((item) => item.url);
-export const supportedChains = supportedChainsInfos.reduce((acc, item) => {
-  acc.push({
-    chainId: item.chainId,
-    chainName: item.chainName,
-    nativeCurrency: {
-      name: item.nativeCurrency.name,
-      symbol: item.nativeCurrency.symbol,
-      decimals: item.nativeCurrency.decimals,
-    },
-    rpcUrls: item.rpcUrls,
-    blockExplorerUrls: item.blockExplorerUrls,
-  });
-  return acc;
-}, []);
+export function getCurNeedChain(chain = ['bsc']): string[] {
+  const arr = [];
+  // bsc
+  if (chain.includes('bsc')) {
+    if (isTest) {
+      arr.push('0x61');
+    } else {
+      arr.push('0x38');
+    }
+  }
+  // polygon
+  if (chain.includes('matic')) {
+    arr.push('0x89');
+  }
 
-console.log('supportedChains..',supportedChains);
+  return arr;
+}
+
+window.swi = getCurNeedChain;
