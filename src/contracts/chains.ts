@@ -53,7 +53,14 @@ export const supportedChains: ISupportChains[] = [
   },
 ];
 
-export function getCurNeedChain(chain = ['bsc']): string[] {
+/**
+ *
+ * @param chain 依赖的链简称
+ * @returns
+ */
+type IChain = 'bsc' | 'matic';
+
+export function getCurNeedChain(chain: IChain[] = ['bsc']): string[] {
   const arr = [];
   // bsc
   if (chain.includes('bsc')) {
