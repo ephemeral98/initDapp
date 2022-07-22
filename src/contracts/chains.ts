@@ -54,7 +54,7 @@ export const supportedChains: ISupportChains[] = [
 ];
 
 /**
- *
+ * 根据简称获取当前路由依赖的链
  * @param chain 依赖的链简称
  * @returns
  */
