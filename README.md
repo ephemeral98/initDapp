@@ -99,15 +99,17 @@ const [handleClick, loadWrite] = useWrite(async () => {
 #### 读取时，借助useRead:
 
 ```js
-const [checkInfo, { datas: myBalan, loading }] = useRead(async () => {
+const [checkInfo, checkInfoEX] = useRead(async () => {
   const p1 = mintCont.getBalance();
   const p2 = mintCont.getBalance();
   const p3 = mintCont.getBalance();
 
   const result = await Promise.all([p1, p2, p3]);
-  return result; // 返回给myBalan，无需再借助外部变量
+  return result; // 返回给checkInfo，无需再借助外部变量
 });
 ```
+
+checkInfo 是返回的数据，checkInfoEX 是返回的数据工具：loading，refetch、status 等
 
 
 

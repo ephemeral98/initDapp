@@ -73,7 +73,7 @@ export async function bpWrite(successMsg, func, ...param) {
  * 处理读交易动作
  * @param {Function} func 交易函数
  * @param 交易参数
- * eg: bpWrite(this.mintObj.funcName, 参数1, 参数2)
+ * eg: bpRead(this.mintObj.funcName, 参数1, 参数2)
  */
 export async function bpRead(func, ...param: any[]): Promise<ITransStatus> {
   if (!func) {
@@ -88,7 +88,7 @@ export async function bpRead(func, ...param: any[]): Promise<ITransStatus> {
       };
     })
     .catch((err) => {
-      console.log(err);
+      console.log('bpRead...error...', err);
       return {
         status: false,
         datas: '0',

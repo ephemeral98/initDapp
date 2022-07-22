@@ -63,47 +63,6 @@ export function useWrite(func): [any, Ref<boolean>] {
   return [help as any, loading];
 }
 
-/**
- * 处理读的hook
- * @param func 回调函数
- * @returns
- * tips: 如果是在 script 中使用返回值:datas，记得要加上 .value
- * 
- * eg:
- *  const [checkInfo, { datas: myBalan, loading }] = useRead(async () => {
-      const p1 = lpContract.getBalance();
-      const p2 = lpContract.getBalance();
-      const result = await Promise.all([p1, p2]);
-      return result; // 此时 myBalan 会得到该返回值
-    }); 
- * 
- */
-export function useRead(func): [Function, { datas: Ref<any>; loading: Ref<boolean> }] {
-  const datas = ref(null); // 返回值
-  const loading = ref(false); // 加载状态
-
-  async function help(...params) {
-    // if (loading.value) return; // read不同于write,允许频繁调用
-
-    loading.value = true;
-    const resp = await func(...params);
-
-    if (resp?.status === false) {
-      // 返回报错信息
-      datas.value = resp?.message;
-      loading.value = false;
-      return datas.message;
-    } else {
-      // 请求成功，返回数据
-      datas.value = resp;
-      loading.value = false;
-      return resp;
-    }
-  }
-
-  return [help as any, { datas, loading }];
-}
-
 interface IUseRead {
   loading: boolean; // 加载中
   refetch: () => void; // 重新请求数据
@@ -116,7 +75,22 @@ interface IEx {
   watcher?: any; // 监听者 使用方式和 watch 一致
 }
 
-export function useLayRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead] {
+/**
+ * 处理读的hook
+ * @param func 回调函数
+ * @returns
+ * tips: 如果是在 script 中使用返回值:checkInfo，记得要加上 .value
+ * 
+ * eg:
+ *  const [checkInfo, checkInfoEX] = useRead(async () => {
+      const p1 = lpContract.getBalance();
+      const p2 = lpContract.getBalance();
+      const result = await Promise.all([p1, p2]);
+      return result; // 此时 checkInfo 会得到该返回值
+    }); 
+ * 
+ */
+export function useRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead] {
   const datas = ref({}); // 返回值
   const refetchStatus = ref(false);
   /**
@@ -161,14 +135,15 @@ export function useLayRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseR
   );
 
   // watcher
-  watch(ex?.watcher, () => help());
+  if (ex?.watcher) {
+    watch(ex.watcher, () => help());
+  }
 
   // 轮询请求
   let timer;
   if (ex?.interval) {
     clearInterval(timer);
     timer = setInterval(() => {
-      console.log('ex?.watcher...', ex?.watcher);
       help();
     }, ex.interval);
   }

@@ -51,6 +51,7 @@ export default class {
    */
   async getBalance(digi: number = 2) {
     const { status, datas } = (await bpRead(this.lpObj.balanceOf, this.defaultAccount)) || {};
+    if (!status) console.log('getBalance...error');
     return {
       balanceOrigin: status ? datas : '0',
       balanceShow: status ? bpFormat(datas, -digi, this.decimals) : '0',
@@ -63,7 +64,11 @@ export default class {
   async getTokens(): Promise<string[]> {
     const token0 = bpRead(this.lpObj.token0);
     const token1 = bpRead(this.lpObj.token1);
-    const [{ datas: tokenRes0 }, { datas: tokenRes1 }] = await Promise.all([token0, token1]);
+    const [{ datas: tokenRes0, status: sta1 }, { datas: tokenRes1, status: sta2 }] =
+      await Promise.all([token0, token1]);
+
+    if (!sta1 || !sta2) console.log('getTokens...error');
+
     return [tokenRes0, tokenRes1];
   }
 
@@ -73,6 +78,7 @@ export default class {
    */
   async getReserves(digi: number = 2) {
     const { status, datas } = await bpRead(this.lpObj.getReserves);
+    if (!status) console.log('getReserves...error');
     return [
       {
         revOrigin: status ? datas[0] : '0',
@@ -135,6 +141,7 @@ export default class {
     const balance = this.getBalance() || {};
     const [{ status, datas }, { balanceOrigin }] = (await Promise.all([allowance, balance])) as any;
     if (!status) {
+      console.log('allow...error');
       return false;
     }
     return bpGt(datas, balanceOrigin);

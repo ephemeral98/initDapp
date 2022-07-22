@@ -53,6 +53,7 @@ export default class {
    */
   async getBalance(digi: number = 2) {
     const { status, datas } = (await bpRead(this.nftObj.balanceOf, this.defaultAccount)) || {};
+    if (!status) console.log('getBalance...error...');
     return {
       balanceOrigin: status ? datas : '0',
       balanceShow: status ? bpFormat(datas, -digi, this.decimals) : '0',
@@ -65,6 +66,7 @@ export default class {
    */
   async isApprovedForAll(addr: string): Promise<boolean> {
     const { status, datas } = await bpRead(this.nftObj.isApprovedForAll, this.defaultAccount, addr);
+    if (!status) console.log('getBalance...error...');
     return status ? datas : false;
   }
 

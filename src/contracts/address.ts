@@ -5,7 +5,7 @@ let contractObj;
 if (isTest) {
   // 测试
   contractObj = {
-    LP_MINT_ADDR: '0xD49EB7bE5B0545AF51A27598D5C3e1509414Cc64', // lp(测试)
+    LP_MINT_ADDR: '0xD49EB7bE5B0545AF51A27598D5C3e1509414Cc64s', // lp(测试)
     MINT_ADDR: '0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21', // 挖矿(测试)
   };
 } else {

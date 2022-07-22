@@ -18,6 +18,7 @@ import TopBar from '@cps/TopBar';
 import { useAppStore, storeToRefs } from '@store/appStore';
 import { useTestStore } from '@store/testStore';
 import { checkRightChain } from '@/router/routerHelp';
+import destroyAllStore from '@/utils/destroyAllStore';
 
 import { ref, nextTick, watch } from 'vue';
 export default {
@@ -34,13 +35,6 @@ export default {
     }); */
 
     /**
-     * 清空一些store
-     */
-    function resetStore() {
-      testStore.$reset();
-    }
-
-    /**
      * 切链or切账号，更新数据
      */
     watch(
@@ -54,7 +48,7 @@ export default {
           checkRightChain();
 
           // 初始化相关store
-          resetStore();
+          destroyAllStore();
         }
 
         nextTick(() => {

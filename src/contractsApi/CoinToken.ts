@@ -50,7 +50,8 @@ export default class {
    * @returns {Number} 精度
    */
   async getDecimals() {
-    const { datas } = await bpRead(this.coinObj.decimals);
+    const { datas, status } = await bpRead(this.coinObj.decimals);
+    if (!status) console.log('getDecimals...error...');
     this.decimals = datas;
     return this.decimals || 18;
   }
@@ -64,6 +65,8 @@ export default class {
       this.decimals = await this.getDecimals();
     }
     const { status, datas } = (await bpRead(this.coinObj.balanceOf, this.defaultAccount)) || {};
+    if (!status) console.log('getBalance...error...');
+
     return {
       balanceOrigin: status ? datas : '0',
       balanceShow: status ? bpFormat(datas, -digi, this.decimals) : '0',
@@ -76,6 +79,7 @@ export default class {
    */
   async totalSupply(digi: number = 2) {
     const { status, datas } = await bpRead(this.coinObj.totalSupply);
+    if (!status) console.log('totalSupply...error...');
 
     return {
       totalSupplyOrigin: status ? datas : '0',
@@ -92,7 +96,9 @@ export default class {
     const allowance = bpRead(this.coinObj.allowance, this.defaultAccount, hoster);
     const balance = this.getBalance() || {};
     const [{ status, datas }, { balanceOrigin }] = (await Promise.all([allowance, balance])) as any;
+
     if (!status) {
+      console.log('allow...error...');
       return false;
     }
     return bpGt(datas, balanceOrigin);
@@ -145,6 +151,8 @@ export default class {
       recipient,
       cloneAmount
     );
+    if (!status) console.log('transferFrom...error...');
+
     return status;
   }
 }

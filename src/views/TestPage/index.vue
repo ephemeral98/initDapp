@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { LP_MINT_CONT } from '@/contracts/address';
-import { useRead, useWrite, useLayRead } from '@hooks/useAction';
+import { useWrite, useRead } from '@hooks/useAction';
 import LpToken from '@/contractsApi/LpToken';
 import { useTestStore } from '@store/testStore';
 import { reactive, ref, watchEffect } from 'vue';
@@ -11,16 +11,6 @@ const mintCont = new MintContractApi();
 
 const testStore = useTestStore();
 
-const [checkInfo, { datas: myBalan, loading }] = useRead(async () => {
-  const p1 = lpObj.getTokens();
-  const p2 = lpObj.getTokens();
-  const p3 = lpObj.getTokens();
-
-  const result = await Promise.all([p1, p2, p3]);
-  console.log('result...', result);
-  return result;
-});
-
 const a = ref(1);
 const aa = reactive({
   b: 1,
@@ -29,19 +19,15 @@ setInterval(() => {
   a.value++;
 }, 1100);
 
-const [data, ex] = useLayRead(async () => {
+const [fetchTokens, fetchTokensEX] = useRead(async () => {
   const p1 = lpObj.getTokens();
   const p2 = lpObj.getTokens();
   const p3 = lpObj.getTokens();
 
   const result: any = await Promise.all([p1, p2, p3]);
-  console.log('result...', result);
+  console.log('resultssss...', result);
   const aaa = 123;
   return aaa;
-});
-
-watchEffect(() => {
-  console.log('数据变化了。。。', myBalan);
 });
 
 /* async function init() {
@@ -69,8 +55,6 @@ const [handleClick, loadWrite] = useWrite(async () => {
 <template>
   <div class="test-page-wrap">
     <h2>this is a test page...</h2>
-    <div>loading: {{ loading }}</div>
-    <div v-loading="loading">myBalance: {{ myBalan }}</div>
 
     <button @click="handleAuth">写操作</button>
 
@@ -78,10 +62,10 @@ const [handleClick, loadWrite] = useWrite(async () => {
 
     <h3>这个是testStore: {{ testStore.test1 }}</h3>
 
-    <div>useLay数据：{{ data }}</div>
-    <div>读取中？ {{ ex.loading }}</div>
-    <div>读取结果？ {{ String(ex.status) }}</div>
-    <button @click="ex.refetch">重新读</button>
+    <div>useLay数据：{{ fetchTokens }}</div>
+    <div>读取中？ {{ fetchTokensEX.loading }}</div>
+    <div>读取结果？ {{ String(fetchTokensEX.status) }}</div>
+    <button @click="fetchTokensEX.refetch">重新读</button>
   </div>
 </template>
 
