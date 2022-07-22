@@ -3,7 +3,7 @@ import { LP_MINT_CONT } from '@/contracts/address';
 import { useRead, useWrite, useLayRead } from '@hooks/useAction';
 import LpToken from '@/contractsApi/LpToken';
 import { useTestStore } from '@store/testStore';
-import { watchEffect } from 'vue';
+import { reactive, ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import MintContractApi from '@/contractsApi/MintContractApi';
 const lpObj = new LpToken(LP_MINT_CONT);
@@ -21,6 +21,14 @@ const [checkInfo, { datas: myBalan, loading }] = useRead(async () => {
   return result;
 });
 
+const a = ref(1);
+const aa = reactive({
+  b: 1,
+});
+setInterval(() => {
+  a.value++;
+}, 1100);
+
 const [data, ex] = useLayRead(async () => {
   const p1 = lpObj.getTokens();
   const p2 = lpObj.getTokens();
@@ -28,7 +36,8 @@ const [data, ex] = useLayRead(async () => {
 
   const result: any = await Promise.all([p1, p2, p3]);
   console.log('result...', result);
-  return result;
+  const aaa = 123;
+  return aaa;
 });
 
 watchEffect(() => {
@@ -69,7 +78,9 @@ const [handleClick, loadWrite] = useWrite(async () => {
 
     <h3>这个是testStore: {{ testStore.test1 }}</h3>
 
+    <div>useLay数据：{{ data }}</div>
     <div>读取中？ {{ ex.loading }}</div>
+    <div>读取结果？ {{ String(ex.status) }}</div>
     <button @click="ex.refetch">重新读</button>
   </div>
 </template>

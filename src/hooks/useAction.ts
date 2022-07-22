@@ -1,5 +1,5 @@
 import { ElMessage } from 'element-plus';
-import { reactive, ref, Ref, watch } from 'vue';
+import { reactive, ReactiveEffect, ref, Ref, watch } from 'vue';
 import { useRouteItem } from '@/router/useRouterTools';
 import { useAppStore } from '@store/appStore';
 import i18n from '@/locales/i18n';
@@ -112,11 +112,11 @@ interface IUseRead {
 }
 
 interface IEx {
-  interval?: number;
-  watcher?: number;
+  interval?: number; // 轮询 间隔时间
+  watcher?: any; // 监听者 使用方式和 watch 一致
 }
 
-export function useLayRead(func: () => Promise<ITransStatus>, ex?: IEx): [Ref<any>, IUseRead] {
+export function useLayRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead] {
   const datas = ref({}); // 返回值
   const refetchStatus = ref(false);
   /**
@@ -142,20 +142,36 @@ export function useLayRead(func: () => Promise<ITransStatus>, ex?: IEx): [Ref<an
     if (resp?.status === false) {
       // 返回报错信息
       result.message = resp?.message;
+      result.status = false;
     } else {
       // 请求成功，返回数据
       datas.value = resp;
+      result.status = true;
     }
     result.loading = false;
-    result.status = resp.status;
   }
 
+  // refetch
   watch(
     () => refetchStatus.value,
-    async () => {
-      help();
+    () => help(),
+    {
+      immediate: true,
     }
   );
+
+  // watcher
+  watch(ex?.watcher, () => help());
+
+  // 轮询请求
+  let timer;
+  if (ex?.interval) {
+    clearInterval(timer);
+    timer = setInterval(() => {
+      console.log('ex?.watcher...', ex?.watcher);
+      help();
+    }, ex.interval);
+  }
 
   return [datas, result];
 }
