@@ -13,7 +13,6 @@ const $t = i18n.global.t;
 export default class {
   public coinObj; // 代币合约对象
   public decimals; // 精度
-  public balance; // 余额
   public defaultAccount; // 用户钱包地址
 
   /**

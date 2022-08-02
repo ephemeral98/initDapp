@@ -1,6 +1,7 @@
 export default {
   common: {
     1: 'Connect Wallet',
+    2: 'Loading',
   },
 
   topBar: {
@@ -18,6 +19,8 @@ export default {
     6: 'Incorrect network',
     7: 'Please connect your wallet.',
     8: 'Transaction has been submitted',
-    9: 'Coming soon'
+    9: 'Coming soon',
+    10: 'Switched',
+    11: 'Switching network failed, please switch manually'
   },
 };

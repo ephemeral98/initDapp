@@ -1,9 +1,10 @@
 /**
- * 销毁store目录，contractStore目录下 一些仓库
+ * 销毁store目录，contractStore目录下 一些仓库,
+ *  (只销毁默认导出的store) (只销毁以xxxStore命名的store)
  */
 export default function destroyAllStore() {
   // store目录
-  const storeFiles = require.context('../store', true, /\S*Store.js$/);
+  const storeFiles = require.context('../store', true, /\S*Store.(ts$|js$)/);
 
   /**
    * 帮助销毁

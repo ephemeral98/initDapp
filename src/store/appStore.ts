@@ -106,18 +106,17 @@ const useAppStore = defineStore('app', {
      * @returns
      */
     async switchChain(chainId: string) {
-      console.log('window000', window.ethereum?.rpc?.rpcUrl);
-
+      // 没有小狐狸插件，则跳去下载
       if (!window?.ethereum) {
-        ElMessage.error($t('msg.19'));
+        window.open('https://metamask.io/download/');
         return;
       }
 
+      // 没有钱包账号，表示没有登录
       if (!+this.defaultAccount) {
         ElMessage.error($t('msg.7'));
         // return;
       }
-      // window.alert(333);
 
       let ethereum = window?.ethereum;
       if (this.ethersObj.cachedProvider === 'bitkeep') {
@@ -158,7 +157,7 @@ const useAppStore = defineStore('app', {
                   window.ethereum.rpc.rpcUrl = chainData.rpcUrls;
                 }
                 // 确实成功切了链
-                ElMessage.success($t('msg.20'));
+                ElMessage.success($t('msg.10'));
 
                 clearInterval(this.chainTimer);
                 // 开锁，更新所有组件数据
@@ -169,7 +168,7 @@ const useAppStore = defineStore('app', {
             }, 500);
           });
       } catch (error) {
-        ElMessage.error($t('msg.19'));
+        ElMessage.error($t('msg.11'));
         console.log('切换链错误..', error);
       }
     },
@@ -265,16 +264,16 @@ const useAppStore = defineStore('app', {
       // 监听切账号
       window.ethereum?.on('accountsChanged', (accounts) => {
         console.log('账号切换了...', accounts);
-        this.lockUpdate = false;
         this.defaultAccount = accounts[0];
+        this.lockUpdate = false;
       });
 
       // 监听切链(TP不兼容)
       window.ethereum?.on('chainChanged', async (chainId) => {
         console.log('链切换了...', chainId);
-        this.lockUpdate = false;
         this.ethersObj.chainId = chainId;
         this.updateTarget = !this.updateTarget;
+        this.lockUpdate = false;
       });
 
       /* // 监听连接钱包

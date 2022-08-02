@@ -134,7 +134,7 @@ export function useStakeInp() {
  *
  * <!-- 确定按钮 -->
  * <button v-if="hasAllow" v-loading="loadingStake" @click="handleStake">
- *   {{ $t('common.6') }}
+ *   {{ $t('common.1') }}
  * </button>
  *
  * Vue script:

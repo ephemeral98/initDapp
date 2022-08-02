@@ -1,8 +1,7 @@
-import { ConnectionInfo } from 'ethers/lib/utils';
 import { isTest } from './address';
 
 // 支持的链
-export interface ISupportChains extends ConnectionInfo {
+export interface ISupportChains {
   chainId: string;
   chainName: string;
   nativeCurrency: {
@@ -25,7 +24,6 @@ export const supportedChains: ISupportChains[] = [
     },
     rpcUrls: ['https://bsc-dataseed1.ninicoin.io'],
     blockExplorerUrls: ['https://bscscan.com/'],
-    url: 'https://bsc-dataseed1.ninicoin.io',
   },
   {
     chainId: '0x61',
@@ -37,7 +35,6 @@ export const supportedChains: ISupportChains[] = [
     },
     rpcUrls: ['https://data-seed-prebsc-1-s3.binance.org:8545'],
     blockExplorerUrls: ['https://testnet.bscscan.com/'],
-    url: 'https://data-seed-prebsc-1-s3.binance.org:8545',
   },
   {
     chainId: '0x89',
@@ -49,7 +46,6 @@ export const supportedChains: ISupportChains[] = [
     },
     rpcUrls: ['https://polygon-rpc.com'], // https://rpc-mainnet.matic.network
     blockExplorerUrls: ['https://polygonscan.com/'],
-    url: '',
   },
 ];
 

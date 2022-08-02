@@ -16,7 +16,7 @@ export interface ITransStatus {
  * @param {*} successMsg 交易成功的消息
  * @param {Function} func 交易函数
  * @param 交易参数
- * eg: bpWrite($t('msg.25'), this.mintObj.funcName, 参数1, 参数2)
+ * eg: bpWrite($t('msg.1'), this.mintObj.funcName, 参数1, 参数2)
  */
 export async function bpWrite(successMsg, func, ...param) {
   console.log('...param', ...param);
