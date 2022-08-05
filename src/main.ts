@@ -25,6 +25,8 @@ import SwiperCore, { Navigation, Pagination, Autoplay, EffectCoverflow } from 's
 import 'swiper/swiper.scss';
 import BpSwiper from '@cps/BpSwiper';
 
+import { useAppStore } from './store/appStore';
+import { handleThrottle } from './utils/tools';
 
 SwiperCore.use([Navigation, Pagination, Autoplay, EffectCoverflow]);
 const pinia = createPinia();
@@ -40,3 +42,11 @@ createApp(App)
   .use(BpSwiper)
   .use(BpButton)
   .mount('#app');
+
+// 获取当前设备尺寸
+const appStore = useAppStore();
+appStore.getCurDevice();
+// 添加监听屏幕变化
+window.onresize = handleThrottle(() => {
+  appStore.getCurDevice();
+});

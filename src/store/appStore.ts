@@ -112,12 +112,6 @@ const useAppStore = defineStore('app', {
         return;
       }
 
-      // 没有钱包账号，表示没有登录
-      if (!+this.defaultAccount) {
-        ElMessage.error($t('msg.7'));
-        // return;
-      }
-
       let ethereum = window?.ethereum;
       if (this.ethersObj.cachedProvider === 'bitkeep') {
         ethereum = window?.bitkeep?.ethereum;

@@ -11,6 +11,11 @@ const slides = reactive({
   img2: null,
 });
 
+// 覆盖配置
+const swiper_options = computed(() => ({
+  slidesPerView: 3,
+}));
+
 <BpSwiper>
     <swiper-slide :swiperRef="slides.img1" v-for="(nft, inx) in nftList" :key="inx">
       <div class="item-container">文案...</div>

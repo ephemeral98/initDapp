@@ -49,7 +49,8 @@ export async function bpWrite(successMsg, func, ...param) {
     })
     .catch((err) => {
       console.log(err);
-      let info = err?.['reason'] || err?.data?.message || err?.message;
+      let info = err?.['reason'] || err?.data?.message || err?.message || err;
+
       // 点击了拒绝信息
       if (info?.includes?.('User denied transaction')) {
         info = 'User denied transaction signature.';
