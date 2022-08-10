@@ -27,16 +27,28 @@ export default defineConfig({
       '@bpMath': path.resolve(__dirname, './src/utils/bpMath'),
     },
   },
-  server: {
-    port: 3100,
-    host: '0.0.0.0',
-  },
   plugins: [vue(), viteCommonjs(), ViteRequireContext(), requireTransform({})],
 
   build: {
     rollupOptions: {
       // 确保外部化处理那些你不想打包进库的依赖
       external: ['parallax-js'],
+    },
+  },
+
+  server: {
+    port: 3100,
+    // 是否自动在浏览器打开
+    open: true,
+    // 是否开启 https
+    https: false,
+    host: '0.0.0.0',
+    proxy: {
+      '/api': {
+        target: '',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '/'),
+      },
     },
   },
 });
