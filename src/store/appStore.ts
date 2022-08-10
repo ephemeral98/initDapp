@@ -66,7 +66,6 @@ const useAppStore = defineStore('app', {
 
       // 获取链id
       this.ethersObj.chainId = toRaw(provider).provider.chainId;
-
       // 添加一系列钱包监听
       this.subscribeProvider(provider);
     },
@@ -123,8 +122,13 @@ const useAppStore = defineStore('app', {
 
         // 记录旧的chainId
         const oldChainId = this.ethersObj.chainId;
+        var hex_chainId = ethers.utils.hexValue(chainId);
+        // 用户有链的id就直接切换
         await providerWrap.provider
-          .request({ method: 'wallet_addEthereumChain', params: [chainData] })
+          .request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: hex_chainId }],
+          })
           .then(async () => {
             if (window.ethereum?.isTokenPocket) {
               // TP钱包才给 loading提示，因为PC点了拒绝，也会到这里。。
@@ -133,12 +137,14 @@ const useAppStore = defineStore('app', {
 
             clearInterval(this.chainTimer);
             this.chainTimer = setInterval(() => {
+              // console.log('new ethers.providers...', ethers.providers.Web3Provider);
               const newProviderWrap: any = new ethers.providers.Web3Provider(
                 window?.ethereum,
                 'any'
               );
               // 获取新的chainId
-              const newChainId = newProviderWrap.provider?.chainId;
+              const newChainId = newProviderWrap?.provider?.chainId;
+
               // 根据判断俩chainId，判断是否成功切了链
               if (+newChainId !== +oldChainId) {
                 // console.log('切完了链', window.ethereum);

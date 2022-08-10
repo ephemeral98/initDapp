@@ -50,6 +50,8 @@ const [handleClick, loadWrite] = useWrite(async () => {
   console.log('这是写啊');
   await lpObj.auth('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21');
 });
+
+const tempImg = require('@img/holder.png');
 </script>
 
 <template>
@@ -57,7 +59,8 @@ const [handleClick, loadWrite] = useWrite(async () => {
     <h2>this is a test page...</h2>
 
     <button @click="handleAuth">写操作</button>
-
+    <img :src="tempImg" alt="" />
+    <img src="@img/holder.png" alt="" />
     <BpButton class="click-box" @click="handleClick" v-loading="loadWrite">bp写操作</BpButton>
 
     <h3>这个是testStore: {{ testStore.test1 }}</h3>

@@ -24,7 +24,6 @@ import BpButton from '@cps/BpButton';
 import SwiperCore, { Navigation, Pagination, Autoplay, EffectCoverflow } from 'swiper';
 import 'swiper/swiper.scss';
 import BpSwiper from '@cps/BpSwiper';
-
 import { useAppStore } from './store/appStore';
 import { handleThrottle } from './utils/tools';
 

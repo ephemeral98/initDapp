@@ -25,7 +25,6 @@ export function checkRightChain(to, from) {
   // 如果链不对，弹窗切链 or 提示
   if (!inclu && targetRoute.meta?.needChains !== undefined && targetRoute.meta?.needTips) {
     ElMessage.error($t('msg.6'));
-
     nextTick(() => {
       appStore.switchChain(targetRoute.meta?.needChains[0]);
     });

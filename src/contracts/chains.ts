@@ -15,6 +15,17 @@ export interface ISupportChains {
 
 export const supportedChains: ISupportChains[] = [
   {
+    chainId: '0x1',
+    chainName: 'Binance Smart Chain',
+    nativeCurrency: {
+      name: 'BNB',
+      symbol: 'BNB',
+      decimals: 18,
+    },
+    rpcUrls: ['https://bsc-dataseed1.ninicoin.io'],
+    blockExplorerUrls: ['https://bscscan.com/'],
+  },
+  {
     chainId: '0x38',
     chainName: 'Binance Smart Chain',
     nativeCurrency: {

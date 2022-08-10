@@ -17,7 +17,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "testPage" */ '@/views/TestPage/index.vue'),
     meta: {
       requireAccount: true, // 依赖钱包
-      needChains: getCurNeedChain(['bsc']), // 依赖的链
+      needChains: ['0x61'], // 依赖的链
       needTips: true, // 链不对的时候，需不需要提示
     },
   },
@@ -27,7 +27,9 @@ const routes: Array<RouteRecordRaw> = [
     name: 'home',
     component: () => import(/* webpackChunkName: "home" */ '@/views/Home/index.vue'),
     meta: {
-      requireAccount: false,
+      requireAccount: true,
+      needChains: ['0x61'], // 依赖的链
+      needTips: true, // 链不对的时候，需不需要提示
     },
   },
 ];

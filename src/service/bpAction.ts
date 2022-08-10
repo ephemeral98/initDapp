@@ -48,8 +48,13 @@ export async function bpWrite(successMsg, func, ...param) {
       };
     })
     .catch((err) => {
-      console.log(err);
-      let info = err?.['reason'] || err?.data?.message || err?.message || err;
+      console.log(err?.data?.message);
+      let info = err?.['reason'] || err?.data?.message || err?.message;
+
+      // 兼容tp钱包
+      if (window.ethereum?.isTokenPocket) {
+        info = err;
+      }
 
       // 点击了拒绝信息
       if (info?.includes?.('User denied transaction')) {
@@ -57,7 +62,7 @@ export async function bpWrite(successMsg, func, ...param) {
       }
 
       // 避免信息太长看懵用户
-      info = String(info).length > 100 ? 'error' : info;
+      info = String(info).length > 200 ? 'error' : info;
       ElMessage({
         type: 'error',
         message: info,

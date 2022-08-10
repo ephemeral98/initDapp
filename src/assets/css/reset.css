@@ -31,7 +31,7 @@ h5 {
 
 body {
   background-color: #ffffff;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: fang;
   font-size: 14px;
   text-align: left;
 }
@@ -198,12 +198,7 @@ body {
   background-color: rgba(63, 76, 96, 1);
 }
 
-#app {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
 input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button { 
-    -webkit-appearance: none; 
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }

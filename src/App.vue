@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import TopBar from '@cps/TopBar';
+import TopBar from '@cps/TopBar/index.vue';
 import { useAppStore, storeToRefs } from '@store/appStore';
 import { useTestStore } from '@store/testStore';
 import { checkRightChain } from '@/router/routerHelp';
@@ -64,8 +64,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.mainContainer {
-  margin-top: $mobTopBarHeight;
-}
-</style>
+<style lang="scss"></style>

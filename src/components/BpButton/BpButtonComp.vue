@@ -35,6 +35,9 @@ async function handleSwitchChain() {
 </template>
 
 <style lang="scss" scoped>
+button {
+  display: block;
+}
 .disableBtn {
   background-color: #c9c9c9 !important;
 }

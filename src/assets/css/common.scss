@@ -15,8 +15,11 @@
   background-color: rgba(225, 225, 225, 0.4) !important;
 }
 
-
 // vant
+.van-popup {
+  border-radius: 0.16rem;
+  background: transparent !important;
+}
 
 // 通用弹窗
 .em-pop-wrap {
@@ -36,4 +39,8 @@
 .empty {
   text-align: center;
   margin: 0.1rem 0;
+}
+
+.cn-font {
+  font-family: fang;
 }

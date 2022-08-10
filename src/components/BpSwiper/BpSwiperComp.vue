@@ -19,7 +19,7 @@ const swiper_options: any = computed(() => {
   return {
     autoplay: {
       disableOnInteraction: true, // 鼠标滑动后继续自动播放
-      delay: 4000, // 4秒切换一次
+      delay: 3000, // 4秒切换一次
     },
     speed: 500, //切换过渡速度
     loop: true,

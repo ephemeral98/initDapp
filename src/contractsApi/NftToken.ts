@@ -8,6 +8,7 @@ import { bpRead, bpWrite } from '@/service/bpAction';
 import { bpFormat } from '@/utils/bpMath';
 import useDefaultRpc from './useDefaultRpc';
 import { ethers } from 'ethers';
+import { $GET } from '@/service/request';
 
 const $t = i18n.global.t;
 
@@ -93,5 +94,25 @@ export default class {
       tokenId
     );
     return status;
+  }
+
+  /**
+   * 查询nft
+   */
+  async tokenURI(ids: number[]) {
+    const resp = ids.map(async (id) => {
+      const { datas } = await bpRead(this.nftObj.tokenURI, id);
+      return datas;
+    });
+
+    const res = await Promise.all(resp);
+
+    const metaData = res.map(async (url) => {
+      const resp = await $GET(url);
+      return resp;
+    });
+
+    const metaDataRes = await Promise.all(metaData);
+    return metaDataRes?.map?.((item: any) => item.image);
   }
 }
