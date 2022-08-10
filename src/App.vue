@@ -16,7 +16,6 @@
 <script>
 import TopBar from '@cps/TopBar/index.vue';
 import { useAppStore, storeToRefs } from '@store/appStore';
-import { useTestStore } from '@store/testStore';
 import { checkRightChain } from '@/router/routerHelp';
 import destroyAllStore from '@/utils/destroyAllStore';
 
@@ -27,7 +26,6 @@ export default {
   },
   setup() {
     const appStore = useAppStore();
-    const testStore = useTestStore();
     const update = ref(true); // 将组件销毁再重建
 
     /* appStore.$subscribe((mutation, state) => {

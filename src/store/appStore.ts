@@ -40,7 +40,7 @@ const useAppStore = defineStore('app', {
     /**
      * 连接小狐狸钱包
      */
-    async linkWallet() {
+    async linkWallet(): Promise<void | boolean> {
       // 已经连接了钱包
       if (this.defaultAccount) {
         return true;

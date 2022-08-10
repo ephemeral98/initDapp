@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { viteCommonjs } from '@originjs/vite-plugin-commonjs';
+import ViteRequireContext from '@originjs/vite-plugin-require-context';
 import requireTransform from 'vite-plugin-require-transform';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
@@ -30,7 +31,7 @@ export default defineConfig({
     port: 3100,
     host: '0.0.0.0',
   },
-  plugins: [vue(), viteCommonjs(), requireTransform({})],
+  plugins: [vue(), viteCommonjs(), ViteRequireContext(), requireTransform({})],
 
   build: {
     rollupOptions: {

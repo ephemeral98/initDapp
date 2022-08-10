@@ -13,4 +13,4 @@ const useTestStore = defineStore('testStore', {
   getters: {},
 });
 
-export { storeToRefs, useTestStore };
+export default useTestStore;

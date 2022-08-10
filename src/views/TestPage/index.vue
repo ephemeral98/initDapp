@@ -2,7 +2,7 @@
 import { LP_MINT_CONT } from '@/contracts/address';
 import { useWrite, useRead } from '@hooks/useAction';
 import LpToken from '@/contractsApi/LpToken';
-import { useTestStore } from '@store/testStore';
+import useTestStore from '@store/testStore';
 import { reactive, ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import MintContractApi from '@/contractsApi/MintContractApi';
