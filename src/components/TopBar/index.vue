@@ -3,6 +3,7 @@ import { getCurrentInstance, reactive } from 'vue';
 import { useAppStore } from '@store/appStore';
 import { computed, ref } from '@vue/reactivity';
 import { plusXing } from '@/utils/tools';
+import Menu from './Menu.vue';
 import MintContractApi from '@/contractsApi/MintContractApi';
 
 const gThis = getCurrentInstance().appContext.config.globalProperties;
@@ -15,13 +16,13 @@ console.log('mintObj...', mintObj);
 const langList = reactive([
   {
     id: 1,
-    name: '中',
+    name: '中文',
     target: 'cn',
     active: false,
   },
   {
     id: 2,
-    name: 'En',
+    name: 'English',
     target: 'en',
     active: true,
   },
@@ -68,38 +69,58 @@ async function handleLink() {
 </script>
 
 <template>
-  <div class="top-bar-wrap">顶部栏</div>
+  <div class="top-bar-wrap">
+    <!-- 控制菜单显示和隐藏 按钮 -->
+    <div :class="['toggle-container']" @click="handleMenu">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+
+    <div>
+      <div>这是顶部栏 《{{ $t('msg.1') }}》多语言</div>
+
+      <!-- 已链接钱包展示钱包地址 -->
+      <div v-if="appStore.defaultAccount" class="account-address">
+        {{ plusXing(appStore.defaultAccount, 4, 4) }}
+      </div>
+
+      <!-- 连接钱包 -->
+      <button v-loading="loadLink" v-else class="link-btn" @click="handleLink">
+        {{ $t('common.1') }}
+      </button>
+
+      <!-- 选择语言 -->
+      <el-dropdown trigger="click" @command="pickLang">
+        <div class="lang-container">
+          <span>{{ curLang }}</span>
+        </div>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item :command="lang" v-for="lang in langList" :key="lang.id">{{
+              lang.name
+            }}</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+    </div>
+
+    <!-- 移动端菜单 -->
+    <Menu :isShowMenu="isOpenMenu" @hide="isOpenMenu = false" />
+  </div>
 </template>
 
 <style lang="scss" scoped>
 .top-bar-wrap {
   width: 100%;
   height: $mobTopBarHeight;
+  background-color: skyblue;
   @include flexPos(space-between);
   padding: 0 0.15rem;
-  position: absolute;
-  left: 0;
-  top: 0;
 
   .lang-container {
     cursor: pointer;
-    @include flexPos(center);
-    font-size: 0.28rem;
-    color: #fff;
-    margin-left: 0.4rem;
-
-    .icon-lang {
-      width: 0.41rem;
-      margin-right: 0.1rem;
-    }
   }
-}
-
-.tools-wrap {
-  position: absolute;
-  top: 0.48rem;
-  @include -right(0.5rem, 1rem, 3.72rem);
-  @include flexPos(center);
 }
 
 .toggle-container {
@@ -117,18 +138,16 @@ async function handleLink() {
     background-color: #000;
     transform-origin: center;
   }
-}
 
-.account-box {
-  padding: 0.08rem 0.24rem;
-  @include flexPos(center);
-  color: #833200;
-  background-color: #fff;
-  border-radius: 1rem;
+  /* &.close {
+    $y: calc($boxHeight / 2 - $barHeight / 2);
+    .bar:nth-child(1) {
+      transform: translateY($y) rotate(45deg);
+    }
 
-  .icon-wallet {
-    margin-right: 0.1rem;
-    width: 0.24rem;
-  }
+    .bar:nth-child(2) {
+      transform: translateY(-$y) rotate(-45deg);
+    }
+  } */
 }
 </style>

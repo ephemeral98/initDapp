@@ -73,6 +73,9 @@ const tempImg = require('@img/holder.png');
 </template>
 
 <style lang="scss" scoped>
+img {
+  width: 1rem;
+}
 .test-page-wrap {
   .click-box {
     width: 150px;
