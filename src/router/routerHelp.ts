@@ -8,7 +8,7 @@ import { nextTick } from 'vue';
 /**
  * 检查是否账户或者链正确
  */
-export function checkRightChain(to, from) {
+export function checkRightChain(to?, from?) {
   const curRouteItem = useRouteItem();
   const targetRoute = to || curRouteItem;
 
@@ -24,8 +24,9 @@ export function checkRightChain(to, from) {
 
   // 如果链不对，弹窗切链 or 提示
   if (!inclu && targetRoute.meta?.needChains !== undefined && targetRoute.meta?.needTips) {
-    ElMessage.error($t('msg.6'));
     nextTick(() => {
+      // 这里就不弹出提示了，不然会跳出很多个message，因为有3处执行了，由于执行的时机不同。如果实在需要提示，可以在watchAccount那传入一个参数作为判断，
+      // ElMessage.error($t('msg.6'));
       appStore.switchChain(targetRoute.meta?.needChains[0]);
     });
   }

@@ -40,10 +40,12 @@ export default {
       () => {
         if (!appStore.lockUpdate) {
           // 更新所有页面内所有组件
-          update.value = !update.value;
+          // update.value = !update.value;
 
           // 更新当前链对不对
-          checkRightChain();
+          if (appStore.ethersObj.chainId) {
+            checkRightChain();
+          }
 
           // 初始化相关store
           destroyAllStore();

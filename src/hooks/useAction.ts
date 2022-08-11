@@ -4,6 +4,7 @@ import { useRouteItem } from '@/router/useRouterTools';
 import { useAppStore } from '@store/appStore';
 import i18n from '@/locales/i18n';
 import { ITransStatus } from '@/service/bpAction';
+import { checkRightChain } from '@/router/routerHelp';
 const $t = i18n.global.t;
 
 /**
@@ -15,7 +16,7 @@ const $t = i18n.global.t;
  *    const resp = await boxObj.directDepositIt(1);
  *  });
  */
-export function useWrite(func): [any, Ref<boolean>] {
+export function useWrite(func, ...params): [any, Ref<boolean>] {
   const route = useRouteItem();
   const appStore = useAppStore();
   const loading = ref(false);
@@ -91,6 +92,8 @@ interface IEx {
  * 
  */
 export function useRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead] {
+  const appStore = useAppStore();
+
   const datas = ref({}); // 返回值
   const refetchStatus = ref(false);
   /**
@@ -127,7 +130,7 @@ export function useRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead
 
   // refetch
   watch(
-    () => refetchStatus.value,
+    () => [refetchStatus.value, appStore.defaultAccount, appStore.ethersObj.chainId],
     () => help(),
     {
       immediate: true,
@@ -149,4 +152,20 @@ export function useRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead
   }
 
   return [datas, result];
+}
+
+/**
+ * 监听账号，监听切链
+ */
+export function watchAccount(func: () => void): void {
+  const appStore = useAppStore();
+  watch(
+    () => [appStore.defaultAccount, appStore.ethersObj.chainId],
+    (newVal, oldVal) => {
+      if (!appStore.defaultAccount || !appStore.ethersObj.chainId) return;
+      checkRightChain();
+
+      func();
+    }
+  );
 }

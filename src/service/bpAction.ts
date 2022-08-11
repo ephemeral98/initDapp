@@ -3,6 +3,7 @@
 
 import { ElMessage } from 'element-plus';
 import i18n from '@/locales/i18n';
+import { useAppStore } from '@/store/appStore';
 const $t = i18n.global.t;
 
 export interface ITransStatus {
@@ -48,7 +49,7 @@ export async function bpWrite(successMsg, func, ...param) {
       };
     })
     .catch((err) => {
-      console.log(err?.data?.message);
+      console.log('bpWrite报错：', err);
       let info = err?.['reason'] || err?.data?.message || err?.message;
 
       // 兼容tp钱包

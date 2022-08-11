@@ -6,6 +6,31 @@ import useTestStore from '@store/testStore';
 import { reactive, ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import MintContractApi from '@/contractsApi/MintContractApi';
+import CoinToken from '@/contractsApi/useCoinToken';
+import { EMET_TOKEN_CONT } from '@/contracts/address';
+
+console.log('渲染了页面。。');
+const { auth, allow, getBalance, balanceObj, hasAllow, created } = CoinToken({
+  address: EMET_TOKEN_CONT.address,
+  abi: EMET_TOKEN_CONT.abi,
+});
+
+// getBalance();
+const [datas, dataEx] = useRead(
+  async () => {
+    const resp = await Promise.all([
+      allow('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21'),
+      getBalance(),
+    ]);
+    console.log('resp...', resp);
+    return resp[1];
+  },
+  { watcher: created }
+);
+
+// watch(getBalance());
+// setInterval(getBalance, 3000);
+
 const lpObj = new LpToken(LP_MINT_CONT);
 const mintCont = new MintContractApi();
 
@@ -42,13 +67,10 @@ const [fetchTokens, fetchTokensEX] = useRead(async () => {
 const route = useRoute();
 console.log('route222....', route);
 
-const [handleAuth] = useWrite(async () => {
-  lpObj.auth('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21');
-});
-
 const [handleClick, loadWrite] = useWrite(async () => {
   console.log('这是写啊');
-  await lpObj.auth('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21');
+  // await lpObj.auth('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21');
+  await auth('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21');
 });
 
 const tempImg = require('@img/holder.png');
@@ -58,7 +80,6 @@ const tempImg = require('@img/holder.png');
   <div class="test-page-wrap">
     <h2>this is a test page...</h2>
 
-    <button @click="handleAuth">写操作</button>
     <img :src="tempImg" alt="" />
     <img src="@img/holder.png" alt="" />
     <BpButton class="click-box" @click="handleClick" v-loading="loadWrite">bp写操作</BpButton>
@@ -69,6 +90,12 @@ const tempImg = require('@img/holder.png');
     <div>读取中？ {{ fetchTokensEX.loading }}</div>
     <div>读取结果？ {{ String(fetchTokensEX.status) }}</div>
     <button @click="fetchTokensEX.refetch">重新读</button>
+
+    <hr />
+
+    <div>{{ dataEx.loading }}</div>
+    <div>余额：{{ datas }}</div>
+    <div>授权了吗？{{ hasAllow }}</div>
   </div>
 </template>
 
