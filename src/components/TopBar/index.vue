@@ -4,13 +4,9 @@ import { useAppStore } from '@store/appStore';
 import { computed, ref } from '@vue/reactivity';
 import { plusXing } from '@/utils/tools';
 import Menu from './Menu.vue';
-import MintContractApi from '@/contractsApi/MintContractApi';
 
 const gThis = getCurrentInstance().appContext.config.globalProperties;
 const appStore = useAppStore();
-
-const mintObj = new MintContractApi();
-console.log('mintObj...', mintObj);
 
 // 语言栏
 const langList = reactive([

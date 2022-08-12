@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { LP_MINT_CONT } from '@/contracts/address';
 import { useWrite, useRead } from '@hooks/useAction';
-import LpToken from '@/contractsApi/LpToken';
 import useTestStore from '@store/testStore';
 import { reactive, ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
-import MintContractApi from '@/contractsApi/MintContractApi';
+import MintContractApi from '@/contractsApi/useMintContractApi';
 import CoinToken from '@/contractsApi/useCoinToken';
 import { EMET_TOKEN_CONT } from '@/contracts/address';
+import TestMintContract from './TestMintContract.vue';
 
 console.log('渲染了页面。。');
 const { auth, allow, getBalance, balanceObj, hasAllow, created } = CoinToken({
@@ -31,8 +31,7 @@ const [datas, dataEx] = useRead(
 // watch(getBalance());
 // setInterval(getBalance, 3000);
 
-const lpObj = new LpToken(LP_MINT_CONT);
-const mintCont = new MintContractApi();
+// const mintCont = new MintContractApi();
 
 const testStore = useTestStore();
 
@@ -44,16 +43,7 @@ setInterval(() => {
   a.value++;
 }, 1100);
 
-const [fetchTokens, fetchTokensEX] = useRead(async () => {
-  const p1 = lpObj.getTokens();
-  const p2 = lpObj.getTokens();
-  const p3 = lpObj.getTokens();
-
-  const result: any = await Promise.all([p1, p2, p3]);
-  console.log('resultssss...', result);
-  const aaa = 123;
-  return aaa;
-});
+const [fetchTokens, fetchTokensEX] = useRead(async () => {});
 
 /* async function init() {
   const resp1 = await checkInfo();
@@ -96,6 +86,8 @@ const tempImg = require('@img/holder.png');
     <div>{{ dataEx.loading }}</div>
     <div>余额：{{ datas }}</div>
     <div>授权了吗？{{ hasAllow }}</div>
+
+    <TestMintContract />
   </div>
 </template>
 

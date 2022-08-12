@@ -16,9 +16,9 @@ const $t = i18n.global.t;
 
 export default (addressObj: IAddressObj) => {
   const appStore = useAppStore();
-  const created = ref(false); // 合约对象是否构建完
-  const coinObj = ref<any>({});
-  const decimals = ref<number>(18);
+  const created = ref<boolean>(false); // 合约对象是否构建完
+  const coinObj = ref<any>({}); // 代币合约对象
+  const decimals = ref<number>(18); // 代币精度
 
   /**
    * 构建代币对象
@@ -45,16 +45,14 @@ export default (addressObj: IAddressObj) => {
     createContract(addressObj);
   });
 
-  // 代币精度
-  const decimalsObj = ref<number>(18);
   /**
    * 获取该代币精度
    */
   async function getDecimals(): Promise<Ref> {
     const { datas, status } = await bpRead(coinObj.value.decimals);
     if (!status) console.log('getDecimals...error...');
-    decimalsObj.value = datas || 18;
-    return decimalsObj;
+    decimals.value = datas || 18;
+    return decimals;
   }
 
   // 代币余额
@@ -177,7 +175,6 @@ export default (addressObj: IAddressObj) => {
 
   return {
     created,
-    decimalsObj,
     balanceObj,
     totalSupplyObj,
     hasAllow,
