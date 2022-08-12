@@ -25,7 +25,10 @@ export async function bpWrite(successMsg, func, ...param) {
   if (!func) {
     console.log('没有这个 write 方法！！，请查询方法名是否正确！');
     ElMessage.error('error');
-    return;
+    return {
+      status: false,
+      datas: '0',
+    };
   }
 
   return func?.(...param)

@@ -40,6 +40,7 @@ export default (addressObj: IAddressObj) => {
   }
   createContract(addressObj);
 
+  // 添加钱包监听
   watchAccount(() => {
     createContract(addressObj);
   });
