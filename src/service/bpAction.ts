@@ -87,7 +87,6 @@ export async function bpWrite(successMsg, func, ...param) {
  */
 export async function bpRead(func, ...param: any[]): Promise<ITransStatus> {
   if (!func) {
-    console.log('没有这个 read 方法！！，请查询方法名是否正确！');
     return;
   }
   return await func?.(...param)
@@ -98,7 +97,10 @@ export async function bpRead(func, ...param: any[]): Promise<ITransStatus> {
       };
     })
     .catch((err) => {
-      console.log('bpRead...error...', err);
+      if (useAppStore().defaultAccount) {
+        // 没有连好小狐狸，报错了不提示
+        console.log('bpRead...error...');
+      }
       return {
         status: false,
         datas: '0',

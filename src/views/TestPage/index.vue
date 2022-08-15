@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { LP_MINT_CONT } from '@/contracts/address';
 import { useWrite, useRead } from '@hooks/useAction';
 import useTestStore from '@store/testStore';
-import { reactive, ref, watchEffect } from 'vue';
+// import { reactive, ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import MintContractApi from '@/contractsApi/useMintContractApi';
 import CoinToken from '@/contractsApi/useCoinToken';
 import { EMET_TOKEN_CONT } from '@/contracts/address';
 import TestMintContract from './TestMintContract.vue';
+import TestLp from './TestLp.vue';
 
 console.log('渲染了页面。。');
-const { auth, allow, getBalance, balanceObj, hasAllow, created } = CoinToken({
+const { auth, allow, getBalance, balanceObj, hasAllow, created, totalSupply } = CoinToken({
   address: EMET_TOKEN_CONT.address,
   abi: EMET_TOKEN_CONT.abi,
 });
@@ -27,6 +27,10 @@ const [datas, dataEx] = useRead(
   },
   { watcher: created }
 );
+
+const [decimal, dataDecimalEx] = useRead(async () => {
+  return await totalSupply();
+});
 
 // watch(getBalance());
 // setInterval(getBalance, 3000);
@@ -64,6 +68,17 @@ const [handleClick, loadWrite] = useWrite(async () => {
 });
 
 const tempImg = require('@img/holder.png');
+
+const inpValue = ref('2222');
+
+function handleAdd() {
+  inpValue.value++;
+}
+
+function tempInp(e) {
+  console.log('eeee', e.target.value);
+  e.target.value = e.target.value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1');
+}
 </script>
 
 <template>
@@ -87,7 +102,30 @@ const tempImg = require('@img/holder.png');
     <div>余额：{{ datas }}</div>
     <div>授权了吗？{{ hasAllow }}</div>
 
+    <div>decimals？？？: {{ decimal }}</div>
+
     <TestMintContract />
+
+    <TestLp />
+    <!-- <div>{{ balanceObj }}</div> -->
+
+    <el-button>自动导入element按钮</el-button>
+
+    <!-- <input type="text" maxlength="5"> -->
+    <bp-input type="double" :max="666" v-model:value="inpValue"></bp-input>
+    {{ inpValue }}
+
+    <bp-add v-model:value="inpValue" :max="333" />
+    <bp-sub v-model:value="inpValue" :min="-2" />
+    {{ inpValue }}
+
+    aa<input type="text" @keyup="tempInp" />
+
+    <!-- <bp-form>
+      <bp-input></bp-input>
+      <add-btn></add-btn>
+      <minu-btn></minu-btn>
+    </bp-form> -->
   </div>
 </template>
 
@@ -96,6 +134,10 @@ img {
   width: 1rem;
 }
 .test-page-wrap {
+  div {
+    margin: 0.3rem 0;
+  }
+
   .click-box {
     width: 150px;
     height: 150px;

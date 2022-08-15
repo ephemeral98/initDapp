@@ -10,7 +10,6 @@ import { bpRead, bpWrite } from '@/service/bpAction';
 import useDefaultRpc from './useDefaultRpc';
 import { reactive, Ref, ref } from 'vue';
 import { watchAccount } from '@/hooks/useAction';
-import { sleep } from '@/utils/tools';
 
 const $t = i18n.global.t;
 
@@ -27,14 +26,9 @@ export default (addressObj: IAddressObj) => {
    * @returns 代币的信息
    */
   async function createContract(addressObj) {
-    await sleep(3000);
-
     const signer = useDefaultRpc();
-    try {
-      coinObj.value = new ethers.Contract(addressObj.address, addressObj.abi, signer);
-    } catch (error) {
-      console.log('构建CoinToken合约对象失败...');
-    }
+    coinObj.value = new ethers.Contract(addressObj.address, addressObj.abi, signer);
+
     created.value = true;
     return coinObj;
   }

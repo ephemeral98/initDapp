@@ -19,6 +19,7 @@ import 'vant/lib/popup/style';
 
 // 一些全局组件
 import BpButton from '@cps/BpButton';
+import BpForm from '@cps/BpForm';
 
 // swiper ui
 import SwiperCore, { Navigation, Pagination, Autoplay, EffectCoverflow } from 'swiper';
@@ -30,7 +31,8 @@ import { handleThrottle } from './utils/tools';
 SwiperCore.use([Navigation, Pagination, Autoplay, EffectCoverflow]);
 const pinia = createPinia();
 
-createApp(App)
+const vueApp = createApp(App);
+vueApp
   .use(router)
   .use(VueI18n)
   .use(animate)
@@ -39,6 +41,7 @@ createApp(App)
   .use(ElLoading)
   .use(ElDropdown)
   .use(BpSwiper)
+  .use(BpForm)
   .use(BpButton)
   .mount('#app');
 

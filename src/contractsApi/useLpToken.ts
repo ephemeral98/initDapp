@@ -10,7 +10,6 @@ import { bpRead, bpWrite } from '@/service/bpAction';
 import useDefaultRpc from './useDefaultRpc';
 import { reactive, Ref, ref } from 'vue';
 import { watchAccount } from '@/hooks/useAction';
-import { sleep } from '@/utils/tools';
 
 const $t = i18n.global.t;
 
@@ -26,12 +25,11 @@ export default (addressObj: IAddressObj) => {
    * 例如 去旁边的 address.js 里拿 BVG_TOKEN_CONT 传入
    * @returns 代币的信息
    */
-  async function createContract(addressObj) {
-    await sleep(3000);
-
+  function createContract(addressObj) {
     const signer = useDefaultRpc();
     try {
       lpObj.value = new ethers.Contract(addressObj.address, addressObj.abi, signer);
+      console.log('lp创建成功？', lpObj.value);
     } catch (error) {
       console.log('构建Lp合约对象失败...');
     }
@@ -70,8 +68,8 @@ export default (addressObj: IAddressObj) => {
    * 获取两个币的token
    */
   async function getTokens(): Promise<string[]> {
-    const token0 = bpRead(lpObj.value.token0);
-    const token1 = bpRead(lpObj.value.token1);
+    const token0 = await bpRead(lpObj.value.token0);
+    const token1 = await bpRead(lpObj.value.token1);
     const [{ datas: tokenRes0, status: sta1 }, { datas: tokenRes1, status: sta2 }] =
       await Promise.all([token0, token1]);
 

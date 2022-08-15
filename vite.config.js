@@ -2,6 +2,10 @@ import { defineConfig } from 'vite';
 import { viteCommonjs } from '@originjs/vite-plugin-commonjs';
 import ViteRequireContext from '@originjs/vite-plugin-require-context';
 import requireTransform from 'vite-plugin-require-transform';
+import AutoImport from 'unplugin-auto-import/vite';
+import AutoCps from 'unplugin-vue-components/vite';
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
+
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
 
@@ -27,7 +31,22 @@ export default defineConfig({
       '@bpMath': path.resolve(__dirname, './src/utils/bpMath'),
     },
   },
-  plugins: [vue(), viteCommonjs(), ViteRequireContext(), requireTransform({})],
+  plugins: [
+    vue(),
+    viteCommonjs(),
+    ViteRequireContext(),
+    requireTransform({}),
+
+    AutoImport({
+      imports: ['vue', 'vue-router'], // 自动导入vue和vue-router相关函数
+      dts: 'src/auto-import.d.ts', // 生成 auto-import.d.ts 全局声明
+      resolvers: [ElementPlusResolver()],
+    }),
+
+    AutoCps({
+      resolvers: [ElementPlusResolver()],
+    }),
+  ],
 
   build: {
     rollupOptions: {

@@ -1,9 +1,8 @@
 <!-- 测试质押组件 -->
 <script setup lang="ts">
 import { useWrite } from '@/hooks/useAction';
-
-console.log('test...mint..');
 import useMintContractApi from '@contApi/useMintContractApi';
+
 const { mint } = useMintContractApi();
 
 const [handleMint, loadMint] = useWrite(async () => {

@@ -10,7 +10,6 @@ import { bpRead, bpWrite } from '@/service/bpAction';
 import useDefaultRpc from './useDefaultRpc';
 import { reactive, Ref, ref } from 'vue';
 import { watchAccount } from '@/hooks/useAction';
-import { sleep } from '@/utils/tools';
 import { $GET } from '@/service/request';
 
 const $t = i18n.global.t;
@@ -27,9 +26,7 @@ export default (addressObj: IAddressObj) => {
    * 例如 去旁边的 address.js 里拿 BVG_TOKEN_CONT 传入
    * @returns 代币的信息
    */
-  async function createContract(addressObj) {
-    await sleep(3000);
-
+  function createContract(addressObj) {
     const signer = useDefaultRpc();
     try {
       nftObj.value = new ethers.Contract(addressObj.address, addressObj.abi, signer);
