@@ -8,12 +8,12 @@ type n = number | string;
 const props = withDefaults(
   defineProps<{
     max?: n; // 最大值
-    min?: n; // 最小值
+    // min?: n; // 最小值
     type?: 'int' | 'double.3'; // 类型:整数、小数(小数可以约定几位，这里的2表示两位)
     value: n;
   }>(),
   {
-    min: 0,
+    // min: 0,
     type: 'int',
   }
 );
@@ -30,41 +30,44 @@ function handleInp(e) {
   const val = e.target.value;
   // 正整数
   if ((/\D+/.test(+val) || /\./g.test(val)) && props.type === 'int') {
-    console.log('非数。。。', props.value);
     e.target.value = props.value;
     return false;
   }
 
-  console.log('props.type?.include...', props.type);
-  // 小数
+  // 正小数
   if (props.type?.includes?.('double')) {
-    // const len = props.type.split('.')[1] || 2; // 约小数后几位
-    console.log('len...', len);
-    e.target.value = e.target.value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1');
+    const len = props.type.split('.')[1] || 2; // 约小数后几位
+    let reg = new RegExp(`^\\D*(\\d*(?:\\.\\d{0,${len}})?).*$`, 'g');
+    e.target.value = e.target.value.replace(reg, '$1');
+
+    // 超过了最最大值
+    if (props.max && +val >= +props.max) {
+      inpVal.value = props.max;
+      e.target.value = inpVal.value;
+    }
+
+    emits('update:value', String(e.target.value));
+
     return false;
   }
 
   // 区间
-  if (props.max && +val >= props.max) {
-    inpVal.value = props.max;
-  } else {
-    inpVal.value = val;
+  function _section() {
+    if (props.max && +val >= +props.max) {
+      inpVal.value = props.max;
+      e.target.value = inpVal.value;
+    } else {
+      inpVal.value = val; // 保存到props.value
+    }
   }
-  e.target.value = inpVal.value;
+
+  _section();
   emits('update:value', String(inpVal.value));
 }
 </script>
 
 <template>
   <input type="text" @input="handleInp" :value="props.value" />
-  <div>值是：{{ props.value }}</div>
 </template>
 
-<style lang="scss" scoped>
-button {
-  display: block;
-}
-.disableBtn {
-  background-color: #c9c9c9 !important;
-}
-</style>
+<style lang="scss" scoped></style>
