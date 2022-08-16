@@ -37,6 +37,5 @@ function handleClick() {
 <style lang="scss" scoped>
 .bp-sub {
   @include flexPos(center);
-  background-color: #008c8c;
 }
 </style>

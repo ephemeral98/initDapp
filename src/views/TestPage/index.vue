@@ -112,14 +112,14 @@ function tempInp(e) {
     <el-button>自动导入element按钮</el-button>
 
     <!-- <input type="text" maxlength="5"> -->
-    <bp-input :max="666" min="1" v-model:value="inpValue"></bp-input>
+    <bp-input :max="666" v-model:value="inpValue"></bp-input>
     {{ inpValue }}
 
     <bp-add v-model:value="inpValue" :max="333" />
     <bp-sub v-model:value="inpValue" :min="-2" />
     {{ inpValue }}
 
-    aa<input type="text" @keyup="tempInp" />
+    <input type="text" @keyup="tempInp" />
 
     <!-- <bp-form>
       <bp-input></bp-input>

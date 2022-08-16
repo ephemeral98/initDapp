@@ -22,13 +22,16 @@ import BpButton from '@cps/BpButton';
 import BpForm from '@cps/BpForm';
 
 // swiper ui
-import SwiperCore, { Navigation, Pagination, Autoplay, EffectCoverflow } from 'swiper';
-import 'swiper/swiper.scss';
+// import 'swiper/swiper.scss';
+import 'swiper/css';
+// import 'swiper/css/navigation';
+// import 'swiper/css/pagination';
+// import 'swiper/css/scrollbar';
+
 import BpSwiper from '@cps/BpSwiper';
 import { useAppStore } from './store/appStore';
 import { handleThrottle } from './utils/tools';
 
-SwiperCore.use([Navigation, Pagination, Autoplay, EffectCoverflow]);
 const pinia = createPinia();
 
 const vueApp = createApp(App);
