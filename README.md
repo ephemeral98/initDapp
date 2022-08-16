@@ -1,16 +1,111 @@
-# Vue 3 + TypeScript + Vite
+# initDapp
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## 全局组件:
 
-## Recommended IDE Setup
+#### 1. BpButton
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+使用按钮的时候，与链上有交易的请求，统一使用全局组件```BpButton```，需要有加载状态```loading```。一些普通的操作DOM按钮可以不使用该组件。
 
-## Type Support For `.vue` Imports in TS
+```vue
+const [handleClick, loadClick] = useWrite(async () => {
+  await lpObj.claimAllReward();
+});
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's Take Over mode by following these steps:
+<BpButton v-loading="loadClick" @click="handleClick" class="click-box">bp写操作</BpButton>
+```
 
-1. Run `Extensions: Show Built-in Extensions` from VS Code's command palette, look for `TypeScript and JavaScript Language Features`, then right click and select `Disable (Workspace)`. By default, Take Over mode will enable itself if the default TypeScript extension is disabled.
-2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
+#### 2. BpSwiper
 
-You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+轮播图，滑块等都可以使用...，基于 swiper@8.3.2 的二次封装
+
+
+
+#### 3. BpForm
+
+包括 ```<bp-input>```，```<Bp-add>```，```<bp-sub>```
+
+
+
+## useAction
+
+#### 写入时，借助```useWrite```:
+
+记得里面是传入异步回调函数(async)
+
+```js
+const [handleClick, loadWrite] = useWrite(async () => {
+  await lpObj.auth('0x00000');
+});
+```
+
+如果需要返回值，需要借助外部变量
+
+#### 读取时，借助useRead:
+
+```js
+const [checkInfo, checkInfoEX] = useRead(async () => {
+  const p1 = mintCont.getBalance();
+  const p2 = mintCont.getBalance();
+  const p3 = mintCont.getBalance();
+
+  const result = await Promise.all([p1, p2, p3]);
+  return result; // 返回给checkInfo，无需再借助外部变量
+});
+```
+
+checkInfo 是返回的数据，checkInfoEX 是返回的数据工具：loading，refetch、status 等
+
+
+
+## bpAction
+
+里面的```useRead```和```useWrite```方法，均在合约对象```contractsApi```文件夹里面的class调用，分别对应合约上的读和写。
+
+
+
+## Tips:
+
+#### useWrite, useRead 和 bpWrite, bpRead 的区别：
+
+前者主要是各种拦截，以及loading的处理。不让调起钱包；
+
+后者是对成功调起钱包交易的 后续信息处理;
+
+
+
+## useStake
+
+快速完成质押逻辑
+
+如果推荐人是单独一个页面的，则把 推荐人(inv)的逻辑 删除
+
+
+## 路由守卫：
+
+可以在 routerHelp 文件中处理，如果链不对，弹窗还是message还是其他什么。。
+
+
+
+## contractsApi
+
+>  这个文件夹下面是放一些 合约api 的
+
+#### 1. useCoinToken: 一些符合 ERC20的代币，直接导入address和api
+
+#### 2. useLpToken: 一些 **通用** lp 币对对象，用法和 useCoinToken 类似
+
+#### 3. useNftToken: 一些 **通用** nft 对象，用法和useCoinToken类似
+
+#### useDefaultRpc，每次构建对象的时候，在**createContract** 中，调用，获取预设的rpc，可参考 CoinToken
+
+### 如果有其他合约，请自行创建对应的文件！！
+
+
+
+## 注意
+
+1. 所有合约方法，均放在 contractsApi 中，命名为: xxxContractApi
+2. 不再使用```useRoute```获取路由信息，统一使用```useRouteTools```，
+
+
+

@@ -8,11 +8,8 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     BpAddComp: typeof import('./src/components/BpForm/BpAddComp.vue')['default']
-    BpAddSubComp: typeof import('./src/components/BpForm/BpAddSubComp.vue')['default']
     BpButtonComp: typeof import('./src/components/BpButton/BpButtonComp.vue')['default']
-    BpForm: typeof import('./src/components/BpForm/index.vue')['default']
     BpInputComp: typeof import('./src/components/BpForm/BpInputComp.vue')['default']
-    BpSub: typeof import('./src/components/BpForm/BpSub.vue')['default']
     BpSubComp: typeof import('./src/components/BpForm/BpSubComp.vue')['default']
     BpSwiperComp: typeof import('./src/components/BpSwiper/BpSwiperComp.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']

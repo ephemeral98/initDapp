@@ -21,13 +21,6 @@ import 'vant/lib/popup/style';
 import BpButton from '@cps/BpButton';
 import BpForm from '@cps/BpForm';
 
-// swiper ui
-// import 'swiper/swiper.scss';
-import 'swiper/css';
-// import 'swiper/css/navigation';
-// import 'swiper/css/pagination';
-// import 'swiper/css/scrollbar';
-
 import BpSwiper from '@cps/BpSwiper';
 import { useAppStore } from './store/appStore';
 import { handleThrottle } from './utils/tools';
