@@ -100,6 +100,12 @@ function handleClick() {
 <BpSwiper :option="swiperOptions" @slideChange="handleChange">
 ```
 
+真实索引改变时候被动触发
+```
+@realIndexChange
+```
+
+
 #### 一些常见的样式可以使用官网推的Demo：https://swiperjs.com/demos
 
 

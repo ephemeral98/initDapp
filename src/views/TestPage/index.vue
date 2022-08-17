@@ -71,10 +71,6 @@ const tempImg = require('@img/holder.png');
 
 const inpValue = ref('2222');
 
-function handleAdd() {
-  inpValue.value++;
-}
-
 function tempInp(e) {
   console.log('eeee', e.target.value);
   e.target.value = e.target.value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1');

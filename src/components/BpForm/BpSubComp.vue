@@ -12,7 +12,7 @@ const props = withDefaults(
 );
 
 const emits = defineEmits<{
-  (click: 'update:value'): MouseEvent;
+  (click: 'update:value', value: string): MouseEvent;
 }>();
 
 /**

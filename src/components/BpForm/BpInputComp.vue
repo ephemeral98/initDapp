@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import { useAppStore } from '@store/appStore';
-import { ethers } from 'ethers';
-const appStore = useAppStore();
-
 type n = number | string;
 
 const props = withDefaults(
@@ -19,7 +15,7 @@ const props = withDefaults(
 );
 
 const emits = defineEmits<{
-  (input: 'update:value'): KeyEvent; // 点击事件
+  (input: 'update:value', value: string): KeyboardEvent; // 输入事件
 }>();
 
 // 输入值
@@ -29,7 +25,7 @@ function handleInp(e) {
   // console.log('eee', e.target.value);
   const val = e.target.value;
   // 正整数
-  if ((/\D+/.test(+val) || /\./g.test(val)) && props.type === 'int') {
+  if ((/\D+/.test(val) || /\./g.test(val)) && props.type === 'int') {
     e.target.value = props.value;
     return false;
   }
@@ -42,7 +38,7 @@ function handleInp(e) {
 
     // 超过了最最大值
     if (props.max && +val >= +props.max) {
-      inpVal.value = props.max;
+      inpVal.value = String(props.max);
       e.target.value = inpVal.value;
     }
 
@@ -54,7 +50,7 @@ function handleInp(e) {
   // 区间
   function _section() {
     if (props.max && +val >= +props.max) {
-      inpVal.value = props.max;
+      inpVal.value = String(props.max);
       e.target.value = inpVal.value;
     } else {
       inpVal.value = val; // 保存到props.value

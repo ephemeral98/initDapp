@@ -9,7 +9,7 @@ const $t = i18n.global.t;
  * @param {Number} endLen 结尾多少个星星
  * @returns {String}
  */
-export function plusXing(str, frontLen, endLen) {
+export function plusXing(str: string, frontLen: number, endLen: number) {
   if (str?.length === undefined) return '';
   var len = str.length - frontLen - endLen;
   var xing = '';
@@ -25,7 +25,7 @@ export function plusXing(str, frontLen, endLen) {
  * @param {Boolean} deep 是否深度克隆
  * @returns
  */
-export function clone(obj, deep) {
+export function clone(obj, deep: boolean) {
   if (Array.isArray(obj)) {
     //如果是数组
     if (deep) {
@@ -59,7 +59,7 @@ export function clone(obj, deep) {
  * @param {Function} callback 回调函数
  * @param {Number} duration 节流间隔时间
  */
-export function handleThrottle(callback, duration = 70) {
+export function handleThrottle(callback: () => void, duration: number = 70) {
   let throttleTimer;
   return () => {
     if (throttleTimer) return;
@@ -72,7 +72,7 @@ export function handleThrottle(callback, duration = 70) {
 }
 
 /**
- * 获取链的节点数据 (除去url)
+ * 获取链的节点数据
  * @param chainId 链id
  * @returns
  */

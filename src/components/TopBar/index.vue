@@ -135,16 +135,16 @@ async function handleLink() {
 }
 
 .toggle-container {
-  $boxHeight: 0.24rem;
+  $boxHeight: 15px;
   $barHeight: 3px;
   cursor: pointer;
 
-  height: 0.24rem;
+  height: 15px;
   @include flexPos(space-between);
   flex-direction: column;
   .bar {
     transition: 0.4s;
-    width: 0.3rem;
+    width: 20px;
     height: $barHeight;
     background-color: #000;
     transform-origin: center;

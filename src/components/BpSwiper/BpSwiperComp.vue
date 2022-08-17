@@ -63,7 +63,6 @@ defineExpose({
   <swiper
     :modules="modules"
     :loop="swiperOptions.loop"
-    :pagination="{ clickable: true }"
     :autoplay="swiperOptions.autoplay"
     @swiper="(Swiper) => (swiperObj = Swiper)"
     :navigation="swiperOptions.navigation"
@@ -77,8 +76,6 @@ defineExpose({
     :observeParents="swiperOptions.observeParents"
     :observeSlideChildren="swiperOptions.observeSlideChildren"
     :centerInsufficientSlides="swiperOptions.centerInsufficientSlides"
-    @realIndexChange="onIndexChange"
-    :activeIndex="activeInx"
   >
     <slot></slot>
   </swiper>
