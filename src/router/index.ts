@@ -7,6 +7,7 @@ import {
 } from 'vue-router';
 import { useAppStore } from '@/store/appStore';
 import { checkRightChain } from './routerHelp';
+import { curNeedChain } from '@/contracts/chains';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -15,7 +16,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "testPage" */ '@/views/TestPage/index.vue'),
     meta: {
       requireAccount: true, // 依赖钱包
-      needChains: ['0x61'], // 依赖的链
+      needChains: curNeedChain(['bsc']), // 依赖的链
       needTips: true, // 链不对的时候，需不需要提示
     },
   },
@@ -26,7 +27,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "testSwiper" */ '@/views/TestPage/TestSwiper.vue'),
     meta: {
       requireAccount: true, // 依赖钱包
-      needChains: ['0x61'], // 依赖的链
+      needChains: curNeedChain(['bsc']), // 依赖的链
       needTips: true, // 链不对的时候，需不需要提示
     },
   },
@@ -37,7 +38,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "home" */ '@/views/Home/index.vue'),
     meta: {
       requireAccount: true,
-      needChains: ['0x61'], // 依赖的链
+      needChains: curNeedChain(['bsc']), // 依赖的链
       needTips: true, // 链不对的时候，需不需要提示
     },
   },

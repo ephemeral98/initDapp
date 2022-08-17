@@ -14,6 +14,7 @@ export interface ISupportChains {
 }
 
 export const supportedChains: ISupportChains[] = [
+  // 以太坊主网
   {
     chainId: '0x1',
     chainName: 'Binance Smart Chain',
@@ -25,6 +26,7 @@ export const supportedChains: ISupportChains[] = [
     rpcUrls: ['https://bsc-dataseed1.ninicoin.io'],
     blockExplorerUrls: ['https://bscscan.com/'],
   },
+  // BSC主网
   {
     chainId: '0x38',
     chainName: 'Binance Smart Chain',
@@ -36,6 +38,7 @@ export const supportedChains: ISupportChains[] = [
     rpcUrls: ['https://bsc-dataseed1.ninicoin.io'],
     blockExplorerUrls: ['https://bscscan.com/'],
   },
+  // BSC测试网
   {
     chainId: '0x61',
     chainName: 'Binance Smart Chain TEST',
@@ -47,6 +50,7 @@ export const supportedChains: ISupportChains[] = [
     rpcUrls: ['https://data-seed-prebsc-1-s3.binance.org:8545'],
     blockExplorerUrls: ['https://testnet.bscscan.com/'],
   },
+  // Polygon主网
   {
     chainId: '0x89',
     chainName: 'Polygon Mainnet',
@@ -65,9 +69,9 @@ export const supportedChains: ISupportChains[] = [
  * @param chain 依赖的链简称
  * @returns
  */
-type IChain = 'bsc' | 'matic';
+type IChain = 'bsc' | 'matic' | 'eth';
 
-export function getCurNeedChain(chain: IChain[] = ['bsc']): string[] {
+export function curNeedChain(chain: IChain[] = ['bsc']): string[] {
   const arr = [];
   // bsc
   if (chain.includes('bsc')) {
@@ -77,12 +81,17 @@ export function getCurNeedChain(chain: IChain[] = ['bsc']): string[] {
       arr.push('0x38');
     }
   }
+
   // polygon
   if (chain.includes('matic')) {
     arr.push('0x89');
   }
 
+  // eth
+  if (chain.includes('eth')) {
+    arr.push('0x1');
+  }
   return arr;
 }
 
-window.swi = getCurNeedChain;
+window.swi = curNeedChain;

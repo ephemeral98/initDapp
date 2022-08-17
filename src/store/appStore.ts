@@ -116,57 +116,67 @@ const useAppStore = defineStore('app', {
         ethereum = window?.bitkeep?.ethereum;
       }
 
-      try {
-        const providerWrap: any = new ethers.providers.Web3Provider(ethereum, 'any');
-        const chainData = getChainData(chainId);
+      const providerWrap: any = new ethers.providers.Web3Provider(ethereum, 'any');
 
+      /**
+       * 切链事件
+       */
+      async function _handleChange() {
+        // 将切到以太坊和其他的链 方法分开
+        if (chainId === '0x1') {
+          const hexChainId = ethers.utils.hexValue(chainId);
+          return await providerWrap.provider.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: hexChainId }],
+          });
+        }
+
+        const chainData = getChainData(chainId);
+        return await providerWrap.provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [chainData],
+        });
+      }
+
+      try {
         // 记录旧的chainId
         const oldChainId = this.ethersObj.chainId;
-        var hex_chainId = ethers.utils.hexValue(chainId);
         // 用户有链的id就直接切换
-        await providerWrap.provider
-          .request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: hex_chainId }],
-          })
-          .then(async () => {
-            if (window.ethereum?.isTokenPocket) {
-              // TP钱包才给 loading提示，因为PC点了拒绝，也会到这里。。
-              ElMessage.info($t('common.2'));
-            }
+        await _handleChange().then(async () => {
+          if (window.ethereum?.isTokenPocket) {
+            // TP钱包才给 loading提示，因为PC点了拒绝，也会到这里。。
+            ElMessage.info($t('common.2'));
+          }
 
-            clearInterval(this.chainTimer);
-            this.chainTimer = setInterval(() => {
-              // console.log('new ethers.providers...', ethers.providers.Web3Provider);
-              const newProviderWrap: any = new ethers.providers.Web3Provider(
-                window?.ethereum,
-                'any'
-              );
-              // 获取新的chainId
-              const newChainId = newProviderWrap?.provider?.chainId;
+          clearInterval(this.chainTimer);
+          this.chainTimer = setInterval(() => {
+            // console.log('new ethers.providers...', ethers.providers.Web3Provider);
+            const newProviderWrap: any = new ethers.providers.Web3Provider(window?.ethereum, 'any');
+            // 获取新的chainId
+            const newChainId = newProviderWrap?.provider?.chainId;
 
-              // 根据判断俩chainId，判断是否成功切了链
-              if (+newChainId !== +oldChainId) {
-                // console.log('切完了链', window.ethereum);
+            // 根据判断俩chainId，判断是否成功切了链
+            if (+newChainId !== +oldChainId) {
+              // console.log('切完了链', window.ethereum);
 
-                this.ethersObj.chainId = newChainId;
+              this.ethersObj.chainId = newChainId;
 
-                if (window.ethereum?.isTokenPocket) {
-                  // TP钱包，iPhone有坑，切换了链，chainId变了，但是rpc没变。这里强行修改rpc。
-                  const chainData = getChainData(newChainId);
-                  window.ethereum.rpc.rpcUrl = chainData.rpcUrls;
-                }
-                // 确实成功切了链
-                ElMessage.success($t('msg.10'));
-
-                clearInterval(this.chainTimer);
-                // 开锁，更新所有组件数据
-                this.lockUpdate = false;
-                // 更新所有组件数据
-                this.updateTarget = !this.updateTarget;
+              if (window.ethereum?.isTokenPocket) {
+                // TP钱包，iPhone有坑，切换了链，chainId变了，但是rpc没变。这里强行修改rpc。
+                const chainData = getChainData(newChainId);
+                window.ethereum.rpc.rpcUrl = chainData.rpcUrls;
               }
-            }, 500);
-          });
+              // 确实成功切了链
+              ElMessage.success($t('msg.10'));
+
+              clearInterval(this.chainTimer);
+              // 开锁，更新所有组件数据
+              this.lockUpdate = false;
+              // 更新所有组件数据
+              this.updateTarget = !this.updateTarget;
+            }
+          }, 500);
+        });
       } catch (error) {
         ElMessage.error($t('msg.11'));
         console.log('切换链错误..', error);
