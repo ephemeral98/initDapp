@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { LP_MINT_CONT } from '@/contracts/address';
+import { LP_CONT } from '@/contracts/address';
 import useLpToken from '@/contractsApi/useLpToken';
 import { useRead } from '@/hooks/useAction';
 
-const lpToken = useLpToken({ address: LP_MINT_CONT.address, abi: LP_MINT_CONT.abi });
+const lpToken = useLpToken({ address: LP_CONT.address, abi: LP_CONT.abi });
 
 const [hasAllow, hasAllowEx] = useRead(async () => {
   return await lpToken.allow('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21');
