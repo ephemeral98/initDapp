@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import { viteCommonjs } from '@originjs/vite-plugin-commonjs';
 import ViteRequireContext from '@originjs/vite-plugin-require-context';
 import requireTransform from 'vite-plugin-require-transform';
+import viteCompression from 'vite-plugin-compression';
 import AutoImport from 'unplugin-auto-import/vite';
 import AutoCps from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
@@ -36,6 +37,7 @@ export default defineConfig({
     viteCommonjs(),
     ViteRequireContext(),
     requireTransform({}),
+    viteCompression(),
 
     AutoImport({
       imports: ['vue', 'vue-router'], // 自动导入vue和vue-router相关函数
