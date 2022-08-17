@@ -96,7 +96,7 @@ checkInfo 是返回的数据，checkInfoEX 是返回的数据工具：loading，
 
 #### 3. useNftToken: 一些 **通用** nft 对象，用法和useCoinToken类似
 
-#### useDefaultRpc，每次构建对象的时候，在**createContract** 中，调用，获取预设的rpc，可参考 CoinToken
+#### useDefaultRpc，每次构建对象的时候，在**createContract** 中，调用，获取预设的rpc，可参考 useCoinToken
 
 ### 如果有其他合约，请自行创建对应的文件！！
 
