@@ -13,6 +13,9 @@ import '@css/index.scss';
 import { Popup } from 'vant';
 import 'vant/lib/popup/style';
 
+// element plus
+import 'element-plus/theme-chalk/index.css';
+
 // 一些全局组件
 import BpButton from '@cps/BpButton';
 import BpForm from '@cps/BpForm';
