@@ -1,12 +1,13 @@
 <script setup lang="ts">
-type n = number | string;
+import { i } from 'mathjs';
+import { IVal } from './types';
 
 const props = withDefaults(
   defineProps<{
-    max?: n; // 最大值
+    max?: any; // 最大值
     // min?: n; // 最小值
-    type?: 'int' | 'double.3'; // 类型:整数、小数(小数可以约定几位，这里的2表示两位)
-    value: n;
+    type?: 'int' | 'double'; //  类型:整数、小数 double.2 (小数可以约定几位，这里的2表示两位)
+    refObj: IVal;
   }>(),
   {
     // min: 0,
@@ -15,18 +16,27 @@ const props = withDefaults(
 );
 
 const emits = defineEmits<{
-  (input: 'update:value', value: string): KeyboardEvent; // 输入事件
+  (input: 'update:refObj', refObj: IVal): KeyboardEvent; // 输入事件
 }>();
 
 // 输入值
 const inpVal = ref('');
 
 function handleInp(e) {
-  // console.log('eee', e.target.value);
+  console.log('eee', e);
+
+  // 按了删除键
+  if (e?.inputType === 'deleteContentBackward') {
+    emits('update:refObj', { show: e.target.value, origin: e.target.value });
+    return false;
+  }
+
+  // 如果需要负数，可以用e判断
+
   const val = e.target.value;
   // 正整数
   if ((/\D+/.test(val) || /\./g.test(val)) && props.type === 'int') {
-    e.target.value = props.value;
+    e.target.value = props.refObj.show;
     return false;
   }
 
@@ -42,7 +52,7 @@ function handleInp(e) {
       e.target.value = inpVal.value;
     }
 
-    emits('update:value', String(e.target.value));
+    emits('update:refObj', { show: e.target.value, origin: e.target.value });
 
     return false;
   }
@@ -56,14 +66,13 @@ function handleInp(e) {
       inpVal.value = val; // 保存到props.value
     }
   }
-
   _section();
-  emits('update:value', String(inpVal.value));
+  emits('update:refObj', { show: inpVal, origin: inpVal });
 }
 </script>
 
 <template>
-  <input type="text" @input="handleInp" :value="props.value" />
+  <input type="text" @input="handleInp" :value="props.refObj.show" />
 </template>
 
 <style lang="scss" scoped></style>

@@ -51,8 +51,8 @@ export default (addressObj: IAddressObj) => {
 
   // 代币余额
   const balanceObj = reactive({
-    balanceOrigin: '0',
-    balanceShow: '0',
+    origin: '0',
+    show: '0',
   });
   /**
    * 获取代币余额（带精度）
@@ -66,16 +66,16 @@ export default (addressObj: IAddressObj) => {
       (await bpRead(coinObj.value.balanceOf, appStore.defaultAccount)) || {};
     if (!status) console.log('getBalance...error...');
 
-    balanceObj.balanceOrigin = status ? datas : '0';
-    balanceObj.balanceShow = status ? bpFormat(datas, -digi, decimals.value) : '0';
+    balanceObj.origin = status ? datas : '0';
+    balanceObj.show = status ? bpFormat(datas, -digi, decimals.value) : '0';
 
     return balanceObj;
   }
 
   // 获取totalSupply
   const totalSupplyObj = reactive({
-    totalSupplyOrigin: '0',
-    totalSupplyShow: '0',
+    origin: '0',
+    show: '0',
   });
   /**
    * 获取totalSupply
@@ -85,8 +85,8 @@ export default (addressObj: IAddressObj) => {
     const { status, datas } = await bpRead(coinObj.value.totalSupply);
     if (!status) console.log('totalSupply...error...');
 
-    totalSupplyObj.totalSupplyOrigin = status ? datas : '0';
-    totalSupplyObj.totalSupplyShow = status ? bpFormat(datas, -digi, decimals.value) : '0';
+    totalSupplyObj.origin = status ? datas : '0';
+    totalSupplyObj.show = status ? bpFormat(datas, -digi, decimals.value) : '0';
 
     return totalSupplyObj;
   }
@@ -104,14 +104,14 @@ export default (addressObj: IAddressObj) => {
       (await bpRead(coinObj.value.allowance, appStore.defaultAccount, hoster)) || {};
     console.log('allowance....', allowance);
     const balance = getBalance() || {};
-    const [{ status, datas }, { balanceOrigin }] = (await Promise.all([allowance, balance])) as any;
+    const [{ status, datas }, { origin }] = (await Promise.all([allowance, balance])) as any;
 
     if (!status) {
       console.log('allow...error...');
       return false;
     }
 
-    hasAllow.value = bpGt(datas, balanceOrigin);
+    hasAllow.value = bpGt(datas, origin);
     return hasAllow;
   }
 

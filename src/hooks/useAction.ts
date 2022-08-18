@@ -16,7 +16,7 @@ const $t = i18n.global.t;
  *    const resp = await boxObj.directDepositIt(1);
  *  });
  */
-export function useWrite(func, ...params): [any, Ref<boolean>] {
+export function useWrite(func): [any, Ref<boolean>] {
   const route = useRouteItem();
   const appStore = useAppStore();
   const loading = ref(false);

@@ -32,17 +32,10 @@ const [decimal, dataDecimalEx] = useRead(async () => {
   return await totalSupply();
 });
 
-// watch(getBalance());
-// setInterval(getBalance, 3000);
-
-// const mintCont = new MintContractApi();
-
 const testStore = useTestStore();
 
 const a = ref(1);
-const aa = reactive({
-  b: 1,
-});
+
 setInterval(() => {
   a.value++;
 }, 1100);
@@ -69,7 +62,10 @@ const [handleClick, loadWrite] = useWrite(async () => {
 
 const tempImg = require('@img/holder.png');
 
-const inpValue = ref('2222');
+const inpValue = ref({
+  show: '123',
+  origin: 6666,
+});
 
 function tempInp(e) {
   console.log('eeee', e.target.value);
@@ -107,13 +103,14 @@ function tempInp(e) {
 
     <el-button>自动导入element按钮</el-button>
 
-    <!-- <input type="text" maxlength="5"> -->
-    <bp-input :max="666" v-model:value="inpValue"></bp-input>
-    {{ inpValue }}
+    <button>MAX</button>
 
-    <bp-add v-model:value="inpValue" :max="333" />
-    <bp-sub v-model:value="inpValue" :min="-2" />
-    {{ inpValue }}
+    <!-- <input type="text" maxlength="5"> -->
+    <bp-input type="int" :max="666" v-model:refObj="inpValue"></bp-input>
+    值：{{ inpValue.show }}
+
+    <bp-add v-model:refObj="inpValue" :max="333" />
+    <bp-sub v-model:refObj="inpValue" :min="-2" />
 
     <input type="text" @keyup="tempInp" />
 

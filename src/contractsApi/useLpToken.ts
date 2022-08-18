@@ -45,8 +45,8 @@ export default (addressObj: IAddressObj) => {
 
   // 代币余额
   const balanceObj = reactive({
-    balanceOrigin: '0',
-    balanceShow: '0',
+    origin: '0',
+    show: '0',
   });
   /**
    * 获取代币余额（源数据和展示数据）
@@ -56,8 +56,8 @@ export default (addressObj: IAddressObj) => {
     const { status, datas } = (await bpRead(lpObj.value.balanceOf, appStore.defaultAccount)) || {};
     if (!status) console.log('getBalance...error...');
 
-    balanceObj.balanceOrigin = status ? datas : '0';
-    balanceObj.balanceShow = status ? bpFormat(datas, -digi, decimals.value) : '0';
+    balanceObj.origin = status ? datas : '0';
+    balanceObj.show = status ? bpFormat(datas, -digi, decimals.value) : '0';
 
     return balanceObj;
   }
@@ -168,7 +168,7 @@ export default (addressObj: IAddressObj) => {
   async function allow(hoster: string): Promise<Ref<boolean>> {
     const allowance = (await bpRead(lpObj.value.allowance, appStore.defaultAccount, hoster)) || {};
     const balance = getBalance() || {};
-    const [{ status, datas }, { balanceOrigin }] = (await Promise.all([allowance, balance])) as any;
+    const [{ status, datas }, { origin }] = (await Promise.all([allowance, balance])) as any;
 
     if (!status) {
       console.log('allow...error...');
@@ -176,7 +176,7 @@ export default (addressObj: IAddressObj) => {
       return hasAllow;
     }
 
-    hasAllow.value = bpGt(datas, balanceOrigin);
+    hasAllow.value = bpGt(datas, origin);
     return hasAllow;
   }
 

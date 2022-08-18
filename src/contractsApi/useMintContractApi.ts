@@ -5,12 +5,8 @@ import i18n from '@/locales/i18n';
 import useDefaultRpc from './useDefaultRpc';
 import { bpFormat, bpMul } from '@/utils/bpMath';
 import { bpRead, bpWrite } from '@/service/bpAction';
-import { ElMessage } from 'element-plus';
 import { watchAccount } from '@/hooks/useAction';
-import { reactive, Ref, ref } from 'vue';
 const $t = i18n.global.t;
-
-const BATCH_MINT_TOPICS = '0x0f6798a560793a54c3bcfe86a93cde1e73087d944c0ea20544137d4121396885';
 
 export default () => {
   const appStore = useAppStore();

@@ -9,10 +9,6 @@ import animate from 'animate.css';
 import '@/utils/initRem';
 import '@css/index.scss';
 
-// element plus
-import { ElLoading, ElDropdown } from 'element-plus';
-import 'element-plus/theme-chalk/index.css';
-
 // vant
 import { Popup } from 'vant';
 import 'vant/lib/popup/style';

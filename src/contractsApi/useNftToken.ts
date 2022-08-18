@@ -45,8 +45,8 @@ export default (addressObj: IAddressObj) => {
 
   // 余额
   const balanceObj = reactive({
-    balanceOrigin: '0',
-    balanceShow: '0',
+    origin: '0',
+    show: '0',
   });
   /**
    * 获取余额（包括源数据和展示数据）
@@ -56,8 +56,8 @@ export default (addressObj: IAddressObj) => {
     const { status, datas } = (await bpRead(nftObj.value.balanceOf, appStore.defaultAccount)) || {};
     if (!status) console.log('getBalance...error...');
 
-    balanceObj.balanceOrigin = status ? datas : '0';
-    balanceObj.balanceShow = status ? bpFormat(datas, -digi, decimals.value) : '0';
+    balanceObj.origin = status ? datas : '0';
+    balanceObj.show = status ? bpFormat(datas, -digi, decimals.value) : '0';
 
     return balanceObj;
   }
