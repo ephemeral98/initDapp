@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Swiper, useSwiper } from 'swiper/vue';
-import { computed, ref, defineExpose } from 'vue';
 import { Pagination, Navigation } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';

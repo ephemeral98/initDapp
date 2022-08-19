@@ -29,7 +29,7 @@ const inpValue = ref('');
 
 ```vue
 const inpValue = ref('');
-<bp-add :max="666" v-model:value="inpValue" />
+<bp-add :max="666" v-model:refObj="inpValue" />
 ```
 
 | 属性            | 描述                                   | 类型           | 默认 |
@@ -47,7 +47,7 @@ const inpValue = ref('');
 
 ```vue
 const inpValue = ref('');
-<bp-sub :min="1" v-model:value="inpValue" />
+<bp-sub :min="1" v-model:refObj="inpValue" />
 ```
 
 | 属性            | 描述                                   | 类型           | 默认 |

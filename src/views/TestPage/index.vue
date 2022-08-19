@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useWrite, useRead } from '@hooks/useAction';
 import useTestStore from '@store/testStore';
-// import { reactive, ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import MintContractApi from '@/contractsApi/useMintContractApi';
 import CoinToken from '@/contractsApi/useCoinToken';
