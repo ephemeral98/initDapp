@@ -163,8 +163,7 @@ export function watchAccount(func: () => void): void {
     () => [appStore.defaultAccount, appStore.ethersObj.chainId],
     (newVal, oldVal) => {
       if (!appStore.defaultAccount || !appStore.ethersObj.chainId) return;
-      checkRightChain();
-
+      // checkRightChain(); // 这里不需要重新检查，因为App.vue已经有检测了
       func();
     }
   );

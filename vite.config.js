@@ -60,7 +60,7 @@ export default defineConfig({
   server: {
     port: 3100,
     // 是否自动在浏览器打开
-    open: true,
+    open: false,
     // 是否开启 https
     https: false,
     host: '0.0.0.0',
