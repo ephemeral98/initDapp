@@ -7,14 +7,15 @@ import {
 } from 'vue-router';
 import { useAppStore } from '@/store/appStore';
 import $load from '@cps/GlobalLoading';
-import { checkRightChain } from './routerHelp';
+import { handleSwitchChain } from './routerHelp';
 import { getCurNeedChain } from '@/contracts/chains';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/TestPage',
     name: 'testPage',
-    component: () => import(/* webpackChunkName: "testPage" */ '@/views/TestPage/index.vue'),
+    component: () =>
+      import(/* webpackChunkName: "testPage" */ '@/views/TestPage/index.vue'),
     meta: {
       requireAccount: true, // 依赖钱包
       needChains: getCurNeedChain(['bsc']), // 依赖的链
@@ -25,7 +26,8 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'home',
-    component: () => import(/* webpackChunkName: "home" */ '@/views/Home/index.vue'),
+    component: () =>
+      import(/* webpackChunkName: "home" */ '@/views/Home/index.vue'),
     meta: {
       requireAccount: false,
     },
@@ -38,7 +40,11 @@ const router = createRouter({
 });
 
 router.beforeEach(
-  async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+  async (
+    to: RouteLocationNormalized,
+    from: RouteLocationNormalized,
+    next: NavigationGuardNext
+  ) => {
     // 每次进来，先确定是否拿到钱包
     const appStore = useAppStore();
     if (appStore.defaultAccount || !to.meta.requireAccount) {
@@ -51,7 +57,7 @@ router.beforeEach(
     }
     next(true);
     try {
-      checkRightChain(to, from);
+      handleSwitchChain();
     } catch (error) {
       console.log('error..', error);
     }

@@ -38,7 +38,7 @@ export default {
      * 切链or切账号，更新数据
      */
     watch(
-      () => [appStore.updateTarget, appStore.defaultAccount],
+      () => [appStore.updateTarget],
       () => {
         if (!appStore.lockUpdate) {
           // 更新所有页面内所有组件
