@@ -53,7 +53,46 @@ const [checkInfo, checkInfoEX] = useRead(async () => {
 });
 ```
 
-checkInfo 是返回的数据，checkInfoEX 是返回的数据工具：loading，refetch、status 等
+> checkInfo 是返回的数据，checkInfoEX 是返回的数据工具：loading，refetch、status 等
+
+
+
+| 名字    | 类型     | 描述                                      |
+| ------- | -------- | ----------------------------------------- |
+| loading | boolean  | 加载中                                    |
+| refetch | function | 是否重新请求数据(重刷)                    |
+| status  | boolean  | 状态，true表示请求成功，false表示请求失败 |
+
+
+
+**PS:**
+
+当用异步调用 hook 的时候，该 hook 的所有方法要使用 ```{watcher: created}```，例：
+
+```js
+async function createContract(addressObj) {
+    await sleep(3000); // 某某情况这里用了await
+    
+    const signer = useDefaultRpc();
+    coinObj.value = new ethers.Contract(addressObj.address, addressObj.abi, signer);
+
+    created.value = true;
+    return coinObj;
+  }
+
+```
+
+```js
+const [datas, dataEx] = useRead(
+  async () => {
+    const resp = await allow('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21'),
+    return resp;
+  },
+  { watcher: created }  // 上面用了 await 去构建合约对象，这里要用这个
+);
+```
+
+
 
 
 

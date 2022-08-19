@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
 import { Swiper, useSwiper } from 'swiper/vue';
 
 const nftList = reactive([
