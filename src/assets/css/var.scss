@@ -1,45 +1,3 @@
-// vw单位，以 phone端设计稿为基础 进行缩放
-$phone_base_width: 750;
-
-@function svw($px) {
-  @if ($px==auto) {
-    @return auto;
-  } @else {
-    @return calc(($px / $phone_base_width) * 100vw);
-  }
-}
-
-// vw单位，以 pad端设计稿为基础 进行缩放
-$pad_base_width: 1280;
-
-@function mvw($px) {
-  @if ($px==auto) {
-    @return auto;
-  } @else {
-    @return calc(($px / $pad_base_width) * 100vw);
-  }
-}
-
-// vw、vh单位，以 pc端设计稿为基础 进行缩放
-$pc_base_width: 1920;
-$pc_base_height: 1080;
-
-@function vw($px) {
-  @if ($px==auto) {
-    @return auto;
-  } @else {
-    @return calc(($px / $pc_base_width) * 100vw);
-  }
-}
-
-@function vh($px) {
-  @if ($px==auto) {
-    @return auto;
-  } @else {
-    @return calc(($px / $pc_base_height) * 100vh);
-  }
-}
-
 $phone: 750px; // 手机端  750以下
 $pad: 1280px; // pad 端  750~1280
 $pc: 1920px; // pc 端    1280以上
@@ -53,9 +11,13 @@ $mobTopBarHeight: 0.5rem; // 移动端 顶部栏高度
 /**
  * pc 主体内容高度
  */
-$mainHeight: calc(100vh - (#{$pcTopBarHeight})); // pc 主体高度
+$mainHeight: calc(
+  100vh - (#{$pcTopBarHeight})
+); // pc 主体高度
 
 /**
  * 移动端 主体内容高度
  */
-$mobMainHeight: calc(100vh - (#{$mobTopBarHeight})); // pc 主体高度
+$mobMainHeight: calc(
+  100vh - (#{$mobTopBarHeight})
+); // pc 主体高度

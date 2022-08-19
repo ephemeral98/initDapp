@@ -56,7 +56,11 @@ const bpSwiper = ref(null);
 
 <template>
   <div class="test-swiper-wrapper">
-    <BpSwiper :option="swiperOptions" ref="bpSwiper" @slideChange="handleChange">
+    <BpSwiper
+      :option="swiperOptions"
+      ref="bpSwiper"
+      @slideChange="handleChange"
+    >
       <swiper-slide v-for="(nft, inx) in nftList" :key="inx">
         <div class="item-container">
           <img :src="nft.img" alt="" class="item-img" />
@@ -119,11 +123,7 @@ const bpSwiper = ref(null);
     transition: 0.8s;
     @include flexPos(center);
     flex-direction: column;
-    // height: 3.05rem;
     @include -height-a(405);
-    /*  @media (min-width: 1920px) {
-        height: vw(300);
-      } */
 
     .item-img {
       cursor: pointer;

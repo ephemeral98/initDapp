@@ -67,11 +67,7 @@ slidesPerView: 3, //设置slider容器能够同时显示的slides数量(carousel
       transition: 0.8s;
       @include flexPos(center);
       flex-direction: column;
-      // height: 3.05rem;
       @include -height-a(405);
-      /*  @media (min-width: 1920px) {
-        height: vw(300);
-      } */
 
       .item-img {
         cursor: pointer;

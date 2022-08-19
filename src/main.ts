@@ -8,6 +8,7 @@ import animate from 'animate.css';
 // 初始化一些东西
 import '@/utils/initRem';
 import '@css/index.scss';
+import 'virtual:windi.css';
 
 // vant
 import { Popup } from 'vant';

@@ -10,10 +10,11 @@ import TestMintContract from './TestMintContract.vue';
 import TestLp from './TestLp.vue';
 
 console.log('渲染了页面。。');
-const { auth, allow, getBalance, balanceObj, hasAllow, created, totalSupply } = CoinToken({
-  address: EMET_TOKEN_CONT.address,
-  abi: EMET_TOKEN_CONT.abi,
-});
+const { auth, allow, getBalance, balanceObj, hasAllow, created, totalSupply } =
+  CoinToken({
+    address: EMET_TOKEN_CONT.address,
+    abi: EMET_TOKEN_CONT.abi,
+  });
 
 // getBalance();
 const [datas, dataEx] = useRead(
@@ -79,7 +80,9 @@ function tempInp(e) {
 
     <img :src="tempImg" alt="" />
     <img src="@img/holder.png" alt="" />
-    <BpButton class="click-box" @click="handleClick" v-loading="loadWrite">bp写操作</BpButton>
+    <BpButton class="click-box" @click="handleClick" v-loading="loadWrite"
+      >bp写操作</BpButton
+    >
 
     <h3>这个是testStore: {{ testStore.test1 }}</h3>
 
@@ -91,7 +94,7 @@ function tempInp(e) {
     <hr />
 
     <div>{{ dataEx.loading }}</div>
-    <div>余额：{{ datas }}</div>
+    <div class="balan-wrap">余额：{{ datas }}</div>
     <div>授权了吗？{{ hasAllow }}</div>
 
     <div>decimals？？？: {{ decimal }}</div>
@@ -135,5 +138,9 @@ img {
     width: 150px;
     height: 150px;
   }
+}
+
+.balan-wrap {
+  @include -width-a(3);
 }
 </style>

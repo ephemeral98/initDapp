@@ -6,9 +6,33 @@ import viteCompression from 'vite-plugin-compression';
 import AutoImport from 'unplugin-auto-import/vite';
 import AutoCps from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
+import WindiCSS from 'vite-plugin-windicss';
+import postcsspxtoviewport from 'postcss-px-to-viewport';
 
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
+
+/**
+ * 获取设计稿的vw
+ * @param {Number} size 设计稿宽度;
+ */
+function getUiVw(size, name) {
+  return {
+    unitToConvert: name, // 要转化的单位
+    viewportWidth: size, // UI设计稿的宽度
+    unitPrecision: 6, // 转换后的精度，即小数点位数
+    propList: ['*'], // 指定转换的css属性的单位，*代表全部css属性的单位都进行转换
+    viewportUnit: 'vw', // 指定需要转换成的视窗单位，默认vw
+    fontViewportUnit: 'vw', // 指定字体需要转换成的视窗单位，默认vw
+    // selectorBlackList: ['ignore-'], // 指定不转换为视窗单位的类名，
+    minPixelValue: 0, // 默认值0，小于或等于1px则不进行转换
+    mediaQuery: true, // 是否在媒体查询的css代码中也进行转换，默认false
+    replace: true, // 是否转换后直接更换属性值
+    // exclude: [/node_modules/], // 设置忽略文件，用正则做目录名匹配
+    exclude: [],
+    landscape: false, // 是否处理横屏情况
+  };
+}
 
 export default defineConfig({
   css: {
@@ -17,6 +41,13 @@ export default defineConfig({
         additionalData:
           '@import "./src/assets/css/var.scss"; @import "./src/assets/css/mixins.scss"; @import "./src/assets/css/mediaSize.scss"; @import "./src/assets/css/mediaUnit.scss"; @import "./src/assets/css/theme.scss";',
       },
+    },
+
+    postcss: {
+      plugins: [
+        postcsspxtoviewport(getUiVw(1280, 'pm')),
+        postcsspxtoviewport(getUiVw(1920, 'pw')),
+      ],
     },
   },
   resolve: {
@@ -38,6 +69,12 @@ export default defineConfig({
     ViteRequireContext(),
     requireTransform({}),
     viteCompression(),
+    WindiCSS({
+      scan: {
+        dirs: ['.'], // all files in the cwd
+        fileExtensions: ['vue', 'js', 'ts'], // also enabled scanning for js/ts
+      },
+    }),
 
     AutoImport({
       imports: ['vue', 'vue-router'], // 自动导入vue和vue-router相关函数

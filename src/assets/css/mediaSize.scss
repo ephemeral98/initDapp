@@ -100,35 +100,34 @@
 /**
  * top
  */
- @mixin -top($px1, $px2, $px3) {
+@mixin -top($px1, $px2, $px3) {
   @include -templateSize(top, $px1, $px2, $px3);
 }
 
 /**
  * right
  */
- @mixin -right($px1, $px2, $px3) {
+@mixin -right($px1, $px2, $px3) {
   @include -templateSize(right, $px1, $px2, $px3);
 }
 
 /**
  * bottom
  */
- @mixin -bottom($px1, $px2, $px3) {
+@mixin -bottom($px1, $px2, $px3) {
   @include -templateSize(bottom, $px1, $px2, $px3);
 }
 
 /**
  * left
  */
- @mixin -left($px1, $px2, $px3) {
+@mixin -left($px1, $px2, $px3) {
   @include -templateSize(left, $px1, $px2, $px3);
 }
 
 /**
  * eg:
  * .box {
- *    @include -width(svw(20), mvw(30), vw(40));
+ *    @include -width(2rem, 30pm, 40pw);
  * }
  */
- 

@@ -20,7 +20,7 @@ const [rev, revEx] = useRead(async () => {
 
 <template>
   <div class="test-lp-wrap">
-    <div>LP授权了吗？？{{ hasAllow }}</div>
+    <div i:w="[10pw] sm:3rem">LP授权了吗？？{{ hasAllow }}</div>
     <div>Token。。。Arr。。。{{ tokenArr }}</div>
     <div>Rev...Arr...{{ tokenArr }}::{{ revEx.loading }}</div>
   </div>

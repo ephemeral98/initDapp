@@ -2,15 +2,15 @@
 
 @mixin -templateUnit($name, $px) {
   @media (max-width: $phone) {
-    #{$name}: svw($px);
+    #{$name}: #{$px}rem;
   }
 
   @media (min-width: $phone) and (max-width: $pad) {
-    #{$name}: mvw($px);
+    #{$name}: #{$px}pm;
   }
 
   @media (min-width: $pad) {
-    #{$name}: vw($px);
+    #{$name}: #{$px}pw;
   }
 }
 
@@ -133,60 +133,60 @@
   // 四个方向
   @if ($px1 != '' and $px2 == '' and $px3 == '' and $px4 == '') {
     @media (max-width: $phone) {
-      margin: svw($px1);
+      margin: #{$px1}rem;
     }
 
     @media (min-width: $phone) and (max-width: $pad) {
-      margin: mvw($px1);
+      margin: #{$px1}pm;
     }
 
     @media (min-width: $pad) {
-      margin: vw($px1);
+      margin: #{$px1}pw;
     }
   }
 
   // 上下 左右
   @if ($px1 != '' and $px2 != '' and $px3 == '' and $px4 == '') {
     @media (max-width: $phone) {
-      margin: svw($px1) svw($px2);
+      margin: #{$px1}rem #{$px2}rem;
     }
 
     @media (min-width: $phone) and (max-width: $pad) {
-      margin: mvw($px1) mvw($px2);
+      margin: #{$px1}pm #{$px2}pm;
     }
 
     @media (min-width: $pad) {
-      margin: vw($px1) vw($px2);
+      margin: #{$px1}pw #{$px2}pw;
     }
   }
 
   // 上 左右 下
   @if ($px1 != '' and $px2 != '' and $px3 != '' and $px4 == '') {
     @media (max-width: $phone) {
-      margin: svw($px1) svw($px2) svw($px3);
+      margin: #{$px1}rem #{$px2}rem #{$px3}rem;
     }
 
     @media (min-width: $phone) and (max-width: $pad) {
-      margin: mvw($px1) mvw($px2) mvw($px3);
+      margin: #{$px1}pm #{$px2}pm #{$px3}pm;
     }
 
     @media (min-width: $pad) {
-      margin: vw($px1) vw($px2) vw($px3);
+      margin: #{$px1}pw #{$px2}pw #{$px3}pw;
     }
   }
 
   // 上 右 下 左
   @if ($px1 != '' and $px2 != '' and $px3 != '' and $px4 != '') {
     @media (max-width: $phone) {
-      margin: svw($px1) svw($px2) svw($px3) svw($px4);
+      margin: #{$px1}rem #{$px2}rem #{$px3}rem #{$px4}rem;
     }
 
     @media (min-width: $phone) and (max-width: $pad) {
-      margin: mvw($px1) mvw($px2) mvw($px3) mvw($px4);
+      margin: #{$px1}pm #{$px2}pm #{$px3}pm #{$px4}pm;
     }
 
     @media (min-width: $pad) {
-      margin: vw($px1) vw($px2) vw($px3) vw($px4);
+      margin: #{$px1}pw #{$px2}pw #{$px3}pw #{$px4}pw;
     }
   }
 }
@@ -194,64 +194,64 @@
 /**
  * padding 支持1、2、3、4个组合
  */
- @mixin -padding-a($px1: '', $px2: '', $px3: '', $px4: '') {
+@mixin -padding-a($px1: '', $px2: '', $px3: '', $px4: '') {
   // 四个方向
   @if ($px1 != '' and $px2 == '' and $px3 == '' and $px4 == '') {
     @media (max-width: $phone) {
-      padding: svw($px1);
+      padding: #{$px1}rem;
     }
 
     @media (min-width: $phone) and (max-width: $pad) {
-      padding: mvw($px1);
+      padding: #{$px1}pm;
     }
 
     @media (min-width: $pad) {
-      padding: vw($px1);
+      padding: #{$px1}pw;
     }
   }
 
   // 上下 左右
   @if ($px1 != '' and $px2 != '' and $px3 == '' and $px4 == '') {
     @media (max-width: $phone) {
-      padding: svw($px1) svw($px2);
+      padding: #{$px1}rem #{$px2}rem;
     }
 
     @media (min-width: $phone) and (max-width: $pad) {
-      padding: mvw($px1) mvw($px2);
+      padding: #{$px1}pm #{$px2}pm;
     }
 
     @media (min-width: $pad) {
-      padding: vw($px1) vw($px2);
+      padding: #{$px1}pw #{$px2}pw;
     }
   }
 
   // 上 左右 下
   @if ($px1 != '' and $px2 != '' and $px3 != '' and $px4 == '') {
     @media (max-width: $phone) {
-      padding: svw($px1) svw($px2) svw($px3);
+      padding: #{$px1}rem #{$px2}rem #{$px3}rem;
     }
 
     @media (min-width: $phone) and (max-width: $pad) {
-      padding: mvw($px1) mvw($px2) mvw($px3);
+      padding: #{$px1}pm #{$px2}pm #{$px3}pm;
     }
 
     @media (min-width: $pad) {
-      padding: vw($px1) vw($px2) vw($px3);
+      padding: #{$px1}pw #{$px2}pw #{$px3}pw;
     }
   }
 
   // 上 右 下 左
   @if ($px1 != '' and $px2 != '' and $px3 != '' and $px4 != '') {
     @media (max-width: $phone) {
-      padding: svw($px1) svw($px2) svw($px3) svw($px4);
+      padding: #{$px1}rem #{$px2}rem #{$px3}rem #{$px4}rem;
     }
 
     @media (min-width: $phone) and (max-width: $pad) {
-      padding: mvw($px1) mvw($px2) mvw($px3) mvw($px4);
+      padding: #{$px1}pm #{$px2}pm #{$px3}pm #{$px4}pm;
     }
 
     @media (min-width: $pad) {
-      padding: vw($px1) vw($px2) vw($px3) vw($px4);
+      padding: #{$px1}pw #{$px2}pw #{$px3}pw #{$px4}pw;
     }
   }
 }
