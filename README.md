@@ -165,3 +165,6 @@ checkInfo 是返回的数据，checkInfoEX 是返回的数据工具：loading，
 
 
 
+## 可使用脚手架创建：
+
+https://www.npmjs.com/package/blockpulse_dapp
