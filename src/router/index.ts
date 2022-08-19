@@ -6,7 +6,7 @@ import {
   NavigationGuardNext,
 } from 'vue-router';
 import { useAppStore } from '@/store/appStore';
-import { checkRightChain } from './routerHelp';
+import { handleSwitchChain } from './routerHelp';
 import { curNeedChain } from '@/contracts/chains';
 
 const routes: Array<RouteRecordRaw> = [
@@ -54,7 +54,7 @@ router.beforeEach(
     // 每次进来，先拿一下钱包
     const appStore = useAppStore();
     appStore.linkWallet();
-    checkRightChain();
+    handleSwitchChain();
     next(true);
   }
 );
