@@ -147,4 +147,29 @@ const [datas, dataEx] = useRead(
 2. 不再使用```useRoute```获取路由信息，统一使用```useRouteTools```，
 
 
+## PS:
+由于 vite 使用 js 的 debugger 的时候，总是跳到不准确的地方，所以建议使用 vsCode 打断点：
+
+```
+{
+  // 使用 IntelliSense 了解相关属性。 
+  // 悬停以查看现有属性的描述。
+  // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch Edge",
+      "request": "launch",
+      "type": "chrome",
+      "url": "http://localhost:3100", // 写自己的端口号
+      "webRoot": "${workspaceFolder}/src",
+    },
+  ]
+}
+
+```
+
+
+
+
 
