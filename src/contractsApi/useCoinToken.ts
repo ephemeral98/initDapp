@@ -42,11 +42,11 @@ export default (addressObj: IAddressObj) => {
   /**
    * 获取该代币精度
    */
-  async function getDecimals(): Promise<Ref> {
+  async function getDecimals(): Promise<number> {
     const { datas, status } = await bpRead(coinObj.value.decimals);
     if (!status) console.log('getDecimals...error...');
-    decimals.value = datas || 18;
-    return decimals;
+    decimals.value = +datas || 18;
+    return decimals.value;
   }
 
   // 代币余额
@@ -98,7 +98,7 @@ export default (addressObj: IAddressObj) => {
    * @param {String} hoster 托管给谁
    * @returns {Boolean} true 已经授权，false 没有授权
    */
-  async function allow(hoster: string) {
+  async function allow(hoster: string): Promise<boolean> {
     console.log('coinObj.value...', coinObj.value);
     const allowance =
       (await bpRead(coinObj.value.allowance, appStore.defaultAccount, hoster)) || {};
@@ -112,7 +112,7 @@ export default (addressObj: IAddressObj) => {
     }
 
     hasAllow.value = bpGt(datas, origin);
-    return hasAllow;
+    return hasAllow.value;
   }
 
   /**

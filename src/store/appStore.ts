@@ -31,7 +31,7 @@ const useAppStore = defineStore('app', {
     rightChain: true, // 当前页面是否在对的链
     loadRead: '', // 是否在读取链上方法中
     ethersObj: INIT_ETHERS,
-    lockUpdate: true, // 是否锁住，禁止更新所有组件和store
+    lockUpdate: true, // 是否锁住，防止首次加载的时候导致的切链('' -> '0x')
     updateChain: false, // 更新所有组件数据的标记
     chainTimer: null, // 切链timer
   }),
@@ -122,6 +122,11 @@ const useAppStore = defineStore('app', {
        * 切链事件
        */
       async function _handleChange() {
+        if (+ethereum.chainId === +chainId) {
+          // 如果当前链和切换的链一样，则不做操作
+          return;
+        }
+
         // 将切到以太坊和其他的链 方法分开
         if (chainId === '0x1') {
           const hexChainId = ethers.utils.hexValue(chainId);
@@ -130,7 +135,6 @@ const useAppStore = defineStore('app', {
             params: [{ chainId: hexChainId }],
           });
         }
-
         const chainData = getChainData(chainId);
         return await providerWrap.provider.request({
           method: 'wallet_addEthereumChain',
@@ -172,8 +176,6 @@ const useAppStore = defineStore('app', {
               clearInterval(this.chainTimer);
               // 开锁，更新所有组件数据
               this.lockUpdate = false;
-              // 更新所有组件数据
-              this.setUpdateChain()
             }
           }, 500);
         });
@@ -181,6 +183,8 @@ const useAppStore = defineStore('app', {
         ElMessage.error($t('msg.11'));
         console.log('切换链错误..', error);
       }
+
+      console.log('触发switch....chain...');
     },
 
     /**
@@ -275,15 +279,12 @@ const useAppStore = defineStore('app', {
       window.ethereum?.on('accountsChanged', (accounts) => {
         console.log('账号切换了...', accounts);
         this.defaultAccount = accounts[0];
-        this.lockUpdate = false;
       });
 
       // 监听切链(TP不兼容)
       window.ethereum?.on('chainChanged', async (chainId) => {
         console.log('链切换了...', chainId);
         this.ethersObj.chainId = chainId;
-        this.setUpdateChain()
-        this.lockUpdate = false;
       });
 
       /* // 监听连接钱包
@@ -305,13 +306,6 @@ const useAppStore = defineStore('app', {
       console.log('status..', status);
       this.rightChain = status;
     },
-
-    /**
-     * 强制触发更新链信息(为了防止某些钱包chainChanged事件没有监听到)
-     */
-    setUpdateChain() {
-      this.updateChain = !this.updateChain;
-    }
   },
 
   getters: {

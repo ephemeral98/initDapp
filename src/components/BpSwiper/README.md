@@ -21,11 +21,11 @@ const nftList = reactive([
 ]);
 
 
- <BpSwiper>
+ <bp-swiper>
     <swiper-slide v-for="(nft, inx) in nftList" :key="inx">
       <div class="item-container"> {{ nft.id }} </div>
     </swiper-slide>
-  </BpSwiper>
+  </bp-swiper>
 ```
 
 3D空间感轮播效果：
@@ -87,13 +87,13 @@ function handleClick() {
   bpSwiper.value.handleSlide(2); // 跳转到第二块
 }
 
-<BpSwiper :option="swiperOptions" ref="bpSwiper">
+<bp-swiper :option="swiperOptions" ref="bpSwiper">
 ```
 
 被动触发change事件
 
 ```vue
-<BpSwiper :option="swiperOptions" @slideChange="handleChange">
+<bp-swiper :option="swiperOptions" @slideChange="handleChange">
 ```
 
 真实索引改变时候被动触发

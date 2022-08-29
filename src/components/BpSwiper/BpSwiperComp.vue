@@ -23,7 +23,7 @@ const swiperOptions: any = computed(() => {
     loop: true,
     speed: 500, //切换过渡速度
     mousewheel: true, // 鼠标滚轮
-    slidesPerView: 3, //设置slider容器能够同时显示的slides数量(carousel模式)。另外，支持'auto'值，会根据容器container的宽度调整slides数目。
+    slidesPerView: 'auto', //设置slider容器能够同时显示的slides数量(carousel模式)。另外，支持'auto'值，会根据容器container的宽度调整slides数目。
     centeredSlides: true, //设置slide居中
     spaceBetween: 20, // 每个item的间距，也可以用scss穿透实现
     coverflowEffect: {

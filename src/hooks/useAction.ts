@@ -159,12 +159,33 @@ export function useRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead
  */
 export function watchAccount(func: () => void): void {
   const appStore = useAppStore();
+
   watch(
     () => [appStore.defaultAccount, appStore.ethersObj.chainId],
     (newVal, oldVal) => {
       if (!appStore.defaultAccount || !appStore.ethersObj.chainId) return;
-      // checkRightChain(); // 这里不需要重新检查，因为App.vue已经有检测了
+      checkRightChain();
       func();
+    },
+    {
+      immediate: true,
+    }
+  );
+}
+
+/**
+ * 监听链的改变，防止首次进入误以切链
+ * @param func
+ */
+export function watchNext(func: () => void): void {
+  const appStore = useAppStore();
+
+  watch(
+    () => appStore.ethersObj.chainId,
+    () => {
+      if (!appStore.lockUpdate) {
+        func();
+      }
     }
   );
 }

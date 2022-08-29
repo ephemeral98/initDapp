@@ -165,7 +165,7 @@ export default (addressObj: IAddressObj) => {
    * @param {String} hoster 托管给谁
    * @returns {Boolean} true 已经授权，false 没有授权
    */
-  async function allow(hoster: string): Promise<Ref<boolean>> {
+  async function allow(hoster: string): Promise<boolean> {
     const allowance = (await bpRead(lpObj.value.allowance, appStore.defaultAccount, hoster)) || {};
     const balance = getBalance() || {};
     const [{ status, datas }, { origin }] = (await Promise.all([allowance, balance])) as any;
@@ -173,11 +173,11 @@ export default (addressObj: IAddressObj) => {
     if (!status) {
       console.log('allow...error...');
       hasAllow.value = false;
-      return hasAllow;
+      return hasAllow.value;
     }
 
     hasAllow.value = bpGt(datas, origin);
-    return hasAllow;
+    return hasAllow.value;
   }
 
   /**

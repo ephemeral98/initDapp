@@ -8,7 +8,6 @@ import { EMET_TOKEN_CONT } from '@/contracts/address';
 import TestMintContract from './TestMintContract.vue';
 import TestLp from './TestLp.vue';
 
-console.log('渲染了页面。。');
 const { auth, allow, getBalance, balanceObj, hasAllow, created, totalSupply } =
   CoinToken({
     address: EMET_TOKEN_CONT.address,

@@ -68,15 +68,15 @@ export default (addressObj: IAddressObj) => {
    * 是否授权
    * @param addr 动作合约
    */
-  async function isApprovedForAll(addr: string): Promise<Ref<boolean>> {
+  async function isApprovedForAll(addr: string): Promise<boolean> {
     const { status, datas } = await bpRead(
       nftObj.value.isApprovedForAll,
-      this.defaultAccount,
+      appStore.defaultAccount,
       addr
     );
     if (!status) console.log('isApprovedForAll...error...');
     hasAllowForAll.value = status ? datas : false;
-    return hasAllowForAll;
+    return hasAllowForAll.value;
   }
 
   /**
