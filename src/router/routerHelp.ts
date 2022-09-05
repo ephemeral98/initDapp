@@ -14,7 +14,7 @@ export function checkRightChain(to?, from?) {
   const appStore = useAppStore();
   // 匹配路由中 meta 的依赖项，如果当前链不在meta依赖项中，则链不对
   const { chainId } = appStore.ethersObj;
-  const inclu = targetRoute.meta.needChains?.includes(chainId);
+  const inclu = targetRoute.meta?.needChains?.includes(chainId);
   if (!inclu && targetRoute.meta?.needChains !== undefined) {
     appStore.setRightChain(false);
     return false;
