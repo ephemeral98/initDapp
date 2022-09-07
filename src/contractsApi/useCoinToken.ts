@@ -57,13 +57,15 @@ export default (addressObj: IAddressObj) => {
   /**
    * 获取代币余额（带精度）
    * @param digi 约为几位小数
+   * @param addr 查询谁的余额
    */
-  async function getBalance(digi: number = 2) {
+  async function getBalance(digi: number = 2, addr?: string) {
+    const targetAddr = addr ?? appStore.defaultAccount;
+
     if (!decimals.value) {
       await getDecimals();
     }
-    const { status, datas } =
-      (await bpRead(coinObj.value.balanceOf, appStore.defaultAccount)) || {};
+    const { status, datas } = (await bpRead(coinObj.value.balanceOf, targetAddr)) || {};
     if (!status) console.log('getBalance...error...');
 
     balanceObj.origin = status ? datas : '0';

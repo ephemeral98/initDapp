@@ -51,9 +51,12 @@ export default (addressObj: IAddressObj) => {
   /**
    * 获取代币余额（源数据和展示数据）
    * @param digi 约为几位小数
+   * @param addr 查询谁的余额
    */
-  async function getBalance(digi: number = 2) {
-    const { status, datas } = (await bpRead(lpObj.value.balanceOf, appStore.defaultAccount)) || {};
+  async function getBalance(digi: number = 2, addr?: string) {
+    const targetAddr = addr ?? appStore.defaultAccount;
+
+    const { status, datas } = (await bpRead(lpObj.value.balanceOf, targetAddr)) || {};
     if (!status) console.log('getBalance...error...');
 
     balanceObj.origin = status ? datas : '0';
@@ -111,9 +114,6 @@ export default (addressObj: IAddressObj) => {
   }
 
   // 两token以及对应的reserves
-  interface ITokenRev extends IRev {
-    token: string;
-  }
   const tokenRevs = reactive([
     {
       token: '',
