@@ -7,5 +7,4 @@ declare interface Window {
   chainModalShow;
   bitkeep;
   require;
-  swi;
 }

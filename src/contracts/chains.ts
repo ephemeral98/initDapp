@@ -93,5 +93,3 @@ export function curNeedChain(chain: IChain[] = ['bsc']): string[] {
   }
   return arr;
 }
-
-window.swi = curNeedChain;
