@@ -44,10 +44,7 @@ export default defineConfig({
     },
 
     postcss: {
-      plugins: [
-        postcsspxtoviewport(getUiVw(1280, 'pm')),
-        postcsspxtoviewport(getUiVw(1920, 'pw')),
-      ],
+      plugins: [postcsspxtoviewport(getUiVw(1280, 'pm')), postcsspxtoviewport(getUiVw(1920, 'pw'))],
     },
   },
   resolve: {
@@ -62,6 +59,9 @@ export default defineConfig({
       '@tools': path.resolve(__dirname, './src/utils/tools'),
       '@bpMath': path.resolve(__dirname, './src/utils/bpMath'),
     },
+
+    // import时省略后缀
+    extensions: ['.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
   },
   plugins: [
     vue(),
