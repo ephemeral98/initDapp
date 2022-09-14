@@ -34,8 +34,6 @@ vueApp
   .use(animate)
   .use(pinia)
   .use(Popup)
-  .use(ElLoading)
-  .use(ElDropdown)
   .use(BpSwiper)
   .use(BpForm)
   .use(BpButton)
