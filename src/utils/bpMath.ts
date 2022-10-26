@@ -2,6 +2,7 @@ import { create, all, BigNumber, MathJsChain } from 'mathjs';
 import { ethers, BigNumber as ethBigNumber } from 'ethers';
 const parseUnits = ethers.utils.parseUnits;
 type NumStr = number | string;
+type BigNumStr = NumStr | ethBigNumber;
 
 export interface IResType {
   hex?: boolean;
@@ -45,9 +46,9 @@ interface IParams {
  */
 function bpBaseCalc(
   funcName: string,
-  ...params: [...NumStr[], IParams | NumStr]
+  ...params: [...BigNumStr[], IParams | NumStr]
 ): string | ethBigNumber {
-  const resTypeConfig = params[params.length - 1];
+  const resTypeConfig: IParams = params[params.length - 1] as any;
 
   let deci = 0;
   let hex = false;
@@ -67,10 +68,11 @@ function bpBaseCalc(
   const cloneParams = resArr.map((item) => (item ? math.bignumber(String(item)) : 0));
 
   let bigNum = math.chain(math[funcName](cloneParams[0], cloneParams[1]));
+
   // bigNumber累加
   if (cloneParams.length > 2) {
     for (let i = 2, len = resArr.length; i < len; i++) {
-      bigNum = bigNum[funcName](resArr[i]) as MathJsChain<0 | BigNumber>;
+      bigNum = bigNum[funcName](String(resArr[i])) as MathJsChain<0 | BigNumber>;
     }
   }
 
@@ -123,7 +125,7 @@ export function bpSub(...params: [...NumStr[], IParams | NumStr]): string | ethB
  * 如果 deci 为负数，则表示 小数往下约，否则默认四舍五入
  * @returns
  */
-export function bpMul(...params: [...NumStr[], IParams | NumStr]): string | ethBigNumber {
+export function bpMul(...params: [...BigNumStr[], IParams | NumStr]): string | ethBigNumber {
   return bpBaseCalc('multiply', ...params);
 }
 
@@ -211,7 +213,7 @@ export function bpFormat(num, digits = 0, dec = 18): string {
 /**
  * 判断是否位非法数
  */
-function _isValid(num: string | number): boolean {
+function _isValid(num: string | number | ethBigNumber): boolean {
   let status = true;
   // 非数
   if (math.isNaN(+num) || num === null) {
@@ -245,7 +247,7 @@ function _fillZero(len) {
  * @param isFill 不足时是否填充0
  * @returns
  */
-export function bpFloor(num: string | number, dec: number = 0, isFill: boolean = false): string {
+export function bpFloor(num: string | number | ethBigNumber, dec: number = 0, isFill: boolean = false): string {
   // 克隆要约的数，变成字符串
   const cloneNum: string = _isValid(num) ? String(num) : '0';
 
@@ -291,7 +293,7 @@ export function bpFloor(num: string | number, dec: number = 0, isFill: boolean =
  * @param isFill 不足是否填充0
  * @returns
  */
-export function bpFixed(num: string | number, dec: number = 0, isFill: boolean = false): string {
+export function bpFixed(num: string | number | ethBigNumber, dec: number = 0, isFill: boolean = false): string {
   // 克隆要约的数，变成字符串
   const cloneNum: string = _isValid(num) ? String(num) : '0';
 

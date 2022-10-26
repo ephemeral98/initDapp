@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { bpAdd, bpSub, bpMul, bpDiv, bpFloor, bpFixed } from '@/utils/bpMath';
+import { bpAdd, bpSub, bpMul, bpDiv, bpFloor, bpFixed, bpEthHex } from '@/utils/bpMath';
 import * as math from 'mathjs';
 
 const a = ref(123);
@@ -10,8 +10,14 @@ watchEffect(() => {
   // const res = bpAdd(a.value, b.value);
   // const res = bpAdd(3, 4, { hex: false, deci: 3 });
   // const res2 = bpAdd('222222222222222222', '1111111111111111111111111.123129999999999999999993123');
-  const res2 = bpMul('2', '10', 3.33, { deci: 3 });
-  console.log('res....', res2);
+
+  let a = bpEthHex('3.9', 2);
+  // console.log('aaaal, ', a);
+
+  // const res2 = bpMul('2', a, a, { deci: 3 });
+  const res2 = bpFloor(a, 4, true);
+  console.log('res...2222', res2);
+  // console.log('res....', res2);
 
   // console.log('数学？', bpFixed('123.12345', 4, true));
 
