@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { i } from 'mathjs';
 import { IVal } from './types';
 
 const props = withDefaults(

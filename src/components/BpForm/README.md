@@ -9,7 +9,10 @@
 ### 使用方法：
 
 ```vue
-const inpValue = ref('');
+const inpValue = ref({
+  show: '',
+  origin: ''
+});
 <bp-input :max="666" v-model:refObj="inpValue" />
 ```
 
@@ -28,7 +31,10 @@ const inpValue = ref('');
 ### 使用方法：
 
 ```vue
-const inpValue = ref('');
+const inpValue = ref({
+  show: '',
+  origin: '',
+});
 <bp-add :max="666" v-model:refObj="inpValue" />
 ```
 
@@ -46,7 +52,10 @@ const inpValue = ref('');
 ### 使用方法：
 
 ```vue
-const inpValue = ref('');
+const inpValue = ref({
+  show: '',
+  origin: '',
+});
 <bp-sub :min="1" v-model:refObj="inpValue" />
 ```
 

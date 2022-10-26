@@ -1,29 +1,67 @@
 <script setup lang="ts">
-import { EMET_TOKEN_CONT, NFT_CONT } from '@/contracts/address';
-import CoinToken from '@/contractsApi/useCoinToken';
-import { useRead, watchAccount } from '@/hooks/useAction';
-import useTestStore from '@/store/testStore';
-import { useAppStore } from '@/store/appStore';
+import { bpAdd, bpSub, bpMul, bpDiv, bpFloor, bpFixed } from '@/utils/bpMath';
+import * as math from 'mathjs';
 
-import useNftToken from '@/contractsApi/useNftToken';
-
-const { isApprovedForAll } = useNftToken({ address: NFT_CONT.address, abi: NFT_CONT.abi });
-
-const [hasAllow, hasAllowEx] = useRead(async () => {
-  return await isApprovedForAll('0x3E65e4dAcc86C7A3b053F9c6B2faee1A11F5037F');
-});
+const a = ref(123);
+const b = ref(456);
+const c = ref(789);
 
 watchEffect(() => {
-  console.log('hasAllow', hasAllow);
-  console.log('hasAllow.value...', hasAllow.value);
-  console.log('hasAllow.value...', hasAllow.value.value);
+  // const res = bpAdd(a.value, b.value);
+  // const res = bpAdd(3, 4, { hex: false, deci: 3 });
+  // const res2 = bpAdd('222222222222222222', '1111111111111111111111111.123129999999999999999993123');
+  const res2 = bpMul('2', '10', 3.33, { deci: 3 });
+  console.log('res....', res2);
+
+  // console.log('数学？', bpFixed('123.12345', 4, true));
+
+  // console.log(math.fix(3.1239999, 5));
+
+  // const resp = bpFixed('123123.9999999', 4, true);
 });
+
+function upGrade(str, i) {
+  if (str[i] == 9) {
+    str[i] = 0;
+    upGrade(str, i - 1);
+  } else {
+    str[i] = String(+str[i] + 1);
+  }
+  return str;
+}
+
+/* let strs = '6792399';
+const arrs = strs.split(''); */
+
+// for (let i = arrs.length - 1; i >= 0; i--) {
+// upGrade(arrs, arrs.length - 1);
+// console.log(strs[i]);
+// console.log(i);
+// }
+
+// console.log(arrs.join(''));
+
+const yue = 7;
+const arrs2 = '134.6792399 816238';
+const reg = /\./g;
+
+const inx = reg.exec(arrs2).index;
+const cloneArrs2 = arrs2.slice(inx + 1).slice(0, yue);
+// console.log('cloneArrs2...', cloneArrs2);
+
+const zheng = arrs2.slice(0, inx);
+// console.log('zh', zheng);
+
+const cloneArrss = cloneArrs2.split('');
+
+upGrade(cloneArrss, cloneArrs2.length - 1);
+
+// console.log('结果...', zheng + '.' +cloneArrss.join(''));
 </script>
 
 <template>
   <div>
     <h1>this is test store...</h1>
-    aaa{{ hasAllow }}
   </div>
 </template>
 
