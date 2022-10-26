@@ -14,9 +14,10 @@ watchEffect(() => {
   let a = bpEthHex('3.9', 2);
   // console.log('aaaal, ', a);
 
-  // const res2 = bpMul('2', a, a, { deci: 3 });
-  const res2 = bpFloor(a, 4, true);
-  console.log('res...2222', res2);
+  const res2 = bpDiv(55, 33, { deci: 3 });
+  console.log('结果', res2);
+  // const res2 = bpFloor(a, 4, true);
+  // console.log('res...2222', res2);
   // console.log('res....', res2);
 
   // console.log('数学？', bpFixed('123.12345', 4, true));

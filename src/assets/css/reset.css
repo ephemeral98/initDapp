@@ -51,6 +51,7 @@ img {
 
 img {
   display: block;
+  user-select: none;
 }
 
 fieldset {

@@ -33,8 +33,8 @@ interface IParams {
  * 如果想带保持3位小数
  * bpMul(3, 2, { deci: 3 }) --> 6.000
  *
- * 一般入参用：
- * bpMul(3, 10 ** 18, true) --> 0x53444835ec580000
+ * 带精度入参用：
+ * bpMul(3, 10 ** 18, { hex: true }) --> 0x53444835ec580000
  * 出来是默认带有18精度的bigNumber
  */
 
@@ -78,8 +78,11 @@ function bpBaseCalc(
 
   let result: string | ethBigNumber = math.format(bigNum.done(), {
     notation: 'fixed',
-    precision: preci,
+    precision: deci > 0 ? preci : 0,
   });
+
+  // 除数为0则返回0
+  if (+result === Infinity) result = '0';
 
   if (deci < 0) {
     // 小数向下约
@@ -224,7 +227,7 @@ function _isValid(num: string | number | ethBigNumber): boolean {
     status = false;
   }
   if (!status) {
-    console.log('数字不合法');
+    console.log('数字不合法:', num);
   }
   return status;
 }

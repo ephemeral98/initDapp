@@ -52,13 +52,10 @@ export async function bpWrite(successMsg, func, ...param) {
       };
     })
     .catch((err) => {
-      console.log('bpWrite报错：', err);
-      let info = err?.['reason'] || err?.data?.message || err?.message;
+      console.log('bpWrite报错:', err);
 
-      // 兼容tp钱包
-      if (window.ethereum?.isTokenPocket) {
-        info = err;
-      }
+      let info =
+        err?.['reason'] || err?.data?.message || err?.error?.message || err?.message || err;
 
       // 点击了拒绝信息
       if (info?.includes?.('User denied transaction')) {

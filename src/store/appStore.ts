@@ -183,8 +183,6 @@ const useAppStore = defineStore('app', {
         ElMessage.error($t('msg.11'));
         console.log('切换链错误..', error);
       }
-
-      console.log('触发switch....chain...');
     },
 
     /**
