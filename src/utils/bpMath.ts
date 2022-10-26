@@ -46,7 +46,7 @@ interface IParams {
  */
 function bpBaseCalc(
   funcName: string,
-  ...params: [...BigNumStr[], IParams | NumStr]
+  ...params: [...BigNumStr[], IParams | BigNumStr]
 ): string | ethBigNumber {
   const resTypeConfig: IParams = params[params.length - 1] as any;
 
@@ -101,7 +101,7 @@ function bpBaseCalc(
  * 如果 deci 为负数，则表示 小数往下约，否则默认四舍五入
  * @returns
  */
-export function bpAdd(...params: [...NumStr[], IParams | NumStr]): string | ethBigNumber {
+export function bpAdd(...params: [...BigNumStr[], IParams | BigNumStr]): string | ethBigNumber {
   return bpBaseCalc('add', ...params);
 }
 
@@ -113,7 +113,7 @@ export function bpAdd(...params: [...NumStr[], IParams | NumStr]): string | ethB
  * 如果 deci 为负数，则表示 小数往下约，否则默认四舍五入
  * @returns
  */
-export function bpSub(...params: [...NumStr[], IParams | NumStr]): string | ethBigNumber {
+export function bpSub(...params: [...BigNumStr[], IParams | BigNumStr]): string | ethBigNumber {
   return bpBaseCalc('subtract', ...params);
 }
 
@@ -125,7 +125,7 @@ export function bpSub(...params: [...NumStr[], IParams | NumStr]): string | ethB
  * 如果 deci 为负数，则表示 小数往下约，否则默认四舍五入
  * @returns
  */
-export function bpMul(...params: [...BigNumStr[], IParams | NumStr]): string | ethBigNumber {
+export function bpMul(...params: [...BigNumStr[], IParams | BigNumStr]): string | ethBigNumber {
   return bpBaseCalc('multiply', ...params);
 }
 
@@ -137,14 +137,14 @@ export function bpMul(...params: [...BigNumStr[], IParams | NumStr]): string | e
  * 如果 deci 为负数，则表示 小数往下约，否则默认四舍五入
  * @returns
  */
-export function bpDiv(...params: [...NumStr[], IParams | NumStr]): string | ethBigNumber {
+export function bpDiv(...params: [...BigNumStr[], IParams | BigNumStr]): string | ethBigNumber {
   return bpBaseCalc('divide', ...params);
 }
 
 /**
  * 比较两个数的大小, a 是否小于 b
  */
-export function bpLt(a: NumStr, b: NumStr): boolean {
+export function bpLt(a: BigNumStr, b: BigNumStr): boolean {
   let num1 = a ? parseUnits(String(a)) : parseUnits('0');
   let num2 = b ? parseUnits(String(b)) : parseUnits('0');
   return num1.lt(num2);
@@ -153,7 +153,7 @@ export function bpLt(a: NumStr, b: NumStr): boolean {
 /**
  * 比较两个数的大小, a 是否小于等于 b
  */
-export function bpLte(a: NumStr, b: NumStr): boolean {
+export function bpLte(a: BigNumStr, b: BigNumStr): boolean {
   let num1 = a ? parseUnits(String(a)) : parseUnits('0');
   let num2 = b ? parseUnits(String(b)) : parseUnits('0');
   return num1.lte(num2);
@@ -162,7 +162,7 @@ export function bpLte(a: NumStr, b: NumStr): boolean {
 /**
  * 比较两个数的大小, a 是否大于 b
  */
-export function bpGt(a: NumStr, b: NumStr): boolean {
+export function bpGt(a: BigNumStr, b: BigNumStr): boolean {
   let num1 = a ? parseUnits(String(a)) : parseUnits('0');
   let num2 = b ? parseUnits(String(b)) : parseUnits('0');
   return num1.gt(num2);
@@ -171,7 +171,7 @@ export function bpGt(a: NumStr, b: NumStr): boolean {
 /**
  * 比较两个数的大小, a 是否大于等于 b
  */
-export function bpGte(a: NumStr, b: NumStr): boolean {
+export function bpGte(a: BigNumStr, b: BigNumStr): boolean {
   let num1 = a ? parseUnits(String(a)) : parseUnits('0');
   let num2 = b ? parseUnits(String(b)) : parseUnits('0');
   return num1.gte(num2);
@@ -231,8 +231,9 @@ function _isValid(num: string | number | ethBigNumber): boolean {
 
 /**
  * 填充0
+ * @param len 填充长度
  */
-function _fillZero(len) {
+function _fillZero(len: number) {
   let c = '';
   for (let i = 0; i < len; i++) {
     c += '0';
@@ -247,7 +248,11 @@ function _fillZero(len) {
  * @param isFill 不足时是否填充0
  * @returns
  */
-export function bpFloor(num: string | number | ethBigNumber, dec: number = 0, isFill: boolean = false): string {
+export function bpFloor(
+  num: string | number | ethBigNumber,
+  dec: number = 0,
+  isFill: boolean = false
+): string {
   // 克隆要约的数，变成字符串
   const cloneNum: string = _isValid(num) ? String(num) : '0';
 
@@ -293,7 +298,11 @@ export function bpFloor(num: string | number | ethBigNumber, dec: number = 0, is
  * @param isFill 不足是否填充0
  * @returns
  */
-export function bpFixed(num: string | number | ethBigNumber, dec: number = 0, isFill: boolean = false): string {
+export function bpFixed(
+  num: string | number | ethBigNumber,
+  dec: number = 0,
+  isFill: boolean = false
+): string {
   // 克隆要约的数，变成字符串
   const cloneNum: string = _isValid(num) ? String(num) : '0';
 
