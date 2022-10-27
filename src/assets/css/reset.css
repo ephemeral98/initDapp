@@ -51,7 +51,6 @@ img {
 
 img {
   display: block;
-  user-select: none;
 }
 
 fieldset {
@@ -142,11 +141,21 @@ p {
 input,
 textarea {
   outline: none;
+  /* text-size-adjust: none !important; */
+  /* -webkit-appearance: none; */
+}
+input {
+  /* 兼容ios */
+  line-height: 1 !important;
+}
+input:focus {
+  border: none;
+  box-shadow: none !important;
 }
 
 input[type='text'] {
   font-size: 14px;
-  outline: none;
+  outline: none !important;
   box-shadow: none !important;
 }
 
@@ -172,10 +181,13 @@ body {
   /* background-color: #008c8c; */
 }
 
-/* #app {
-  width: 100vw;
+#app {
+  max-width: 750px;
+  margin: 0 auto;
   overflow: auto;
-} */
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
 
 /*滚动条 start*/
 ::-webkit-scrollbar {
