@@ -8,11 +8,10 @@ import { EMET_TOKEN_CONT } from '@/contracts/address';
 import TestMintContract from './TestMintContract.vue';
 import TestLp from './TestLp.vue';
 
-const { auth, allow, getBalance, balanceObj, hasAllow, created, totalSupply } =
-  CoinToken({
-    address: EMET_TOKEN_CONT.address,
-    abi: EMET_TOKEN_CONT.abi,
-  });
+const { auth, allow, getBalance, balanceObj, hasAllow, created, totalSupply } = CoinToken({
+  address: EMET_TOKEN_CONT.address,
+  abi: EMET_TOKEN_CONT.abi,
+});
 
 // getBalance();
 const [datas, dataEx] = useRead(
@@ -78,9 +77,7 @@ function tempInp(e) {
 
     <img :src="tempImg" alt="" />
     <img src="@img/holder.png" alt="" />
-    <BpButton class="click-box" @click="handleClick" v-loading="loadWrite"
-      >bp写操作</BpButton
-    >
+    <BpButton class="click-box" @click="handleClick" v-loading="loadWrite">bp写操作</BpButton>
 
     <h3>这个是testStore: {{ testStore.test1 }}</h3>
 

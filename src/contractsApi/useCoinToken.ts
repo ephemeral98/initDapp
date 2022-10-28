@@ -120,8 +120,9 @@ export default (addressObj: IAddressObj) => {
   /**
    * 授权
    * @param {String} hoster 托管给谁
+   * @returns {Boolean} true 授权成功，false 授权失败
    */
-  async function auth(hoster: string) {
+  async function auth(hoster: string): Promise<boolean> {
     const { status } = await bpWrite(
       $t('msg.3'),
       coinObj.value.approve,
