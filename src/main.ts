@@ -4,6 +4,7 @@ import router from './router';
 import { createPinia } from 'pinia';
 import VueI18n from '@/locales/i18n';
 import animate from 'animate.css';
+import * as direct from './hooks/useDirective';
 
 // 初始化一些东西
 import '@/utils/initRem';
@@ -38,6 +39,14 @@ vueApp
   .use(BpForm)
   .use(BpButton)
   .mount('#app');
+
+// 常用自定义指令
+direct.maxDirective(vueApp);
+direct.minDirective(vueApp);
+direct.doubleDirective(vueApp);
+direct.numberDirective(vueApp);
+direct.intDirective(vueApp);
+direct.integerDirective(vueApp);
 
 // 获取当前设备尺寸
 const appStore = useAppStore();

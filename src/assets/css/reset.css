@@ -32,7 +32,7 @@ h5 {
 body {
   background-color: #ffffff;
   font-family: fang;
-  font-size: 14px;
+  font-size: 0.14rem;
   text-align: left;
 }
 
@@ -168,7 +168,7 @@ input[type='week'],
 input[multiple],
 textarea,
 select {
-  font-size: 14px;
+  font-size: 0.14rem;
   outline: none;
   box-shadow: none;
   padding: 0;

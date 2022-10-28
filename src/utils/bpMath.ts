@@ -82,7 +82,7 @@ function bpBaseCalc(
   });
 
   // 除数为0则返回0
-  if (+result === Infinity) result = '0';
+  if (+result === Infinity || math.isNaN(+result)) result = '0';
 
   if (deci < 0) {
     // 小数向下约
