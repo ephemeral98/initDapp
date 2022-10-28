@@ -153,10 +153,25 @@ input:focus {
   box-shadow: none !important;
 }
 
-input[type='text'] {
+input[type='text'],
+input[type='email'],
+input[type='url'],
+input[type='password'],
+input[type='number'],
+input[type='date'],
+input[type='datetime-local'],
+input[type='month'],
+input[type='search'],
+input[type='tel'],
+input[type='time'],
+input[type='week'],
+input[multiple],
+textarea,
+select {
   font-size: 14px;
-  outline: none !important;
-  box-shadow: none !important;
+  outline: none;
+  box-shadow: none;
+  padding: 0;
 }
 
 div,
