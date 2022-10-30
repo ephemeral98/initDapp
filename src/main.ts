@@ -20,7 +20,6 @@ import 'element-plus/theme-chalk/index.css';
 
 // 一些全局组件
 import BpButton from '@cps/BpButton';
-import BpForm from '@cps/BpForm';
 
 import BpSwiper from '@cps/BpSwiper';
 import { useAppStore } from './store/appStore';
@@ -36,7 +35,6 @@ vueApp
   .use(pinia)
   .use(Popup)
   .use(BpSwiper)
-  .use(BpForm)
   .use(BpButton)
   .mount('#app');
 

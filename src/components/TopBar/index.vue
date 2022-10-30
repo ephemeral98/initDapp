@@ -75,16 +75,6 @@ async function handleLink() {
 
     <!-- 一些工具：钱包、选择语言等 -->
     <div class="top-bar-tools">
-      <!-- 已链接钱包展示钱包地址 -->
-      <div v-if="appStore.defaultAccount" class="account-address">
-        {{ plusXing(appStore.defaultAccount, 4, 4) }}
-      </div>
-
-      <!-- 连接钱包 -->
-      <button v-loading="loadLink" v-else class="link-btn" @click="handleLink">
-        {{ $t('common.1') }}
-      </button>
-
       <!-- 选择语言 -->
       <el-dropdown trigger="click" @command="pickLang">
         <div class="lang-container">
@@ -99,6 +89,16 @@ async function handleLink() {
           </el-dropdown-menu>
         </template>
       </el-dropdown>
+
+      <!-- 已链接钱包展示钱包地址 -->
+      <div v-if="appStore.defaultAccount" class="account-address">
+        {{ plusXing(appStore.defaultAccount, 4, 4) }}
+      </div>
+
+      <!-- 连接钱包 -->
+      <button v-loading="loadLink" v-else class="link-btn" @click="handleLink">
+        {{ $t('common.1') }}
+      </button>
     </div>
   </div>
   <!-- 移动端菜单 -->
@@ -119,7 +119,7 @@ async function handleLink() {
   @include flexPos(flex-start);
 
   .account-address {
-    margin-right: 0.18rem;
+    margin-left: 0.18rem;
   }
 
   .lang-container {

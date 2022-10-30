@@ -3,7 +3,6 @@
 // import { useAppStore } from '@store/appStore';
 import { ethers } from 'ethers';
 import { useAppStore } from '@/store/appStore';
-import { IAddressObj } from './types';
 import i18n from '@/locales/i18n';
 import { bpFormat, bpGt, bpMul } from '@/utils/bpMath';
 import { bpRead, bpWrite } from '@/service/bpAction';
@@ -25,7 +24,7 @@ export default (addressObj: IAddressObj) => {
    * 例如 去旁边的 address.js 里拿 BVG_TOKEN_CONT 传入
    * @returns 代币的信息
    */
-  function createContract(addressObj) {
+  function createContract(addressObj: IAddressObj) {
     const signer = useDefaultRpc();
     try {
       lpObj.value = new ethers.Contract(addressObj.address, addressObj.abi, signer);

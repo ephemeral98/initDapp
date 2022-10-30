@@ -103,20 +103,7 @@ function tempInp(e) {
 
     <button>MAX</button>
 
-    <!-- <input type="text" maxlength="5"> -->
-    <bp-input type="int" :max="666" v-model:refObj="inpValue"></bp-input>
-    值：{{ inpValue.show }}
-
-    <bp-add v-model:refObj="inpValue" :max="333" />
-    <bp-sub v-model:refObj="inpValue" :min="-2" />
-
     <input type="text" @keyup="tempInp" />
-
-    <!-- <bp-form>
-      <bp-input></bp-input>
-      <add-btn></add-btn>
-      <minu-btn></minu-btn>
-    </bp-form> -->
   </div>
 </template>
 

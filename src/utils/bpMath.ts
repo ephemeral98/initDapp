@@ -197,7 +197,7 @@ export function bpEthHex(num, dec = 18) {
  * 如果 digits 为负数，则表示 小数往下约，否则默认四舍五入
  * @param dec 精度
  */
-export function bpFormat(num, digits = 0, dec = 18): string {
+export function bpFormat(num, digits: number = 0, dec: number = 18): string {
   // 没有值
   if (!num) {
     const res = 0;
@@ -403,8 +403,8 @@ export function bpFixed(
 
 /**
  * 将数字转换为千分位表示
- * @param {Number} num 数字
- * @returns {String} 123,456,78
+ * @param num 数字
+ * @returns 123,456,78
  */
 export function toThousands(num) {
   //处理非数字

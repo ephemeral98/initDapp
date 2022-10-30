@@ -8,6 +8,7 @@ import { bpRead, bpWrite } from '@/service/bpAction';
 import { ElMessage } from 'element-plus';
 import { watchAccount } from '@/hooks/useAction';
 import { reactive, Ref, ref } from 'vue';
+
 const $t = i18n.global.t;
 
 export default () => {
@@ -52,7 +53,7 @@ export default () => {
    * @param amount 质押数量
    * @param inv 邀请人
    */
-  async function stake(amount: string | number, inv: string) {
+  async function stake(amount: BigNumStr, inv: string) {
     const cloneAmount = bpMul(amount, 10 ** 18);
     const { status } = await bpWrite($t('msg.12'), stakeObj.value.stake, {
       value: cloneAmount,
