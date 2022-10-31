@@ -66,4 +66,10 @@
 
     transform: translateY($range);
   }
+
+  // 置灰
+  &.disable {
+    background: rgb(178, 178, 178);
+    box-shadow: 0 $range 0 0 rgb(137, 137, 137);
+  }
 }

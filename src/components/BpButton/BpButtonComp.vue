@@ -22,7 +22,7 @@ async function handleSwitchChain() {
 
 <template>
   <!-- 链不对，文案显示连接钱包 -->
-  <button :class="['write-btn func-btn', { disableBtn: props.disable }]" @click="handleSwitchChain">
+  <button :class="['write-btn func-btn', { disable: props.disable }]" @click="handleSwitchChain">
     <template v-loading="loadSwitch" v-if="!appStore.rightChain || !appStore.defaultAccount">
       <!-- {{ $t('common.1') }} -->
 
@@ -37,13 +37,6 @@ async function handleSwitchChain() {
 </template>
 
 <style lang="scss" scoped>
-button {
-  display: block;
-}
-.disableBtn {
-  background-color: #c9c9c9 !important;
-}
-
 .write-btn {
   text-align: center;
   padding-top: 0.07rem;
