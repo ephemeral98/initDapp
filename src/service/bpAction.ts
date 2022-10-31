@@ -19,7 +19,7 @@ export interface ITransStatus {
  * @param 交易参数
  * eg: bpWrite($t('msg.1'), mintObj.value.funcName, 参数1, 参数2)
  */
-export async function bpWrite(successMsg, func, ...param) {
+export async function bpWrite(successMsg, func, ...param): Promise<ITransStatus> {
   console.log('...param', ...param);
 
   if (!func) {

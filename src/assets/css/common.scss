@@ -8,6 +8,10 @@
 // 消息
 .el-message {
   z-index: 99999 !important;
+
+  .el-icon {
+    font-size: 15px !important;
+  }
 }
 
 // 指令loading
@@ -50,7 +54,7 @@
   $color: #07caf0;
   $range: 2px; // 下沉幅度
 
-  background-image: linear-gradient(90deg, #18e7ca 0%, #01c0fd 100%);;
+  background-image: linear-gradient(90deg, #18e7ca 0%, #01c0fd 100%);
   border-radius: 100px;
   color: #fff;
   box-shadow: 0 $range 0 0 $color;

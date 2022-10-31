@@ -32,8 +32,9 @@ const useAppStore = defineStore('app', {
     loadRead: '', // 是否在读取链上方法中
     ethersObj: INIT_ETHERS,
     lockUpdate: true, // 是否锁住，防止首次加载的时候导致的切链('' -> '0x')
-    updateChain: false, // 更新所有组件数据的标记
     chainTimer: null, // 切链timer
+    netWorkReady: false, // 成功获取链和钱包等准备工作
+    afterWatchAccount: false, // watchAccount 触发后
   }),
 
   actions: {
@@ -67,7 +68,7 @@ const useAppStore = defineStore('app', {
       // 获取链id
       this.ethersObj.chainId = toRaw(provider).provider.chainId;
       // 添加一系列钱包监听
-      this.subscribeProvider(provider);
+      this.subscribeProvider();
     },
 
     /**
@@ -225,7 +226,6 @@ const useAppStore = defineStore('app', {
               clearInterval(timer);
             }
             count++;
-
             // 1秒内还获取不到小狐狸，则
             const sec = (1 * 1000) / duration;
             if (count > sec) {
@@ -269,13 +269,12 @@ const useAppStore = defineStore('app', {
      * @param {*} provider
      * @returns
      */
-    async subscribeProvider(provider) {
+    async subscribeProvider() {
       // const { provider } = this.ethersObj;
       // console.log('provider.on....', provider.on);
 
       // 监听切账号
       window.ethereum?.on('accountsChanged', (accounts) => {
-        console.log('账号切换了...', accounts);
         this.defaultAccount = accounts[0];
       });
 
@@ -301,8 +300,21 @@ const useAppStore = defineStore('app', {
      * 设置是否为对的链
      */
     setRightChain(status: boolean) {
-      console.log('status..', status);
       this.rightChain = status;
+    },
+
+    /**
+     * 设置网络准备状态
+     */
+    setNetWorkReady(status: boolean) {
+      this.netWorkReady = status;
+    },
+
+    /**
+     * 设置watchAccount之后
+     */
+    setAfterWatchAccount(status: boolean) {
+      this.afterWatchAccount = status;
     },
   },
 

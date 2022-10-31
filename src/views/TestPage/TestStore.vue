@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { bpFormat, bpAdd, bpSub, bpMul, bpDiv, bpFloor, bpFixed, bpEthHex } from '@/utils/bpMath';
 import * as math from 'mathjs';
+import useStakeContractApi from '@/contractsApi/useStakeContractApi';
+import { useRead } from '@/hooks/useAction';
+
+const useStake = useStakeContractApi();
+
+const [user, userEx] = useRead(async () => {
+  return await useStake.userInfo();
+});
 
 const a = ref(123);
 const b = ref(456);
@@ -22,6 +30,8 @@ setTimeout(() => {
     <input type="text" class="bp-input" v-double="-5" v-min="1" v-max="16" />
 
     <bp-button>write操作</bp-button>
+
+    {{ user }}
   </div>
 </template>
 

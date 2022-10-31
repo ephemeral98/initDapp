@@ -53,8 +53,10 @@ router.beforeEach(
   (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
     // 每次进来，先拿一下钱包
     const appStore = useAppStore();
-    appStore.linkWallet();
-    handleSwitchChain();
+    appStore.linkWallet().then(() => {
+      handleSwitchChain();
+      appStore.setNetWorkReady(true);
+    });
 
     if (to.matched.length === 0) {
       //如果未匹配到路由

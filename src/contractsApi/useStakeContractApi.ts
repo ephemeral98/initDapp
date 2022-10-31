@@ -43,9 +43,11 @@ export default () => {
 
   const inviter = ref('');
   async function userInfo() {
-    const resp = await bpRead(stakeObj.value.userInfo);
+    const resp = await bpRead(stakeObj.value.userInfo, appStore.defaultAccount);
+    console.log('获取用户信息,', resp);
     if (!resp.status) console.log('getUserInfo...error...');
     inviter.value = resp.datas?.invitor || '';
+    return resp;
   }
 
   /**
