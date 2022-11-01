@@ -128,15 +128,11 @@ export function useRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead
     result.loading = false;
   }
 
-  // 首次 和 refetch
+  // refetch
   watch(
-    () => [refetchStatus.value, appStore.afterWatchAccount],
+    () => [refetchStatus.value, appStore.touchAfterWatchAccount],
     () => {
-      if (!appStore.afterWatchAccount) return;
       help();
-    },
-    {
-      immediate: true,
     }
   );
 
@@ -167,12 +163,15 @@ export function watchAccount(func: () => void): void {
     () => [appStore.defaultAccount, appStore.ethersObj.chainId, appStore.netWorkReady],
     (newVal, oldVal) => {
       if (!appStore.defaultAccount || !appStore.ethersObj.chainId || !appStore.netWorkReady) return;
+
       checkRightChain();
       func();
 
-      // 确保合约对象构建完成后，才开始一些列的 read 方法
-      // 由于 useRead 走的是任务队列，所以会等 所有 useHook构建完成合约对象 才会useRead
-      appStore.setAfterWatchAccount(true);
+      nextTick(() => {
+        // 确保合约对象构建完成后，才开始一些列的 read 方法
+        // 由于 useRead 走的是任务队列，所以会等 所有 useHook构建完成合约对象 才会useRead
+        appStore.setTouchAfterWatchAccount(appStore.touchAfterWatchAccount + 1);
+      });
     },
     {
       immediate: true,

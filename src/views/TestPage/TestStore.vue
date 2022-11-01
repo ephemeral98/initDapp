@@ -3,11 +3,23 @@ import { bpFormat, bpAdd, bpSub, bpMul, bpDiv, bpFloor, bpFixed, bpEthHex } from
 import * as math from 'mathjs';
 import useStakeContractApi from '@/contractsApi/useStakeContractApi';
 import { useRead } from '@/hooks/useAction';
+import { useRoute } from 'vue-router';
+import useLpToken from '@contApi/useLpToken';
+import { LP_CONT } from '@/contracts/address';
 
 const useStake = useStakeContractApi();
+const useStake2 = useStakeContractApi();
+const useStake3 = useStakeContractApi();
+
+const usdt = useLpToken({ address: LP_CONT.address, abi: LP_CONT.abi });
 
 const [user, userEx] = useRead(async () => {
+  console.log('重新读');
   return await useStake.userInfo();
+});
+
+useRead(async () => {
+  await usdt.getBalance();
 });
 
 const a = ref(123);
@@ -17,6 +29,15 @@ const c = ref(789);
 setTimeout(() => {
   b.value = 666;
 }, 3000);
+
+/* function handleWrite() {
+  console.log('click././');
+  console.log(useRoute());
+} */
+
+const handleWrite = () => {
+  console.log('aaaa', useRoute());
+};
 </script>
 
 <template>
@@ -29,7 +50,7 @@ setTimeout(() => {
 
     <input type="text" class="bp-input" v-double="-5" v-min="1" v-max="16" />
 
-    <bp-button>write操作</bp-button>
+    <bp-button @click="handleWrite">write操作</bp-button>
 
     {{ user }}
   </div>

@@ -34,7 +34,7 @@ const useAppStore = defineStore('app', {
     lockUpdate: true, // 是否锁住，防止首次加载的时候导致的切链('' -> '0x')
     chainTimer: null, // 切链timer
     netWorkReady: false, // 成功获取链和钱包等准备工作
-    afterWatchAccount: false, // watchAccount 触发后
+    touchAfterWatchAccount: 0, // 告诉useRead，已重新构建合约对象
   }),
 
   actions: {
@@ -313,8 +313,8 @@ const useAppStore = defineStore('app', {
     /**
      * 设置watchAccount之后
      */
-    setAfterWatchAccount(status: boolean) {
-      this.afterWatchAccount = status;
+    setTouchAfterWatchAccount(count: number) {
+      this.touchAfterWatchAccount = count;
     },
   },
 

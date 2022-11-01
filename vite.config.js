@@ -92,6 +92,7 @@ export default defineConfig({
       // 确保外部化处理那些你不想打包进库的依赖
       external: ['parallax-js'],
     },
+    outDir: './dist'
   },
 
   server: {
