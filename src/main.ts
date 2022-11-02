@@ -4,7 +4,7 @@ import router from './router';
 import { createPinia } from 'pinia';
 import VueI18n from '@/locales/i18n';
 import animate from 'animate.css';
-import * as direct from './hooks/useDirective';
+import * as direct from './utils/bpDirective';
 
 // 初始化一些东西
 import '@/utils/initRem';
@@ -23,7 +23,7 @@ import BpButton from '@cps/BpButton';
 
 import BpSwiper from '@cps/BpSwiper';
 import { useAppStore } from './store/appStore';
-import { handleThrottle } from './utils/tools';
+import { bpThrottle } from './utils/tools';
 
 const pinia = createPinia();
 
@@ -50,6 +50,6 @@ direct.integerDirective(vueApp);
 const appStore = useAppStore();
 appStore.getCurDevice();
 // 添加监听屏幕变化
-window.onresize = handleThrottle(() => {
+window.onresize = bpThrottle(() => {
   appStore.getCurDevice();
 });

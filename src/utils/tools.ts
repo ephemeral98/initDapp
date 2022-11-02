@@ -5,8 +5,8 @@ const $t = i18n.global.t;
 /**
  * 地址略写
  * @param {String} str 全地址
- * @param {Number} frontLen 前面多少颗星星
- * @param {Number} endLen 结尾多少个星星
+ * @param frontLen 前面多少颗星星
+ * @param endLen 结尾多少个星星
  * @returns {String}
  */
 export function plusXing(str: string, frontLen: number, endLen: number) {
@@ -56,25 +56,25 @@ export function clone(obj, deep: boolean) {
 
 /**
  * 节流
- * @param {Function} callback 回调函数
- * @param {Number} duration 节流间隔时间
+ * @param callback 回调函数
+ * @param duration 节流间隔时间
  */
-export function handleThrottle(callback: () => void, duration: number = 70) {
+export function bpThrottle(callback: (e) => void, duration: number = 70) {
   let throttleTimer;
-  return () => {
+  return (e) => {
     if (throttleTimer) return;
 
     throttleTimer = setTimeout(() => {
-      callback();
+      callback(e);
       throttleTimer = null;
     }, duration);
   };
 }
 
 /**
- * 节流
- * @param {Function} callback 回调函数
- * @param {Number} duration 节流间隔时间
+ * 防抖
+ * @param callback 回调函数
+ * @param duration 防抖间隔时间
  */
 export function bpDebounce(callback: (e) => void, duration: number = 70) {
   let debounceTimer;
@@ -82,7 +82,7 @@ export function bpDebounce(callback: (e) => void, duration: number = 70) {
     if (debounceTimer) {
       clearTimeout(debounceTimer);
     }
-    debounceTimer = setTimeout(function () {
+    debounceTimer = setTimeout(() => {
       callback(e);
       debounceTimer = null;
     }, duration);

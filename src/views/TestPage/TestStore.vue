@@ -6,6 +6,7 @@ import { useRead } from '@/hooks/useAction';
 import { useRoute } from 'vue-router';
 import useLpToken from '@contApi/useLpToken';
 import { LP_CONT } from '@/contracts/address';
+import { bpDebounce } from '@/utils/tools';
 
 const input = ref('');
 
@@ -17,12 +18,16 @@ const usdt = useLpToken({ address: LP_CONT.address, abi: LP_CONT.abi });
 
 const [user, userEx] = useRead(async () => {
   console.log('重新读');
-  return await useStake.userInfo();
+  const resp =  await useStake.userInfo();
+  console.log('用户？？', user);
+  return resp;
 });
 
-useRead(async () => {
-  await usdt.getBalance();
+const [bal, balEx] = useRead(async () => {
+  return await usdt.getBalance();
 });
+
+// bal.value
 
 const a = ref(123);
 const b = ref(456);
@@ -45,6 +50,10 @@ const trailing = ref(true);
 const leading = ref(false);
 const updated = ref(0);
 
+const changeInp = bpDebounce((e) => {
+  console.log('aaaa', e.target.value);
+}, 3000);
+
 /* window.addEventListener('scroll', myThrottle);
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', myThrottle);
@@ -65,7 +74,9 @@ const aaa = ref(1);
 
     <bp-button @click="handleWrite">write操作</bp-button>
 
-    {{ user }}
+    {{ user.datas }}
+
+    <input type="text" @input="changeInp" />
 
     <!-- <div class="h-4000px"></div> -->
   </div>

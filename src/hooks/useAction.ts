@@ -3,7 +3,6 @@ import { reactive, ReactiveEffect, ref, Ref, watch } from 'vue';
 import { useRouteItem } from '@/router/useRouterTools';
 import { useAppStore } from '@store/appStore';
 import i18n from '@/locales/i18n';
-import { ITransStatus } from '@/service/bpAction';
 import { checkRightChain } from '@/router/routerHelp';
 const $t = i18n.global.t;
 

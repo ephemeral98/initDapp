@@ -6,12 +6,6 @@ import i18n from '@/locales/i18n';
 import { useAppStore } from '@/store/appStore';
 const $t = i18n.global.t;
 
-export interface ITransStatus {
-  status: boolean; // 请求是否成功
-  datas: any; // 请求的数据
-  message?: string; // 错误时候的消息
-}
-
 /**
  * 处理写交易动作,唤起交易之后的信息处理
  * @param {*} successMsg 交易成功的消息
