@@ -72,6 +72,24 @@ export function handleThrottle(callback: () => void, duration: number = 70) {
 }
 
 /**
+ * 节流
+ * @param {Function} callback 回调函数
+ * @param {Number} duration 节流间隔时间
+ */
+export function bpDebounce(callback: (e) => void, duration: number = 70) {
+  let debounceTimer;
+  return (e) => {
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
+    debounceTimer = setTimeout(function () {
+      callback(e);
+      debounceTimer = null;
+    }, duration);
+  };
+}
+
+/**
  * 获取链的节点数据
  * @param chainId 链id
  * @returns

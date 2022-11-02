@@ -118,7 +118,8 @@ async function handleLink() {
 .top-bar-tools {
   @include flexPos(flex-start);
 
-  .account-address {
+  .account-address,
+  .link-btn {
     margin-left: 0.18rem;
   }
 
