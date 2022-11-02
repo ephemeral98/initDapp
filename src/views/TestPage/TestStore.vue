@@ -6,11 +6,8 @@ import { useRead } from '@/hooks/useAction';
 import { useRoute } from 'vue-router';
 import useLpToken from '@contApi/useLpToken';
 import { LP_CONT } from '@/contracts/address';
-import { refThrottled, refDebounced, useDebounceFn } from '@vueuse/core';
-import { handleThrottle, bpDebounce } from '@/utils/tools';
 
 const input = ref('');
-// const throttled = refThrottled(input, 1000, false);
 
 const useStake = useStakeContractApi();
 const useStake2 = useStakeContractApi();
@@ -48,42 +45,12 @@ const trailing = ref(true);
 const leading = ref(false);
 const updated = ref(0);
 
-const throttled = refThrottled(input, 1000, false);
-
-watch(throttled, () => {
-  updated.value += 1;
-});
-
-const input2 = ref('foo');
-const debounced = refDebounced(input2, 1000);
-
-input.value = 'bar';
-console.log(debounced.value); // 'foo'
-
-console.log(debounced.value); // 'bar'
-
-const debouncedFn = useDebounceFn((e) => {
-  // do something
-  console.log(e.target.value);
-}, 150);
-
-const myThrottle = bpDebounce((e) => {
-  console.log(e);
-}, 1000);
-const myThrottle2 = bpDebounce(() => {
-  console.log(new Date().getTime());
-}, 1050);
-const myThrottle3 = bpDebounce(() => {
-  console.log(new Date().getTime());
-}, 1050);
-
 /* window.addEventListener('scroll', myThrottle);
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', myThrottle);
 }); */
 
 const aaa = ref(1);
-
 </script>
 
 <template>
@@ -95,19 +62,6 @@ const aaa = ref(1);
     <input type="text" class="bp-input" v-double="-5" v-max="15" />
 
     <input type="text" class="bp-input" v-double="-5" v-min="1" v-max="16" />
-
-    <div class="my-2">
-      <input v-model="input" placeholder="Try to type anything..." type="text" />
-      <p>Throttled: {{ throttled }}</p>
-      <p>Times Updated: {{ updated }}</p>
-      <p>Trailing: {{ trailing }}</p>
-      <p>Leading: {{ leading }}</p>
-    </div>
-
-    <div class="my-2">
-      <div>{{ aaa }}</div>
-      <input type="text" @input="myThrottle"/>
-    </div>
 
     <bp-button @click="handleWrite">write操作</bp-button>
 
