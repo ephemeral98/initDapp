@@ -7,6 +7,7 @@ import { useRoute } from 'vue-router';
 import useLpToken from '@contApi/useLpToken';
 import { LP_CONT } from '@/contracts/address';
 import { bpDebounce } from '@/utils/tools';
+import { useRouteItem } from '@/router/useRouterTools';
 
 const input = ref('');
 
@@ -17,9 +18,7 @@ const useStake3 = useStakeContractApi();
 const usdt = useLpToken({ address: LP_CONT.address, abi: LP_CONT.abi });
 
 const [user, userEx] = useRead(async () => {
-  console.log('重新读');
   const resp =  await useStake.userInfo();
-  console.log('用户？？', user);
   return resp;
 });
 
@@ -44,7 +43,10 @@ setTimeout(() => {
 
 const handleWrite = () => {
   console.log('aaaa', useRoute());
+  console.log('bbbb', useRouteItem());
 };
+
+console.log('aaaa', useRoute());
 
 const trailing = ref(true);
 const leading = ref(false);

@@ -5,6 +5,7 @@ import { createPinia } from 'pinia';
 import VueI18n from '@/locales/i18n';
 import animate from 'animate.css';
 import * as direct from './utils/bpDirective';
+import watchUrl from './router/watchUrl';
 
 // 初始化一些东西
 import '@/utils/initRem';
@@ -53,3 +54,9 @@ appStore.getCurDevice();
 window.onresize = bpThrottle(() => {
   appStore.getCurDevice();
 });
+
+/**
+ * 开启监听地址栏的变化，
+ * 如果需要用到 useRouterTools.ts/useRouteItemRef 就开启
+ */
+watchUrl();

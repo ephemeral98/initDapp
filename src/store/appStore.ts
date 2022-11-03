@@ -35,6 +35,7 @@ const useAppStore = defineStore('app', {
     chainTimer: null, // 切链timer
     netWorkReady: false, // 成功获取链和钱包等准备工作
     touchAfterWatchAccount: 0, // 告诉useRead，已重新构建合约对象
+    touchUrl: 0, // 用作监听地址栏的变化
   }),
 
   actions: {
@@ -315,6 +316,13 @@ const useAppStore = defineStore('app', {
      */
     setTouchAfterWatchAccount(count: number) {
       this.touchAfterWatchAccount = count;
+    },
+
+    /**
+     * 设置
+     */
+    setTouchUrl(count: number) {
+      this.touchUrl = count;
     },
   },
 
