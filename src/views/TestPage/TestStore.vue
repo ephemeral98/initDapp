@@ -18,7 +18,7 @@ const useStake3 = useStakeContractApi();
 const usdt = useLpToken({ address: LP_CONT.address, abi: LP_CONT.abi });
 
 const [user, userEx] = useRead(async () => {
-  const resp =  await useStake.userInfo();
+  const resp = await useStake.userInfo();
   return resp;
 });
 
@@ -44,6 +44,7 @@ setTimeout(() => {
 const handleWrite = () => {
   console.log('aaaa', useRoute());
   console.log('bbbb', useRouteItem());
+  console.log('bal...', bpFormat(bal.value.origin, 0), bal.value.origin / 10 ** 18);
 };
 
 console.log('aaaa', useRoute());

@@ -210,7 +210,7 @@ export function bpFormat(num, digits: number = 0, dec: number = 18): string {
     // 小数向下约
     res = bpFloor(res, digi, true);
   }
-  return digits ? (+res).toFixed(digi) : (+res).toFixed();
+  return bpFixed(res, digi, true);
 }
 
 /**
@@ -353,7 +353,7 @@ export function bpFixed(
   // 匹配小数点的索引位
   const dotInx = regDot.exec(cloneNum)?.index;
   // 获取 要匹配的小数点的 索引位置 的多一位 (最后一位为标记位)
-  const patchMoreOne = cloneNum.slice(dotInx + 1).slice(0, dec + 1);
+  const patchMoreOne = cloneNum.slice(dotInx + 1).slice(0, +dec + 1);
 
   // 整数 (没有小数点)
   if (count === 0) {
@@ -366,7 +366,7 @@ export function bpFixed(
   }
 
   // 不够约
-  if (patchMoreOne.length <= dec) {
+  if (patchMoreOne.length <= +dec) {
     if (isFill) {
       // 填充0
       const len = dec - patchMoreOne.length;
@@ -397,8 +397,7 @@ export function bpFixed(
   const res = temp.replace(replaceA, '0');
 
   const resPositiveInt = allZero ? bpAdd(positiveInt, 1) : positiveInt;
-
-  return resPositiveInt + '.' + res;
+  return res ? resPositiveInt + '.' + res : String(resPositiveInt);
 }
 
 /**
