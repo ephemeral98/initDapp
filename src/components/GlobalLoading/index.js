@@ -23,7 +23,7 @@ let lock = false; // 是不是首次加载
 
 /**
  * 展示loading
- * @param {Boolean} isShow 是否展示
+ * @param {*} isShow 是否展示
  */
 function installLoad({ isShow, style='' }) {
   setLoadStyle(style);

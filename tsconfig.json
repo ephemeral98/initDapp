@@ -15,20 +15,26 @@
     "isolatedModules": false,
     "resolveJsonModule": true,
     "noEmit": true,
+    "allowJs": true,
     "baseUrl": ".",
-    "types": ["webpack-env"],
     "paths": {
       "@/*": ["./src/*"],
-      "@page/*": ["./src/pages/*"],
       "@css/*": ["./src/assets/css/*"],
       "@img/*": ["./src/assets/img/*"],
       "@cps/*": ["./src/components/*"],
       "@store/*": ["./src/store/*"],
       "@contApi/*": ["./src/contractsApi/*"],
-      "@hooks/*": ["./src/hooks/*"]
+      "@hooks/*": ["./src/hooks/*"],
+      "@tools/*": ["./src/tools/*"],
+      "@bpMath/*": ["./src/bpMath/*"]
     },
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/**/*.ts", "tests/**/*.tsx", "typings.d.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "init.d.ts",
+  ],
   "exclude": ["node_modules"]
 }

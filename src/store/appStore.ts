@@ -31,16 +31,18 @@ const useAppStore = defineStore('app', {
     rightChain: true, // 当前页面是否在对的链
     loadRead: '', // 是否在读取链上方法中
     ethersObj: INIT_ETHERS,
-    lockUpdate: true, // 是否锁住，禁止更新所有组件和store
-    updateTarget: false, // 更新所有组件数据的标记
+    lockUpdate: true, // 是否锁住，防止首次加载的时候导致的切链('' -> '0x')
     chainTimer: null, // 切链timer
+    netWorkReady: false, // 成功获取链和钱包等准备工作
+    touchAfterWatchAccount: 0, // 告诉useRead，已重新构建合约对象
+    touchUrl: 0, // 用作监听地址栏的变化
   }),
 
   actions: {
     /**
      * 连接小狐狸钱包
      */
-    async linkWallet() {
+    async linkWallet(): Promise<void | boolean> {
       // 已经连接了钱包
       if (this.defaultAccount) {
         return true;
@@ -66,9 +68,8 @@ const useAppStore = defineStore('app', {
 
       // 获取链id
       this.ethersObj.chainId = toRaw(provider).provider.chainId;
-
       // 添加一系列钱包监听
-      this.subscribeProvider(provider);
+      this.subscribeProvider();
     },
 
     /**
@@ -106,70 +107,82 @@ const useAppStore = defineStore('app', {
      * @returns
      */
     async switchChain(chainId: string) {
-      console.log('window000', window.ethereum?.rpc?.rpcUrl);
-
+      // 没有小狐狸插件，则跳去下载
       if (!window?.ethereum) {
-        ElMessage.error($t('msg.19'));
+        window.open('https://metamask.io/download/');
         return;
       }
-
-      if (!+this.defaultAccount) {
-        ElMessage.error($t('msg.7'));
-        // return;
-      }
-      // window.alert(333);
 
       let ethereum = window?.ethereum;
       if (this.ethersObj.cachedProvider === 'bitkeep') {
         ethereum = window?.bitkeep?.ethereum;
       }
 
-      try {
-        const providerWrap: any = new ethers.providers.Web3Provider(ethereum, 'any');
-        const chainData = getChainData(chainId);
+      const providerWrap: any = new ethers.providers.Web3Provider(ethereum, 'any');
 
+      /**
+       * 切链事件
+       */
+      async function _handleChange() {
+        if (+ethereum.chainId === +chainId) {
+          // 如果当前链和切换的链一样，则不做操作
+          return;
+        }
+
+        // 将切到以太坊和其他的链 方法分开
+        if (chainId === '0x1') {
+          const hexChainId = ethers.utils.hexValue(chainId);
+          return await providerWrap.provider.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: hexChainId }],
+          });
+        }
+        const chainData = getChainData(chainId);
+        return await providerWrap.provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [chainData],
+        });
+      }
+
+      try {
         // 记录旧的chainId
         const oldChainId = this.ethersObj.chainId;
-        await providerWrap.provider
-          .request({ method: 'wallet_addEthereumChain', params: [chainData] })
-          .then(async () => {
-            if (window.ethereum?.isTokenPocket) {
-              // TP钱包才给 loading提示，因为PC点了拒绝，也会到这里。。
-              ElMessage.info($t('common.2'));
-            }
+        // 用户有链的id就直接切换
+        await _handleChange().then(async () => {
+          if (window.ethereum?.isTokenPocket) {
+            // TP钱包才给 loading提示，因为PC点了拒绝，也会到这里。。
+            ElMessage.info($t('common.2'));
+          }
 
-            clearInterval(this.chainTimer);
-            this.chainTimer = setInterval(() => {
-              const newProviderWrap: any = new ethers.providers.Web3Provider(
-                window?.ethereum,
-                'any'
-              );
-              // 获取新的chainId
-              const newChainId = newProviderWrap.provider?.chainId;
-              // 根据判断俩chainId，判断是否成功切了链
-              if (+newChainId !== +oldChainId) {
-                // console.log('切完了链', window.ethereum);
+          clearInterval(this.chainTimer);
+          this.chainTimer = setInterval(() => {
+            // console.log('new ethers.providers...', ethers.providers.Web3Provider);
+            const newProviderWrap: any = new ethers.providers.Web3Provider(window?.ethereum, 'any');
+            // 获取新的chainId
+            const newChainId = newProviderWrap?.provider?.chainId;
 
-                this.ethersObj.chainId = newChainId;
+            // 根据判断俩chainId，判断是否成功切了链
+            if (+newChainId !== +oldChainId) {
+              // console.log('切完了链', window.ethereum);
 
-                if (window.ethereum?.isTokenPocket) {
-                  // TP钱包，iPhone有坑，切换了链，chainId变了，但是rpc没变。这里强行修改rpc。
-                  const chainData = getChainData(newChainId);
-                  window.ethereum.rpc.rpcUrl = chainData.rpcUrls;
-                }
-                // 确实成功切了链
-                ElMessage.success($t('msg.20'));
+              this.ethersObj.chainId = newChainId;
 
-                clearInterval(this.chainTimer);
-                // 开锁，更新所有组件数据
-                this.lockUpdate = false;
-                // 更新所有组件数据
-                this.updateTarget = !this.updateTarget;
+              if (window.ethereum?.isTokenPocket) {
+                // TP钱包，iPhone有坑，切换了链，chainId变了，但是rpc没变。这里强行修改rpc。
+                const chainData = getChainData(newChainId);
+                window.ethereum.rpc.rpcUrl = chainData.rpcUrls;
               }
-            }, 500);
-          });
+              // 确实成功切了链
+              ElMessage.success($t('msg.10'));
+
+              clearInterval(this.chainTimer);
+              // 开锁，更新所有组件数据
+              this.lockUpdate = false;
+            }
+          }, 500);
+        });
       } catch (error) {
-        ElMessage.error($t('msg.19'));
+        ElMessage.error($t('msg.11'));
         console.log('切换链错误..', error);
       }
     },
@@ -214,7 +227,6 @@ const useAppStore = defineStore('app', {
               clearInterval(timer);
             }
             count++;
-
             // 1秒内还获取不到小狐狸，则
             const sec = (1 * 1000) / duration;
             if (count > sec) {
@@ -258,23 +270,19 @@ const useAppStore = defineStore('app', {
      * @param {*} provider
      * @returns
      */
-    async subscribeProvider(provider) {
+    async subscribeProvider() {
       // const { provider } = this.ethersObj;
       // console.log('provider.on....', provider.on);
 
       // 监听切账号
       window.ethereum?.on('accountsChanged', (accounts) => {
-        console.log('账号切换了...', accounts);
-        this.lockUpdate = false;
         this.defaultAccount = accounts[0];
       });
 
       // 监听切链(TP不兼容)
       window.ethereum?.on('chainChanged', async (chainId) => {
         console.log('链切换了...', chainId);
-        this.lockUpdate = false;
         this.ethersObj.chainId = chainId;
-        this.updateTarget = !this.updateTarget;
       });
 
       /* // 监听连接钱包
@@ -293,8 +301,28 @@ const useAppStore = defineStore('app', {
      * 设置是否为对的链
      */
     setRightChain(status: boolean) {
-      console.log('status..', status);
       this.rightChain = status;
+    },
+
+    /**
+     * 设置网络准备状态
+     */
+    setNetWorkReady(status: boolean) {
+      this.netWorkReady = status;
+    },
+
+    /**
+     * 设置watchAccount之后
+     */
+    setTouchAfterWatchAccount(count: number) {
+      this.touchAfterWatchAccount = count;
+    },
+
+    /**
+     * 设置
+     */
+    setTouchUrl(count: number) {
+      this.touchUrl = count;
     },
   },
 

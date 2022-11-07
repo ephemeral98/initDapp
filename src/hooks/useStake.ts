@@ -1,19 +1,16 @@
 // 质押 hook
 import { reactive, ref } from 'vue';
-import MintContractApi from '@contApi/MintContractApi';
-import LpToken from '@contApi/LpToken';
-import { LP_MINT_CONT, MINT_ADDR } from '@/contracts/address';
+import useStakeContractApi from '@contApi/useStakeContractApi';
+import useLpToken from '@contApi/useLpToken';
+import { LP_CONT, STAKE_CONT, STAKE_ADDR } from '@/contracts/address';
 import { bpMul } from '@/utils/bpMath';
 import { ElMessage } from 'element-plus';
 import i18n from '@/locales/i18n';
 const $t = i18n.global.t;
 
 export function useStakeInp() {
-  const lpObj = new LpToken(LP_MINT_CONT);
-  const mintObj = new MintContractApi();
-
-  // 判断是否授权
-  const hasAllow = ref(false);
+  const lpObj = useLpToken(LP_CONT);
+  const stakeObj = useStakeContractApi();
 
   // 质押数量
   const stakeNum = reactive({
@@ -27,14 +24,8 @@ export function useStakeInp() {
   // 如没有推荐人,则输入推荐人
   const inpInv = ref('');
 
-  const inviter = ref(''); // 推荐人
-  /**
-   * 获取推荐人
-   */
-  async function getInviter() {
-    inviter.value = await mintObj.getInviter();
-  }
-  getInviter();
+  // 获取推荐人
+  stakeObj.userInfo();
 
   /**
    * 手动输入质押量
@@ -59,9 +50,9 @@ export function useStakeInp() {
   async function handleAuth() {
     if (loadingStake.value) return;
     loadingStake.value = true;
-    await lpObj.auth(MINT_ADDR);
+    await lpObj.auth(STAKE_ADDR);
     loadingStake.value = false;
-    checkHasAllow();
+    lpObj.allow(STAKE_ADDR);
   }
 
   /**
@@ -72,11 +63,11 @@ export function useStakeInp() {
     loadingStake.value = true;
     let inv;
     // 没有推荐人
-    if (!+inviter.value) {
+    if (!+stakeObj.inviter.value) {
       inv = inpInv.value.trim();
     } else {
       // 有推荐人
-      inv = inviter.value;
+      inv = stakeObj.inviter.value;
     }
 
     if (!+inv && !String(inpInv.value)) {
@@ -92,7 +83,7 @@ export function useStakeInp() {
       typeof stakeNum.origin === 'string' ? bpMul(stakeNum.origin, 10 ** 18) : stakeNum.origin;
 
     if ((+inv || String(inpInv.value)) && +stakeNum.origin) {
-      await mintObj.stake(stakeValue, inv);
+      await stakeObj.stake(stakeValue, inv);
     }
     // 重置
     loadingStake.value = false;
@@ -100,25 +91,16 @@ export function useStakeInp() {
     stakeNum.origin = '';
     stakeNum.show = '';
 
-    getInviter();
+    stakeObj.userInfo();
     callback();
   }
-
-  /**
-   * 查询是否授权
-   */
-  async function checkHasAllow() {
-    hasAllow.value = await lpObj.allow(MINT_ADDR);
-    console.log('hasAllow.value...', hasAllow.value);
-  }
-  checkHasAllow();
 
   return {
     loadingStake, // 加载状态
     stakeNum, // 质押数量：包括源数据和展示数据
     inpInv, // 推荐人输入框
-    inviter, // 推荐人
-    hasAllow, // 是否授权
+    inviter: stakeObj.inviter, //邀请人
+    hasAllow: lpObj.hasAllow, // 是否授权
     changeStakeNum, // 质押输入框的值
     handleMax, // 输入最大按钮
     handleAuth, // 授权操作
@@ -134,7 +116,7 @@ export function useStakeInp() {
  *
  * <!-- 确定按钮 -->
  * <button v-if="hasAllow" v-loading="loadingStake" @click="handleStake">
- *   {{ $t('common.6') }}
+ *   {{ $t('common.1') }}
  * </button>
  *
  * Vue script:

@@ -31,10 +31,9 @@ h5 {
 
 body {
   background-color: #ffffff;
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 14px;
+  font-family: fang;
+  font-size: 0.14rem;
   text-align: left;
-  color: #00044a;
 }
 
 select {
@@ -142,6 +141,37 @@ p {
 input,
 textarea {
   outline: none;
+  /* text-size-adjust: none !important; */
+  /* -webkit-appearance: none; */
+}
+input {
+  /* 兼容ios */
+  line-height: 1 !important;
+}
+input:focus {
+  border: none;
+  box-shadow: none !important;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='url'],
+input[type='password'],
+input[type='number'],
+input[type='date'],
+input[type='datetime-local'],
+input[type='month'],
+input[type='search'],
+input[type='tel'],
+input[type='time'],
+input[type='week'],
+input[multiple],
+textarea,
+select {
+  font-size: 0.14rem;
+  outline: none;
+  box-shadow: none;
+  padding: 0;
 }
 
 div,
@@ -166,15 +196,18 @@ body {
   /* background-color: #008c8c; */
 }
 
-/* #app {
-  width: 100vw;
+#app {
+  max-width: 750px;
+  margin: 0 auto;
   overflow: auto;
-} */
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
 
 /*滚动条 start*/
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 14px;
+  height: 14px;
 
   /* @media (min-width: $pad) {
         &:hover {
@@ -199,12 +232,7 @@ body {
   background-color: rgba(63, 76, 96, 1);
 }
 
-#app {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
 input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button { 
-    -webkit-appearance: none; 
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }

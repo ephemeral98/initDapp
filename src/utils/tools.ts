@@ -1,15 +1,15 @@
 import i18n from '@/locales/i18n';
-import { supportedChainsInfos, supportedChains } from '@/contracts/chains';
+import { supportedChains } from '@/contracts/chains';
 const $t = i18n.global.t;
 
 /**
  * 地址略写
  * @param {String} str 全地址
- * @param {Number} frontLen 前面多少颗星星
- * @param {Number} endLen 结尾多少个星星
+ * @param frontLen 前面多少颗星星
+ * @param endLen 结尾多少个星星
  * @returns {String}
  */
-export function plusXing(str, frontLen, endLen) {
+export function plusXing(str: string, frontLen: number, endLen: number) {
   if (str?.length === undefined) return '';
   var len = str.length - frontLen - endLen;
   var xing = '';
@@ -25,7 +25,7 @@ export function plusXing(str, frontLen, endLen) {
  * @param {Boolean} deep 是否深度克隆
  * @returns
  */
-export function clone(obj, deep) {
+export function clone(obj, deep: boolean) {
   if (Array.isArray(obj)) {
     //如果是数组
     if (deep) {
@@ -56,35 +56,41 @@ export function clone(obj, deep) {
 
 /**
  * 节流
- * @param {Function} callback 回调函数
- * @param {Number} duration 节流间隔时间
+ * @param callback 回调函数
+ * @param duration 节流间隔时间
  */
-export function handleThrottle(callback, duration = 70) {
+export function bpThrottle(callback: (e) => void, duration: number = 70) {
   let throttleTimer;
-  return () => {
+  return (e) => {
     if (throttleTimer) return;
 
     throttleTimer = setTimeout(() => {
-      callback();
+      callback(e);
       throttleTimer = null;
     }, duration);
   };
 }
 
 /**
- * 获取链的节点数据 (包括url)
- * @param chainId 链id
- * @returns
+ * 防抖
+ * @param callback 回调函数
+ * @param duration 防抖间隔时间
  */
-export function getChainInfoData(chainId) {
-  if (!chainId) {
-    return supportedChainsInfos[0];
-  }
-  return supportedChainsInfos.find((chain) => chain.chainId === chainId);
+export function bpDebounce(callback: (e) => void, duration: number = 70) {
+  let debounceTimer;
+  return (e) => {
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
+    debounceTimer = setTimeout(() => {
+      callback(e);
+      debounceTimer = null;
+    }, duration);
+  };
 }
 
 /**
- * 获取链的节点数据 (除去url)
+ * 获取链的节点数据
  * @param chainId 链id
  * @returns
  */

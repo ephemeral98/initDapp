@@ -1,8 +1,7 @@
-import { clone } from '@/utils/tools';
-import { ConnectionInfo } from 'ethers/lib/utils';
+import { isTest } from './address';
 
 // 支持的链
-export interface ISupportChains extends ConnectionInfo {
+export interface ISupportChains {
   chainId: string;
   chainName: string;
   nativeCurrency: {
@@ -14,7 +13,20 @@ export interface ISupportChains extends ConnectionInfo {
   blockExplorerUrls: string[];
 }
 
-export const supportedChainsInfos: ISupportChains[] = [
+export const supportedChains: ISupportChains[] = [
+  // 以太坊主网
+  {
+    chainId: '0x1',
+    chainName: 'Binance Smart Chain',
+    nativeCurrency: {
+      name: 'BNB',
+      symbol: 'BNB',
+      decimals: 18,
+    },
+    rpcUrls: ['https://bsc-dataseed1.ninicoin.io'],
+    blockExplorerUrls: ['https://bscscan.com/'],
+  },
+  // BSC主网
   {
     chainId: '0x38',
     chainName: 'Binance Smart Chain',
@@ -25,8 +37,8 @@ export const supportedChainsInfos: ISupportChains[] = [
     },
     rpcUrls: ['https://bsc-dataseed1.ninicoin.io'],
     blockExplorerUrls: ['https://bscscan.com/'],
-    url: 'https://bsc-dataseed1.ninicoin.io',
   },
+  // BSC测试网
   {
     chainId: '0x61',
     chainName: 'Binance Smart Chain TEST',
@@ -37,8 +49,8 @@ export const supportedChainsInfos: ISupportChains[] = [
     },
     rpcUrls: ['https://data-seed-prebsc-1-s3.binance.org:8545'],
     blockExplorerUrls: ['https://testnet.bscscan.com/'],
-    url: 'https://data-seed-prebsc-1-s3.binance.org:8545',
   },
+  // Polygon主网
   {
     chainId: '0x89',
     chainName: 'Polygon Mainnet',
@@ -49,24 +61,35 @@ export const supportedChainsInfos: ISupportChains[] = [
     },
     rpcUrls: ['https://polygon-rpc.com'], // https://rpc-mainnet.matic.network
     blockExplorerUrls: ['https://polygonscan.com/'],
-    url: '',
   },
 ];
 
-// export const supportedUrls = supportedChainsInfos.map((item) => item.url);
-export const supportedChains = supportedChainsInfos.reduce((acc, item) => {
-  acc.push({
-    chainId: item.chainId,
-    chainName: item.chainName,
-    nativeCurrency: {
-      name: item.nativeCurrency.name,
-      symbol: item.nativeCurrency.symbol,
-      decimals: item.nativeCurrency.decimals,
-    },
-    rpcUrls: item.rpcUrls,
-    blockExplorerUrls: item.blockExplorerUrls,
-  });
-  return acc;
-}, []);
+/**
+ * 根据简称获取当前路由依赖的链
+ * @param chain 依赖的链简称
+ * @returns
+ */
+type IChain = 'bsc' | 'matic' | 'eth';
 
-console.log('supportedChains..',supportedChains);
+export function curNeedChain(chain: IChain[] = ['bsc']): string[] {
+  const arr = [];
+  // bsc
+  if (chain.includes('bsc')) {
+    if (isTest) {
+      arr.push('0x61');
+    } else {
+      arr.push('0x38');
+    }
+  }
+
+  // polygon
+  if (chain.includes('matic')) {
+    arr.push('0x89');
+  }
+
+  // eth
+  if (chain.includes('eth')) {
+    arr.push('0x1');
+  }
+  return arr;
+}

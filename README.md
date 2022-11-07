@@ -16,69 +16,13 @@ const [handleClick, loadClick] = useWrite(async () => {
 
 #### 2. BpSwiper
 
-轮播图，滑块等都可以使用...，基于 swiper@6.8.4 的二次封装
+轮播图，滑块等都可以使用...，基于 swiper@8.3.2 的二次封装
 
-```vue
-const slides = reactive({
-  img1: null,
-  img2: null,
-});
 
- <BpSwiper>
-    <swiper-slide :swiperRef="slides.img1" v-for="(nft, inx) in nftList" :key="inx">
-      <div class="item-container"> {{ nft.id }} </div>
-    </swiper-slide>
-  </BpSwiper>
-```
 
-3D空间感轮播效果：
+#### 3. BpForm
 
-```scss
-  // swiper 穿透
-  :deep(.swiper-container) {
-    position: relative;
-    @include -width-a(650);
-    margin: 0.8rem auto;
-    // min-height: 6.05rem;
-    // background: yellow;
-
-    .swiper-wrapper {
-      align-items: center;
-    }
-
-    .swiper-slide {
-      text-align: center;
-      @include flexPos(center);
-      opacity: 0.5;
-    }
-    .swiper-slide-active,
-    .swiper-slide-duplicate-active {
-      opacity: 1;
-
-      .item-container {
-        transform: scale(1.7);
-        z-index: 99;
-      }
-    }
-
-    .item-container {
-      transition: 0.8s;
-      @include flexPos(center);
-      flex-direction: column;
-      // height: 3.05rem;
-      @include -height-a(405);
-      /*  @media (min-width: 1920px) {
-        height: vw(300);
-      } */
-
-      .item-img {
-        cursor: pointer;
-        @include -width-a(195);
-        border-radius: 0.1rem;
-      }
-    }
-  }
-```
+包括 ```<bp-input>```，```<Bp-add>```，```<bp-sub>```
 
 
 
@@ -109,7 +53,46 @@ const [checkInfo, checkInfoEX] = useRead(async () => {
 });
 ```
 
-checkInfo 是返回的数据，checkInfoEX 是返回的数据工具：loading，refetch、status 等
+> checkInfo 是返回的数据，checkInfoEX 是返回的数据工具：loading，refetch、status 等
+
+
+
+| 名字    | 类型     | 描述                                      |
+| ------- | -------- | ----------------------------------------- |
+| loading | boolean  | 加载中                                    |
+| refetch | function | 是否重新请求数据(重刷)                    |
+| status  | boolean  | 状态，true表示请求成功，false表示请求失败 |
+
+
+
+**PS:**
+
+当用异步调用 hook 的时候，该 hook 的所有方法要使用 ```{watcher: created}```，例：
+
+```js
+async function createContract(addressObj) {
+    await sleep(3000); // 某某情况这里用了await
+    
+    const signer = useDefaultRpc();
+    coinObj.value = new ethers.Contract(addressObj.address, addressObj.abi, signer);
+
+    created.value = true;
+    return coinObj;
+  }
+
+```
+
+```js
+const [datas, dataEx] = useRead(
+  async () => {
+    const resp = await allow('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21'),
+    return resp;
+  },
+  { watcher: created }  // 上面用了 await 去构建合约对象，这里要用这个
+);
+```
+
+
 
 
 
@@ -146,13 +129,13 @@ checkInfo 是返回的数据，checkInfoEX 是返回的数据工具：loading，
 
 >  这个文件夹下面是放一些 合约api 的
 
-#### 1. CoinToken: 一些符合 ERC20的代币，直接导入address和api，new 出一个代币对象
+#### 1. useCoinToken: 一些符合 ERC20的代币，直接导入address和api
 
-#### 2. LpToken: 一些 **通用** lp 币对对象，用法和 CoinToken 类似
+#### 2. useLpToken: 一些 **通用** lp 币对对象，用法和 useCoinToken 类似
 
-#### 3. NftToken: 一些 **通用** nft 对象，用法和CoinToken类似
+#### 3. useNftToken: 一些 **通用** nft 对象，用法和useCoinToken类似
 
-#### useDefaultRpc，每次构建对象的时候，在**createContract** 中，调用，获取预设的rpc，可参考 CoinToken
+#### useDefaultRpc，每次构建对象的时候，在**createContract** 中，调用，获取预设的rpc，可参考 useCoinToken
 
 ### 如果有其他合约，请自行创建对应的文件！！
 
@@ -162,6 +145,31 @@ checkInfo 是返回的数据，checkInfoEX 是返回的数据工具：loading，
 
 1. 所有合约方法，均放在 contractsApi 中，命名为: xxxContractApi
 2. 不再使用```useRoute```获取路由信息，统一使用```useRouteTools```，
+
+
+## PS:
+由于 vite 使用 js 的 debugger 的时候，总是跳到不准确的地方，所以建议使用 vsCode 打断点：
+
+```
+{
+  // 使用 IntelliSense 了解相关属性。 
+  // 悬停以查看现有属性的描述。
+  // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch Edge",
+      "request": "launch",
+      "type": "chrome",
+      "url": "http://localhost:3100", // 写自己的端口号
+      "webRoot": "${workspaceFolder}/src",
+    },
+  ]
+}
+
+```
+
+
 
 
 

@@ -8,6 +8,10 @@
 // 消息
 .el-message {
   z-index: 99999 !important;
+
+  .el-icon {
+    font-size: 15px !important;
+  }
 }
 
 // 指令loading
@@ -15,8 +19,11 @@
   background-color: rgba(225, 225, 225, 0.4) !important;
 }
 
-
 // vant
+.van-popup {
+  border-radius: 0.16rem;
+  background: transparent !important;
+}
 
 // 通用弹窗
 .em-pop-wrap {
@@ -36,4 +43,33 @@
 .empty {
   text-align: center;
   margin: 0.1rem 0;
+}
+
+.cn-font {
+  font-family: fang;
+}
+
+// 按钮通用样式
+.func-btn {
+  $color: #07caf0;
+  $range: 2px; // 下沉幅度
+
+  background-image: linear-gradient(90deg, #18e7ca 0%, #01c0fd 100%);
+  border-radius: 100px;
+  color: #fff;
+  box-shadow: 0 $range 0 0 $color;
+  padding-top: $range;
+
+  &:active {
+    // box-shadow: 0 1px 0 0 #2877c9;
+    box-shadow: 0 0 0 0 $color;
+
+    transform: translateY($range);
+  }
+
+  // 置灰
+  &.disable {
+    background: rgb(178, 178, 178);
+    box-shadow: 0 $range 0 0 rgb(137, 137, 137);
+  }
 }

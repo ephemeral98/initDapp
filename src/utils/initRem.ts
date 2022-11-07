@@ -6,11 +6,11 @@
     recalc = function () {
       const clientWidth = docEl.clientWidth;
       if (!clientWidth) return;
-      if (clientWidth >= 375) {
+      if (clientWidth >= 750) {
         // 如果超过手机设计稿，则按照 pc 固定基本 fontSize
         docEl.style.fontSize = '100px';
       } else {
-        docEl.style.fontSize = 100 * (clientWidth / 375) + 'px';
+        docEl.style.fontSize = 100 * (clientWidth / 750) + 'px';
       }
     };
   recalc();

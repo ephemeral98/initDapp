@@ -4,13 +4,9 @@ import { useAppStore } from '@store/appStore';
 import { computed, ref } from '@vue/reactivity';
 import { plusXing } from '@/utils/tools';
 import Menu from './Menu.vue';
-import MintContractApi from '@/contractsApi/MintContractApi';
 
 const gThis = getCurrentInstance().appContext.config.globalProperties;
 const appStore = useAppStore();
-
-const mintObj = new MintContractApi();
-console.log('mintObj...', mintObj);
 
 // 语言栏
 const langList = reactive([
@@ -71,28 +67,18 @@ async function handleLink() {
 <template>
   <div class="top-bar-wrap">
     <!-- 控制菜单显示和隐藏 按钮 -->
-    <div :class="['toggle-container']" @click="handleMenu">
+    <div :class="['toggle-container', { opening: isOpenMenu }]" @click="handleMenu">
       <div class="bar"></div>
       <div class="bar"></div>
       <div class="bar"></div>
     </div>
 
-    <div>
-      <div>这是顶部栏 《{{ $t('msg.1') }}》多语言</div>
-
-      <!-- 已链接钱包展示钱包地址 -->
-      <div v-if="appStore.defaultAccount" class="account-address">
-        {{ plusXing(appStore.defaultAccount, 4, 4) }}
-      </div>
-
-      <!-- 连接钱包 -->
-      <button v-loading="loadLink" v-else class="link-btn" @click="handleLink">
-        {{ $t('common.1') }}
-      </button>
-
+    <!-- 一些工具：钱包、选择语言等 -->
+    <div class="top-bar-tools">
       <!-- 选择语言 -->
       <el-dropdown trigger="click" @command="pickLang">
         <div class="lang-container">
+          <img src="@img/icon-lang.png" alt="" class="icon-lang" />
           <span>{{ curLang }}</span>
         </div>
         <template #dropdown>
@@ -103,11 +89,20 @@ async function handleLink() {
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-    </div>
 
-    <!-- 移动端菜单 -->
-    <Menu :isShowMenu="isOpenMenu" @hide="isOpenMenu = false" />
+      <!-- 已链接钱包展示钱包地址 -->
+      <div v-if="appStore.defaultAccount" class="account-address">
+        {{ plusXing(appStore.defaultAccount, 4, 4) }}
+      </div>
+
+      <!-- 连接钱包 -->
+      <button v-loading="loadLink" v-else class="link-btn" @click="handleLink">
+        {{ $t('common.1') }}
+      </button>
+    </div>
   </div>
+  <!-- 移动端菜单 -->
+  <Menu :isShowMenu="isOpenMenu" @hide="isOpenMenu = false" />
 </template>
 
 <style lang="scss" scoped>
@@ -117,37 +112,58 @@ async function handleLink() {
   background-color: skyblue;
   @include flexPos(space-between);
   padding: 0 0.15rem;
+  color: #fff;
+}
+
+.top-bar-tools {
+  @include flexPos(flex-start);
+
+  .account-address,
+  .link-btn {
+    margin-left: 0.18rem;
+  }
 
   .lang-container {
     cursor: pointer;
+    @include flexPos(flex-start);
+    color: #fff;
+
+    .icon-lang {
+      width: 0.32rem;
+      margin-right: 0.1rem;
+    }
   }
 }
 
 .toggle-container {
-  $boxHeight: 0.24rem;
+  $boxHeight: 15px;
   $barHeight: 3px;
   cursor: pointer;
 
-  height: 0.24rem;
+  height: 15px;
   @include flexPos(space-between);
   flex-direction: column;
   .bar {
     transition: 0.4s;
-    width: 0.3rem;
+    width: 20px;
     height: $barHeight;
     background-color: #000;
     transform-origin: center;
   }
 
-  /* &.close {
+  &.opening {
     $y: calc($boxHeight / 2 - $barHeight / 2);
+    $dy: calc((-#{$boxHeight} / 2 + #{$barHeight} / 2));
+
     .bar:nth-child(1) {
       transform: translateY($y) rotate(45deg);
     }
-
     .bar:nth-child(2) {
-      transform: translateY(-$y) rotate(-45deg);
+      opacity: 0;
     }
-  } */
+    .bar:nth-child(3) {
+      transform: translateY($dy) rotate(-45deg);
+    }
+  }
 }
 </style>

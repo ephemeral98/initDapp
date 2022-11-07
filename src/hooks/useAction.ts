@@ -3,7 +3,7 @@ import { reactive, ReactiveEffect, ref, Ref, watch } from 'vue';
 import { useRouteItem } from '@/router/useRouterTools';
 import { useAppStore } from '@store/appStore';
 import i18n from '@/locales/i18n';
-import { ITransStatus } from '@/service/bpAction';
+import { checkRightChain } from '@/router/routerHelp';
 const $t = i18n.global.t;
 
 /**
@@ -91,6 +91,8 @@ interface IEx {
  * 
  */
 export function useRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead] {
+  const appStore = useAppStore();
+
   const datas = ref({}); // 返回值
   const refetchStatus = ref(false);
   /**
@@ -127,10 +129,9 @@ export function useRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead
 
   // refetch
   watch(
-    () => refetchStatus.value,
-    () => help(),
-    {
-      immediate: true,
+    () => [refetchStatus.value, appStore.touchAfterWatchAccount],
+    () => {
+      help();
     }
   );
 
@@ -149,4 +150,47 @@ export function useRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead
   }
 
   return [datas, result];
+}
+
+/**
+ * 监听账号，监听切链
+ */
+export function watchAccount(func: () => void): void {
+  const appStore = useAppStore();
+
+  watch(
+    () => [appStore.defaultAccount, appStore.ethersObj.chainId, appStore.netWorkReady],
+    (newVal, oldVal) => {
+      if (!appStore.defaultAccount || !appStore.ethersObj.chainId || !appStore.netWorkReady) return;
+
+      checkRightChain();
+      func();
+
+      nextTick(() => {
+        // 确保合约对象构建完成后，才开始一些列的 read 方法
+        // 由于 useRead 走的是任务队列，所以会等 所有 useHook构建完成合约对象 才会useRead
+        appStore.setTouchAfterWatchAccount(appStore.touchAfterWatchAccount + 1);
+      });
+    },
+    {
+      immediate: true,
+    }
+  );
+}
+
+/**
+ * 监听链的改变，防止首次进入误以切链
+ * @param func
+ */
+export function watchNext(func: () => void): void {
+  const appStore = useAppStore();
+
+  watch(
+    () => appStore.ethersObj.chainId,
+    () => {
+      if (!appStore.lockUpdate) {
+        func();
+      }
+    }
+  );
 }
