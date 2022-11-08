@@ -44,7 +44,7 @@ export const supportedChains: ISupportChains[] = [
     chainName: 'Binance Smart Chain TEST',
     nativeCurrency: {
       name: 'TBNB',
-      symbol: 'TBNB',
+      symbol: 'tBNB',
       decimals: 18,
     },
     rpcUrls: ['https://data-seed-prebsc-1-s3.binance.org:8545'],
