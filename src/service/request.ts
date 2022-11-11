@@ -1,10 +1,7 @@
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
 
-const xlLocal = 'http://192.168.31.240:9101'; // 小陆本地
-const testUrl = 'https://bovineversetest.com/api'; // 测试服
-// const masterUrl = 'http://13.214.147.16/api'; // 正式服
-const masterUrl = 'https://www.bovine-verse.games/api'; // 域名https 正式服
+const masterUrl = ''; // 域名https 正式服
 
 // const baseURL = process.env.NODE_ENV == 'development' ? testUrl : '';
 const baseURL = '';
