@@ -125,23 +125,25 @@ const useAppStore = defineStore('app', {
        */
       async function _handleChange() {
         if (+ethereum.chainId === +chainId) {
-          // 如果当前链和切换的链一样，则不做操作
+          // 如果当前链和想要切换的链一样，则不做操作
           return;
         }
 
-        // 将切到以太坊和其他的链 方法分开
-        if (chainId === '0x1') {
+        try {
+          // 用户有该链就直接切换
           const hexChainId = ethers.utils.hexValue(chainId);
           return await providerWrap.provider.request({
             method: 'wallet_switchEthereumChain',
             params: [{ chainId: hexChainId }],
           });
+        } catch (error) {
+          // 用户没有这条链，则给他添加
+          const chainData = getChainData(chainId);
+          return await providerWrap.provider.request({
+            method: 'wallet_addEthereumChain',
+            params: [chainData],
+          });
         }
-        const chainData = getChainData(chainId);
-        return await providerWrap.provider.request({
-          method: 'wallet_addEthereumChain',
-          params: [chainData],
-        });
       }
 
       try {
