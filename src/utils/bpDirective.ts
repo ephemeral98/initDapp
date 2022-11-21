@@ -43,7 +43,7 @@ export const maxDirective = (app) => {
  * 限制输入框的最大值
  * eg: <input v-min="123" /> // 则输入框最小值不能小于123
  */
- export const minDirective = (app) => {
+export const minDirective = (app) => {
   let mountedValue, updatedValue;
   app.directive('min', {
     mounted(el, binding, vnode) {
@@ -77,13 +77,55 @@ export const maxDirective = (app) => {
  * eg: <input v-number />
  */
 export const numberDirective = (app) => {
+  const key = 'copy';
+  const property = '__v_' + key + '__';
+
   app.directive('number', {
     mounted(el, binding, vnode) {
+      /* el[property] = {
+        value: binding.value,
+        listener: function () {},
+      };
+
+      el[property].listener = el[property].listener.bind(el[property]); */
+
       el.addEventListener('input', () => {
+        el.value = '';
+
+        // console.log('vnode', el, binding, vnode.props.onInput());
+        // const modelValue = (el as any)._modelValue
+        // console.log('moomoo', modelValue);
+        // console.log('el[property].listener..', el[property]);
+        // console.log('vnode...', vnode.el['__vueParentComponent'].render);
+        // console.log('props...', vnode.props['onUpdate:modelValue'](666));
         // 只能输入数字类型
-        const reg = /(\-?\d+\.?\d*)|(\-?\d*\d*)/;
-        el.value = el.value.match(reg)[0];
+        // const reg = /(\-?\d+\.?\d*)|(\-?\d*\d*)/;
+        // el.value = el.value.match(reg)[0];
+        // vnode.props['onUpdate:modelValue'](el.value);
+        // vnode.props['onUpdate:ttt'](el.value);
+        /* setTimeout(() => {
+        el.value = 'aaa';
+          
+        }, 1000); */
+        // console.log('binding...', binding);
       });
+    },
+
+    // 兼容异步数据
+    updated(el, binding, vnode) {
+      // el.addEventListener('input', () => {
+      // console.log('apppp', app);
+      // console.log(vnode._context);
+      // el.value = 'ppp';
+      // console.log('update.....', el.valueOf(),binding, vnode);
+      // const property = '__v_'+key+'__'
+      // console.log('vnode...', vnode.props);
+      // vnode.props.onInput();
+      // console.log('props...', vnode.props['onUpdate:modelValue'](666));
+      // 只能输入数字类型
+      // const reg = /(\-?\d+\.?\d*)|(\-?\d*\d*)/;
+      // el.value = el.value.match(reg)[0];
+      // });
     },
   });
 };
