@@ -198,13 +198,14 @@ export function bpEthHex(num, dec = 18) {
  * @param dec 精度
  */
 export function bpFormat(num, digits: number = 0, dec: number = 18): string {
+  let digi = Math.abs(digits);
+
   // 没有值
   if (!num) {
     const res = 0;
-    return digits ? res.toFixed(digits) : '0';
+    return digits ? res.toFixed(digi) : '0';
   }
 
-  let digi = Math.abs(digits);
   let res: any = ethers.utils.formatUnits(num, dec);
   if (digits < 0) {
     // 小数向下约
@@ -245,53 +246,24 @@ function _fillZero(len: number) {
 }
 
 /**
- * 向下约n位
- * @param num 要约的数
- * @param dec 约几位
- * @param isFill 不足时是否填充0
- * @returns
+ * 将整数和小数分隔开
  */
-export function bpFloor(
-  num: string | number | ethBigNumber,
-  dec: number = 0,
-  isFill: boolean = false
-): string {
-  // 克隆要约的数，变成字符串
-  const cloneNum: string = _isValid(num) ? String(num) : '0';
-
+interface IDiviDotRes {
+  iNum: string; // 整数部分
+  dNum: string; // 小数部分
+}
+function _diviDot(num: string): IDiviDotRes {
   const regDot = /\./g;
-  let appearTimes;
-  let count = 0; // 匹配小数点出现次数
-  while ((appearTimes = regDot.exec(cloneNum))) {
-    count++;
-  }
+  const dotInx = regDot.exec(num)?.index;
+  const iNum = num.slice(0, dotInx);
+  let dNum = num.slice(dotInx);
 
-  // 值是整数
-  if (count === 0) {
-    // 填充0
-    if (isFill) {
-      const zeros = _fillZero(dec);
-      return cloneNum + '.' + zeros;
-    }
+  // 如果没有小数： .0000、
 
-    return cloneNum;
-  }
-
-  const inx = regDot.exec(cloneNum).index;
-  const resNum = cloneNum.slice(0, inx + dec + 1);
-
-  const decLen = cloneNum.slice(inx + 1);
-  if (decLen.length < dec) {
-    if (isFill) {
-      // 不足补0
-      const zeros = _fillZero(dec - decLen.length);
-      return cloneNum + zeros;
-    }
-
-    return cloneNum;
-  }
-
-  return resNum;
+  return {
+    iNum,
+    dNum: dotInx ? dNum : '',
+  };
 }
 
 /**
@@ -306,98 +278,78 @@ export function bpFixed(
   dec: number = 0,
   isFill: boolean = false
 ): string {
+  return baseFixed(num, dec, isFill, 'fixed');
+}
+
+/**
+ * 向下约n位
+ * @param num 要约的数
+ * @param dec 约几位
+ * @param isFill 不足时是否填充0
+ * @returns
+ */
+export function bpFloor(
+  num: string | number | ethBigNumber,
+  dec: number = 0,
+  isFill: boolean = false
+): string {
+  return baseFixed(num, dec, isFill, 'floor');
+}
+
+/**
+ * 向上约n位
+ * @param num 要约的数
+ * @param dec 约几位
+ * @param isFill 不足时是否填充0
+ * @returns
+ */
+export function bpCeil(
+  num: string | number | ethBigNumber,
+  dec: number = 0,
+  isFill: boolean = false
+): string {
+  return baseFixed(num, dec, isFill, 'ceil');
+}
+
+/**
+ * 向上约、向下约、四舍五入、基础方法
+ */
+type IType = 'ceil' | 'floor' | 'fixed';
+function baseFixed(
+  num: string | number | ethBigNumber,
+  dec: number = 0,
+  isFill: boolean = false,
+  type: IType
+): string {
   // 克隆要约的数，变成字符串
   const cloneNum: string = _isValid(num) ? String(num) : '0';
 
-  const regDot = /\./g;
-  let appearTimes;
-  let count = 0; // 匹配小数点出现次数
-  while ((appearTimes = regDot.exec(cloneNum))) {
-    count++;
+  let result: string = '0';
+  if (type === 'ceil') {
+    result = math.bignumber(cloneNum).toFixed(dec, 2);
+  } else if (type === 'floor') {
+    result = math.bignumber(cloneNum).toFixed(dec, 3);
+  } else if (type === 'fixed') {
+    result = math.bignumber(cloneNum).toFixed(dec);
   }
 
-  let isFirst = true; // 判断首次进来的 锁
-
-  /**
-   * 字符串挨个判断
-   * @param str 字符串被打散成的数组 (会修改原数组)
-   * @param i 索引
-   * @returns
-   */
-  function _upGrade(str: string[], i: number): string[] {
-    if (str[i + 1] === undefined && isFirst) {
-      if (+str[i] >= 5) {
-        // 用a标记，已约的数
-        str[i] = 'a';
-        // 继续往前挪，继续判断
-        _upGrade(str, i - 1);
-      }
-    } else if (str[i + 1] === 'a') {
-      // 如果后一项是已经约掉的数，如果当前项还是9的话，则往前进一
-      if (+str[i] === 9) {
-        str[i] = 'a';
-        // 继续往前挪，继续判断
-        _upGrade(str, i - 1);
-      } else {
-        str[i] = String(+str[i] + 1);
-        // str[i] = bpAdd(str[i], 1); // 这里是一个一个的转，不会精度溢出，没必要bpAdd
-      }
-    }
-
-    // 记住首次进来的时候
-    isFirst = false;
-
-    return str;
+  if (isFill) {
+    // 填充0
+    return result;
   }
 
-  // 匹配小数点的索引位
-  const dotInx = regDot.exec(cloneNum)?.index;
-  // 获取 要匹配的小数点的 索引位置 的多一位 (最后一位为标记位)
-  const patchMoreOne = cloneNum.slice(dotInx + 1).slice(0, +dec + 1);
+  // 不填充0
+  const { iNum, dNum } = _diviDot(result);
 
-  // 整数 (没有小数点)
-  if (count === 0) {
-    if (isFill) {
-      const zeros = _fillZero(dec);
-      return cloneNum + '.' + zeros;
-    } else {
-      return cloneNum;
-    }
+  if (!dNum || /^.0+$/.test(dNum)) {
+    // 没有小数, 或者小数部分都为0
+    return iNum;
   }
 
-  // 不够约
-  if (patchMoreOne.length <= +dec) {
-    if (isFill) {
-      // 填充0
-      const len = dec - patchMoreOne.length;
-      const zeros = _fillZero(len);
-      return cloneNum + zeros;
-    } else {
-      return cloneNum;
-    }
-  }
-
-  // 匹配整数部分
-  const positiveInt = cloneNum.slice(0, dotInx);
-
-  // 匹配正数部分打散成数组
-  const patchMoreOneArr = patchMoreOne.split('');
-
-  _upGrade(patchMoreOneArr, patchMoreOne.length - 1);
-
-  // 去掉最后一位标记位
-  patchMoreOneArr.pop();
-
-  // 判断是否所有都是已经约掉的数
-  const allZero = patchMoreOneArr.every((item) => item === 'a');
-
-  // 将所有标记转成0
-  const replaceA = /a/g;
-  const temp = patchMoreOneArr.join('');
-  const res = temp.replace(replaceA, '0');
-
-  const resPositiveInt = allZero ? bpAdd(positiveInt, 1) : positiveInt;
-  return res ? resPositiveInt + '.' + res : String(resPositiveInt);
+  // 将小数后面的0去掉
+  const resDNum = dNum.replace(/0+/, '');
+  // 整数和小数拼接
+  return iNum + resDNum;
 }
 
 /**
