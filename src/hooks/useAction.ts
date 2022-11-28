@@ -6,6 +6,23 @@ import i18n from '@/locales/i18n';
 import { checkRightChain } from '@/router/routerHelp';
 const $t = i18n.global.t;
 
+interface IUseRead {
+  loading: boolean; // 加载状态
+  refetch: () => void; // 重新请求数据
+  status: null | boolean; // 请求结果
+  message: string; // 请求结果消息，如果成功，则为 '',
+}
+
+interface IEx {
+  interval?: number; // 轮询 间隔时间
+  watcher?: any; // 监听者 使用方式和 watch 一致
+}
+
+interface IAjax {
+  loading: boolean; // 加载状态
+  refetch: () => void; // 重新请求数据
+}
+
 /**
  * 处理写的hook
  * @param func 回调函数
@@ -61,18 +78,6 @@ export function useWrite(func): [any, Ref<boolean>] {
   }
 
   return [help as any, loading];
-}
-
-interface IUseRead {
-  loading: boolean; // 加载中
-  refetch: () => void; // 重新请求数据
-  status: null | boolean; // 请求结果
-  message: string; // 请求结果消息，如果成功，则为 '',
-}
-
-interface IEx {
-  interval?: number; // 轮询 间隔时间
-  watcher?: any; // 监听者 使用方式和 watch 一致
 }
 
 /**
@@ -193,4 +198,68 @@ export function watchNext(func: () => void): void {
       }
     }
   );
+}
+
+/* const [data, dataEx] = useAjax(async () => {
+  const resp = await $get();
+  const resp2 = await $get();
+  return resp + resp2;
+}); */
+export function useAjax(func: () => Promise<any>, extra?: { watcher: boolean }): [Ref<any>, IAjax] {
+  const appStore = useAppStore();
+
+  /**
+   * 返回状态结构
+   */
+  const result = reactive<IAjax>({
+    loading: false,
+    refetch,
+  });
+
+  const datas = ref({}); // 返回值
+  const refetchStatus = ref(false);
+  /**
+   * 重新请求
+   */
+  function refetch() {
+    refetchStatus.value = !refetchStatus.value;
+  }
+
+  async function core() {
+    result.loading = true;
+    const resp = await func().finally(() => {
+      result.loading = false;
+    });
+    datas.value = resp;
+  }
+
+  // 需要钱包的监听
+  if (extra?.watcher) {
+    watch(
+      () => [refetchStatus.value, appStore.defaultAccount],
+      () => {
+        if (!+appStore.defaultAccount) {
+          // 但是没有登录的，不发请求
+          return;
+        }
+        core();
+      },
+      {
+        immediate: true,
+      }
+    );
+  } else {
+    // 不需要钱包的监听
+    watch(
+      () => [refetchStatus.value],
+      () => {
+        core();
+      },
+      {
+        immediate: true,
+      }
+    );
+  }
+
+  return [datas, result];
 }

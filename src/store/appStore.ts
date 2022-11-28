@@ -31,7 +31,6 @@ const useAppStore = defineStore('app', {
     rightChain: true, // 当前页面是否在对的链
     loadRead: '', // 是否在读取链上方法中
     ethersObj: INIT_ETHERS,
-    lockUpdate: true, // 是否锁住，防止首次加载的时候导致的切链('' -> '0x')
     chainTimer: null, // 切链timer
     netWorkReady: false, // 成功获取链和钱包等准备工作
     touchAfterWatchAccount: 0, // 告诉useRead，已重新构建合约对象
@@ -178,8 +177,6 @@ const useAppStore = defineStore('app', {
               ElMessage.success($t('msg.10'));
 
               clearInterval(this.chainTimer);
-              // 开锁，更新所有组件数据
-              this.lockUpdate = false;
             }
           }, 500);
         });

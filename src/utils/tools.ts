@@ -61,6 +61,7 @@ export function clone(obj, deep: boolean) {
  */
 export function bpThrottle(callback: (e) => void, duration: number = 70) {
   let throttleTimer;
+  console.log('12222222');
   return (e) => {
     if (throttleTimer) return;
 
