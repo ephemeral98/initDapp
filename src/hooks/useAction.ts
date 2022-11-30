@@ -8,7 +8,7 @@ const $t = i18n.global.t;
 
 interface IUseRead {
   loading: boolean; // 加载状态
-  refetch: () => void; // 重新请求数据
+  refetch: () => Promise<void>; // 重新请求数据
   status: null | boolean; // 请求结果
   message: string; // 请求结果消息，如果成功，则为 '',
 }
@@ -20,7 +20,7 @@ interface IEx {
 
 interface IAjax {
   loading: boolean; // 加载状态
-  refetch: () => void; // 重新请求数据
+  refetch: () => Promise<void>; // 重新请求数据
 }
 
 /**
@@ -99,12 +99,11 @@ export function useRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead
   const appStore = useAppStore();
 
   const datas = ref({}); // 返回值
-  const refetchStatus = ref(false);
   /**
    * 重新请求
    */
-  function refetch() {
-    refetchStatus.value = !refetchStatus.value;
+  async function refetch() {
+    await core();
   }
 
   /**
@@ -117,7 +116,7 @@ export function useRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead
     message: '',
   });
 
-  async function help() {
+  async function core() {
     result.loading = true;
     const resp = await func();
     if (resp?.status === false) {
@@ -134,15 +133,15 @@ export function useRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead
 
   // refetch
   watch(
-    () => [refetchStatus.value, appStore.touchAfterWatchAccount],
+    () => [appStore.touchAfterWatchAccount],
     () => {
-      help();
+      core();
     }
   );
 
   // watcher
   if (ex?.watcher) {
-    watch(ex.watcher, () => help());
+    watch(ex.watcher, () => core());
   }
 
   // 轮询请求
@@ -150,7 +149,7 @@ export function useRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead
   if (ex?.interval) {
     clearInterval(timer);
     timer = setInterval(() => {
-      help();
+      core();
     }, ex.interval);
   }
 
@@ -200,12 +199,11 @@ export function useAjax(func: () => Promise<any>, extra?: { watcher: boolean }):
   });
 
   const datas = ref({}); // 返回值
-  const refetchStatus = ref(false);
   /**
    * 重新请求
    */
-  function refetch() {
-    refetchStatus.value = !refetchStatus.value;
+  async function refetch() {
+    await core();
   }
 
   async function core() {
@@ -219,7 +217,7 @@ export function useAjax(func: () => Promise<any>, extra?: { watcher: boolean }):
   // 需要钱包的监听
   if (extra?.watcher) {
     watch(
-      () => [refetchStatus.value, appStore.defaultAccount],
+      () => [appStore.defaultAccount],
       () => {
         if (!+appStore.defaultAccount) {
           // 但是没有登录的，不发请求
@@ -233,15 +231,7 @@ export function useAjax(func: () => Promise<any>, extra?: { watcher: boolean }):
     );
   } else {
     // 不需要钱包的监听
-    watch(
-      () => [refetchStatus.value],
-      () => {
-        core();
-      },
-      {
-        immediate: true,
-      }
-    );
+    core();
   }
 
   return [datas, result];
