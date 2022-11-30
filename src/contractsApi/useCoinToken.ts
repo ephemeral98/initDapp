@@ -9,6 +9,7 @@ import { bpRead, bpWrite } from '@/service/bpAction';
 import useDefaultRpc from './useDefaultRpc';
 import { reactive, Ref, ref } from 'vue';
 import { watchAccount } from '@/hooks/useAction';
+import { ElMessage } from 'element-plus';
 
 const $t = i18n.global.t;
 
@@ -123,7 +124,7 @@ export default (addressObj: IAddressObj) => {
    */
   async function auth(hoster: string): Promise<boolean> {
     const { status } = await bpWrite(
-      $t('msg.3'),
+      { success: $t('msg.3') },
       coinObj.value.approve,
       hoster,
       ethers.constants.MaxUint256
@@ -141,7 +142,13 @@ export default (addressObj: IAddressObj) => {
       await getDecimals();
     }
     const cloneAmount = bpMul(amount, 10 ** decimals.value);
-    const { status } = await bpWrite($t('msg.5'), coinObj.value.transfer, recipient, cloneAmount);
+    const { status } = await bpWrite(
+      { success: $t('msg.5') },
+      coinObj.value.transfer,
+      recipient,
+      cloneAmount
+    );
+
     return status;
   }
 
@@ -158,7 +165,7 @@ export default (addressObj: IAddressObj) => {
     }
     const cloneAmount = bpMul(amount, 10 ** decimals.value);
     const { status } = await bpWrite(
-      $t('msg.5'),
+      { success: $t('msg.5') },
       coinObj.value.transferFrom,
       sender,
       recipient,

@@ -1,47 +1,27 @@
 <script setup lang="ts">
-import { dataWrap } from './testData';
-import { useAjax } from '@hooks/useAction';
-import { $GET } from '@/service/request';
-import { bpThrottle } from '@/utils/tools';
-import { useWindowScroll } from '@vueuse/core';
-import { useScrollBottom } from '@/hooks/useScrollCallback';
+import { bpFormat } from '@/utils/bpMath';
+import { useRouteItemRef } from '@/router/useRouterTools';
+import { useRead, useWrite } from '@/hooks/useAction';
+import useCoinToken from '@contApi/useCoinToken';
+import { EMET_TOKEN_CONT } from '@/contracts/address';
 
-import useDiviPage from '@/hooks/useDiviPage';
-const { curPage, loading, finished, finalData: showData, core: init } = useDiviPage(dataWrap);
-init();
+const emetObj = useCoinToken({ address: EMET_TOKEN_CONT.address, abi: EMET_TOKEN_CONT.abi });
+
+const [balan, balanEx] = useRead(async () => {
+  return await emetObj.getBalance();
+});
+
+const [doTrans, loadDoTrans] = useWrite(async () => {
+  await emetObj.transfer('0x2c1BbCDCa84Fd84C38652D75D67044711eF027ad', '100');
+});
 </script>
 
 <template>
-  <div class="text-1rem fixed">
-    {{ showData.length }}当前页码：{{ curPage }}
-
-    <div class="text-main-1">
-      {{ loading ? 'loading' : 'done' }}
-    </div>
-    <div class="text-main-1">
-      {{ finished ? 'finish' : 'more' }}
-    </div>
-  </div>
-  <div class="bg-main-1">{{ dataWrap.length }}</div>
-  <div class="test-store-wrap">
-    <div class="item" v-for="(item, inx) in showData" :key="inx">
-      <div class="title">
-        {{ inx }}
-      </div>
-      <div>{{ item }}</div>
-    </div>
+  <div class="test-wrap">
+    <h1>test wrap page...</h1>
+    <div>余额： {{ balan.show }}</div>
+    <bp-button class="w-10 h-5 text-0.6rem" @click="doTrans" v-loading="loadDoTrans">交易</bp-button>
   </div>
 </template>
 
-<style lang="scss" scoped>
-.item {
-  height: 250px;
-  background-color: pink;
-  margin: 0.2rem;
-  overflow: auto;
-
-  .title {
-    font-size: 1rem;
-  }
-}
-</style>
+<style lang="scss" scoped></style>
