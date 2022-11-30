@@ -16,9 +16,6 @@ const [balan, balanEx] = useRead(async () => {
   <div class="test-wrap">
     <h1>test wrap page...</h1>
     <div>余额： {{ balan.show }}</div>
-    <bp-button class="w-10 h-5 text-0.6rem" @click="doTrans" v-loading="loadDoTrans"
-      >交易</bp-button
-    >
   </div>
 </template>
 
