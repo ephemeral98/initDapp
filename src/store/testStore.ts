@@ -1,29 +1,26 @@
 import { defineStore, storeToRefs } from 'pinia';
 import { EMET_TOKEN_CONT } from '@/contracts/address';
-import CoinToken from '@/contractsApi/useCoinToken';
+import useCoinToken from '@/contractsApi/useCoinToken';
+import { useRead } from '@/hooks/useAction';
+import { sleep } from '@/utils/tools';
 
-const useTestStore = defineStore('testStore', {
-  state: () => ({
-    test1: '1',
-    test3: CoinToken({
-      address: EMET_TOKEN_CONT.address,
-      abi: EMET_TOKEN_CONT.abi,
-    }),
-    test4: '5565',
-  }),
+const useTestStore = defineStore('testStore', () => {
+  const emetObj = useCoinToken({
+    address: EMET_TOKEN_CONT.address,
+    abi: EMET_TOKEN_CONT.abi,
+  });
 
-  actions: {
-    setTest(payload) {
-      this.test1 = payload;
+  const [data, dataEx] = useRead(
+    async () => {
+      return await emetObj.getBalance();
     },
+    { immediate: false }
+  );
 
-    async storeGetBalan(payload) {
-      console.log('test3....', payload);
-      this.test4 = 123;
-    },
-  },
-
-  getters: {},
+  return {
+    data,
+    dataEx,
+  };
 });
 
 export default useTestStore;

@@ -1,5 +1,5 @@
 import { ElMessage } from 'element-plus';
-import { reactive, ReactiveEffect, ref, Ref, watch } from 'vue';
+import { reactive, ref, Ref, watch } from 'vue';
 import { useRouteItem } from '@/router/useRouterTools';
 import { useAppStore } from '@store/appStore';
 import i18n from '@/locales/i18n';
@@ -8,14 +8,17 @@ const $t = i18n.global.t;
 
 interface IUseRead {
   loading: boolean; // 加载状态
-  refetch: () => Promise<void>; // 重新请求数据
   status: null | boolean; // 请求结果
   message: string; // 请求结果消息，如果成功，则为 '',
+  refetch: () => Promise<void>; // 重新请求数据
+  doCore: () => Promise<void>; // 手动请求方法
 }
 
 interface IEx {
   interval?: number; // 轮询 间隔时间
   watcher?: any; // 监听者 使用方式和 watch 一致
+  immediate?: boolean; // 是否立即执行，默认立即
+  noAccount?: boolean; // 是否 不依赖钱包
 }
 
 interface IAjax {
@@ -99,23 +102,10 @@ export function useRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead
   const appStore = useAppStore();
 
   const datas = ref({}); // 返回值
-  /**
-   * 重新请求
-   */
-  async function refetch() {
-    await core();
-  }
 
   /**
-   * 返回状态结构
+   * core
    */
-  const result = reactive<IUseRead>({
-    loading: false,
-    refetch,
-    status: null,
-    message: '',
-  });
-
   async function core() {
     result.loading = true;
     const resp = await func();
@@ -131,13 +121,65 @@ export function useRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead
     result.loading = false;
   }
 
-  // refetch
-  watch(
-    () => [appStore.touchAfterWatchAccount],
-    () => {
+  /**
+   * 手动执行
+   * 默认不依赖
+   */
+  async function doCore() {
+    if (ex?.noAccount) {
+      // 不依赖钱包
       core();
+    } else {
+      // 依赖钱包
+      watch(
+        () => [appStore.touchAfterWatchAccount],
+        () => {
+          if (!appStore.defaultAccount || !appStore.ethersObj.chainId || !appStore.netWorkReady)
+            return;
+
+          core();
+        },
+        {
+          immediate: true,
+        }
+      );
     }
-  );
+  }
+
+  /**
+   * 重新请求
+   */
+  async function refetch() {
+    await core();
+  }
+
+  /**
+   * 返回状态结构
+   */
+  const result = reactive<IUseRead>({
+    loading: false,
+    status: null,
+    message: '',
+    refetch,
+    doCore,
+  });
+
+  if (ex?.immediate === false) {
+    // 不立即执行
+  } else {
+    // 立即执行
+    if (ex?.noAccount) {
+      core();
+    } else {
+      // 需要钱包地址
+      watch(
+        () => [appStore.touchAfterWatchAccount],
+        () => {
+          core();
+        }
+      );
+    }
+  }
 
   // watcher
   if (ex?.watcher) {
