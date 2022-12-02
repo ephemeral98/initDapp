@@ -20,10 +20,18 @@ type ICurRoute = IExtraParam & RouteRecordRaw;
 export function useRouteItem(): ICurRoute {
   // const routerInfo = router.getRoutes();
   // 获取当前地址栏路由
+
+  console.log(
+    'router.options?.history?.state?.current...',
+    router.options?.history?.state?.current
+  );
+
   let curRouterPath = String(router.options?.history?.state?.current);
   curRouterPath = curRouterPath?.replace?.(/\?\S*/, '');
 
   const pathArrs = curRouterPath.split('/').filter((item) => item);
+
+  console.log('pathArrs..', pathArrs);
 
   // 获取所有路由信息
   const allRouter = router?.options?.routes;
@@ -123,12 +131,20 @@ function _queryURLparams(url) {
   let obj = {};
   if (url.indexOf('?') < 0) return obj;
   let arr = url.split('?');
-  url = arr[1];
-  let array = url.split('&');
-  for (let i = 0; i < array.length; i++) {
-    let arr2 = array[i];
-    let arr3 = arr2.split('=');
-    obj[arr3[0]] = arr3[1];
+
+  // 去除掉第一项(baseUrl)
+  const t1 = arr.filter((item, inx) => inx > 0);
+
+  for (let j = 0, jlen = t1.length; j < jlen; j++) {
+    const l = t1[j];
+    const tArr = l.split('&');
+
+    for (let i = 0; i < tArr.length; i++) {
+      let arr2 = tArr[i];
+      let arr3 = arr2.split('=');
+      obj[arr3[0]] = arr3[1];
+    }
   }
+
   return obj;
 }

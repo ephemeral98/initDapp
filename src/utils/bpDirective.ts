@@ -13,27 +13,33 @@
  */
 export const maxDirective = (app) => {
   let mountedValue, updatedValue;
+  const core = (el, binding) => {
+    // 只能输入数字类型
+    const reg = /(\-?\d+\.?\d*)|(\-?\d*\d*)/;
+    el.value = el.value.match(reg)[0];
+
+    // 不能超过最大值
+    mountedValue = binding.value;
+    const maxValue = updatedValue || mountedValue;
+
+    if (el.value > maxValue) {
+      el.value = maxValue;
+    }
+  };
+
   app.directive('max', {
     mounted(el, binding, vnode) {
       el.addEventListener('input', () => {
-        // 只能输入数字类型
-        const reg = /(\-?\d+\.?\d*)|(\-?\d*\d*)/;
-        el.value = el.value.match(reg)[0];
-
-        // 不能超过最大值
-        mountedValue = binding.value;
-        const maxValue = updatedValue || mountedValue;
-
-        if (el.value > maxValue) {
-          el.value = maxValue;
-        }
+        core(el, binding);
       });
     },
 
     // 兼容异步数据
     updated(el, binding, vnode) {
+      console.log('updata...', binding.value);
       el.addEventListener('input', () => {
         updatedValue = binding.value;
+        core(el, binding);
       });
     },
   });
@@ -45,27 +51,35 @@ export const maxDirective = (app) => {
  */
 export const minDirective = (app) => {
   let mountedValue, updatedValue;
+
+  const core = (el, binding) => {
+    // 只能输入数字类型
+    const reg = /(\-?\d+\.?\d*)|(\-?\d*\d*)/;
+    el.value = el.value.match(reg)[0];
+
+    // 不能小于最小值
+    mountedValue = binding.value;
+    const minValue = updatedValue || mountedValue;
+
+    if (el.value < minValue) {
+      el.value = minValue;
+    }
+
+    const e = new Event('input');
+    el.dispatchEvent(e);
+  };
+
   app.directive('min', {
     mounted(el, binding, vnode) {
-      el.addEventListener('input', () => {
-        // 只能输入数字类型
-        const reg = /(\-?\d+\.?\d*)|(\-?\d*\d*)/;
-        el.value = el.value.match(reg)[0];
-
-        // 不能小于最小值
-        mountedValue = binding.value;
-        const minValue = updatedValue || mountedValue;
-
-        if (el.value < minValue) {
-          el.value = minValue;
-        }
+      el.addEventListener('keyup', () => {
+        core(el, binding);
       });
     },
 
     // 兼容异步数据
     updated(el, binding, vnode) {
-      el.addEventListener('input', () => {
-        updatedValue = binding.value;
+      el.addEventListener('keyup', () => {
+        core(el, binding);
       });
     },
   });
@@ -77,55 +91,18 @@ export const minDirective = (app) => {
  * eg: <input v-number />
  */
 export const numberDirective = (app) => {
-  const key = 'copy';
-  const property = '__v_' + key + '__';
-
   app.directive('number', {
     mounted(el, binding, vnode) {
-      /* el[property] = {
-        value: binding.value,
-        listener: function () {},
+      const core = () => {
+        // 只能输入数字类型
+        const reg = /(\-?\d+\.?\d*)|(\-?\d*\d*)/;
+        el.value = el.value.match(reg)[0];
+        // vnode.props['onUpdate:modelValue'](666)
+        const e = new Event('input');
+        el.dispatchEvent(e);
       };
 
-      el[property].listener = el[property].listener.bind(el[property]); */
-
-      el.addEventListener('input', () => {
-        el.value = '';
-
-        // console.log('vnode', el, binding, vnode.props.onInput());
-        // const modelValue = (el as any)._modelValue
-        // console.log('moomoo', modelValue);
-        // console.log('el[property].listener..', el[property]);
-        // console.log('vnode...', vnode.el['__vueParentComponent'].render);
-        // console.log('props...', vnode.props['onUpdate:modelValue'](666));
-        // 只能输入数字类型
-        // const reg = /(\-?\d+\.?\d*)|(\-?\d*\d*)/;
-        // el.value = el.value.match(reg)[0];
-        // vnode.props['onUpdate:modelValue'](el.value);
-        // vnode.props['onUpdate:ttt'](el.value);
-        /* setTimeout(() => {
-        el.value = 'aaa';
-          
-        }, 1000); */
-        // console.log('binding...', binding);
-      });
-    },
-
-    // 兼容异步数据
-    updated(el, binding, vnode) {
-      // el.addEventListener('input', () => {
-      // console.log('apppp', app);
-      // console.log(vnode._context);
-      // el.value = 'ppp';
-      // console.log('update.....', el.valueOf(),binding, vnode);
-      // const property = '__v_'+key+'__'
-      // console.log('vnode...', vnode.props);
-      // vnode.props.onInput();
-      // console.log('props...', vnode.props['onUpdate:modelValue'](666));
-      // 只能输入数字类型
-      // const reg = /(\-?\d+\.?\d*)|(\-?\d*\d*)/;
-      // el.value = el.value.match(reg)[0];
-      // });
+      el.addEventListener('keyup', core);
     },
   });
 };
@@ -139,7 +116,7 @@ export const doubleDirective = (app) => {
   app.directive('double', {
     mounted(el, binding, vnode) {
       const len = Math.abs(binding.value); // 限制的长度
-      el.addEventListener('input', () => {
+      const core = () => {
         // let reg2 = new RegExp(`^\\D*(\\d*(?:\\.\\d{0,${binding.value}})?).*$`, 'g');
         // 只能输入数字类型
         const reg = binding.value > 0 ? /(\d+\.?\d*)|(\d*\d*)/ : /(\-?\d+\.?\d*)|(\-?\d*\d*)/;
@@ -153,7 +130,12 @@ export const doubleDirective = (app) => {
           const dotInx = matcher.index; // 小数点出现的位置
           el.value = el.value?.slice(0, dotInx + len + 1);
         }
-      });
+
+        const e = new Event('input');
+        el.dispatchEvent(e);
+      };
+
+      el.addEventListener('keyup', core);
     },
   });
 };
@@ -165,11 +147,16 @@ export const doubleDirective = (app) => {
 export const intDirective = (app) => {
   app.directive('int', {
     mounted(el, binding, vnode) {
-      el.addEventListener('input', () => {
+      const core = () => {
         // 只能输入数字类型
         const reg = /(\d*)/;
         el.value = el.value.match(reg)?.[0];
-      });
+
+        const e = new Event('input');
+        el.dispatchEvent(e);
+      };
+
+      el.addEventListener('keyup', core);
     },
   });
 };
@@ -181,11 +168,16 @@ export const intDirective = (app) => {
 export const integerDirective = (app) => {
   app.directive('integer', {
     mounted(el, binding, vnode) {
-      el.addEventListener('input', () => {
+      const core = () => {
         // 只能输入数字类型
         const reg = /(\d*)/;
         el.value = el.value.match(reg)?.[0];
-      });
+
+        const e = new Event('input');
+        el.dispatchEvent(e);
+      };
+
+      el.addEventListener('keyup', core);
     },
   });
 };

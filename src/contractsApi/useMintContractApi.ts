@@ -46,7 +46,7 @@ export default () => {
    */
   async function mint(amount: string | number) {
     const cloneAmount = bpMul(amount, 10 ** 18);
-    const { status } = await bpWrite(false, mintObj.value.mint, {
+    const { status } = await bpWrite(true, mintObj.value.mint, {
       value: cloneAmount,
     });
     return status;

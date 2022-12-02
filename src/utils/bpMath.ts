@@ -201,7 +201,7 @@ export function bpFormat(num, digits: number = 0, dec: number = 18): string {
   let digi = Math.abs(digits);
 
   // 没有值
-  if (!num) {
+  if (!+num) {
     const res = 0;
     return digits ? res.toFixed(digi) : '0';
   }
