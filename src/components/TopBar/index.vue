@@ -25,13 +25,11 @@ const langList = reactive([
 ]);
 
 langList.forEach((item) => {
-  console.log('appStore.curLang..', appStore.curLang);
   item.active = item.target === appStore.curLang;
 });
 
 // 当前选中语言
 const curLang = computed(() => {
-  console.log('item...,', langList);
   return langList.find((item) => item.active)?.name ?? langList[1].name;
 });
 
