@@ -68,7 +68,7 @@ export async function bpWrite(msgs: boolean | IMsgs, func, ...param): Promise<IT
       // 点击了拒绝信息
       const rejectCondiction = info?.includes?.('User denied transaction');
       if (rejectCondiction) {
-        info = rejectCondiction;
+        info = 'User denied transaction';
       }
 
       // 避免信息太长看懵用户
