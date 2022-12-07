@@ -33,8 +33,9 @@ const useAppStore = defineStore('app', {
     ethersObj: INIT_ETHERS,
     chainTimer: null, // 切链timer
     netWorkReady: false, // 成功获取链和钱包等准备工作
-    touchAfterWatchAccount: 0, // 告诉useRead，已重新构建合约对象
     touchUrl: 0, // 用作监听地址栏的变化
+    touchAfterWatchAccount: 0, // 告诉useRead，已重新构建合约对象
+    touchRefreshRead: 0, // 全世界的 useRead 重跑
   }),
 
   actions: {
@@ -311,14 +312,21 @@ const useAppStore = defineStore('app', {
     },
 
     /**
-     * 设置watchAccount之后
+     * watchAccount之后发布
      */
     setTouchAfterWatchAccount(count: number) {
       this.touchAfterWatchAccount = count;
     },
 
     /**
-     * 设置
+     * 告诉全世界的 useRead重跑
+     */
+    refreshAllRead() {
+      this.touchRefreshRead++;
+    },
+
+    /**
+     * 触发url发布
      */
     setTouchUrl(count: number) {
       this.touchUrl = count;

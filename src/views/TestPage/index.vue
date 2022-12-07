@@ -1,128 +1,55 @@
 <script setup lang="ts">
-import { useWrite, useRead } from '@hooks/useAction';
-import useTestStore from '@store/testStore';
-import { useRoute } from 'vue-router';
-import MintContractApi from '@/contractsApi/useMintContractApi';
-import CoinToken from '@/contractsApi/useCoinToken';
-import { EMET_TOKEN_CONT } from '@/contracts/address';
-import TestMintContract from './TestMintContract.vue';
-import TestLp from './TestLp.vue';
-
-const { auth, allow, getBalance, balanceObj, hasAllow, created, totalSupply } = CoinToken({
-  address: EMET_TOKEN_CONT.address,
-  abi: EMET_TOKEN_CONT.abi,
-});
-
-// getBalance();
-const [datas, dataEx] = useRead(
-  async () => {
-    const resp = await Promise.all([
-      allow('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21'),
-      getBalance(),
-    ]);
-    console.log('resp...', resp);
-    return resp[1];
-  },
-  { watcher: created }
-);
-
-const [decimal, dataDecimalEx] = useRead(async () => {
-  return await totalSupply();
-});
+import { useRead, useWrite } from '@/hooks/useAction';
+import useCoinToken from '@contApi/useCoinToken';
+import { EMET_TOKEN_CONT, STAKE_ADDR } from '@/contracts/address';
+import useTestStore from '@/store/testStore';
 
 const testStore = useTestStore();
+const emetObj = useCoinToken({ address: EMET_TOKEN_CONT.address, abi: EMET_TOKEN_CONT.abi });
 
-const a = ref(1);
+const [balan, balanEx] = useRead(
+  async () => {
+    const myBalan = await emetObj.getBalance();
+    console.log('myBalance...', myBalan);
+    return myBalan;
+  },
+  { default: 0 }
+);
 
-setInterval(() => {
-  a.value++;
-}, 1100);
+const [getDecimal, getDecimalEx] = useRead(
+  async () => {
+    return await emetObj.getDecimals();
+  },
+  { default: 18 }
+);
 
-const [fetchTokens, fetchTokensEX] = useRead(async () => {});
+// testStore.dataEx.doCore();
 
-/* async function init() {
-  const resp1 = await checkInfo();
-  console.log('resp1111', resp1, myBalan);
-  const resp2 = await checkInfo();
-  console.log('resp2222', resp2, myBalan);
-} */
-
-// init();
-
-const route = useRoute();
-console.log('route222....', route);
-
-const [handleClick, loadWrite] = useWrite(async () => {
-  console.log('这是写啊');
-  // await lpObj.auth('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21');
-  await auth('0x6BDb16fDC24679E9dE0A4FF9aDc7A7C36831Cc21');
+const [doAuth, loadDoAuth] = useWrite(async () => {
+  await emetObj.auth(STAKE_ADDR);
 });
-
-const tempImg = require('@img/holder.png');
-
-const inpValue = ref({
-  show: '123',
-  origin: 6666,
-});
-
-function tempInp(e) {
-  console.log('eeee', e.target.value);
-  e.target.value = e.target.value.replace(/^\D*(\d*(?:\.\d{0,2})?).*$/g, '$1');
-}
 </script>
 
 <template>
-  <div class="test-page-wrap">
-    <h2>this is a test page...</h2>
+  <div class="test-wrap">
+    <h1>test wrap page...</h1>
+    <div>余额： {{ balan }}</div>
 
-    <img :src="tempImg" alt="" />
-    <img src="@img/holder.png" alt="" />
-    <BpButton class="click-box" @click="handleClick" v-loading="loadWrite">bp写操作</BpButton>
+    <div>精度：{{ getDecimal }}</div>
 
-    <h3>这个是testStore: {{ testStore.test1 }}</h3>
+    <div>
+      <div>testStore::{{ testStore.data }}</div>
+      <div>testStore...loading??{{ testStore.dataEx.loading }}</div>
+    </div>
 
-    <div>useLay数据：{{ fetchTokens }}</div>
-    <div>读取中？ {{ fetchTokensEX.loading }}</div>
-    <div>读取结果？ {{ String(fetchTokensEX.status) }}</div>
-    <button @click="fetchTokensEX.refetch">重新读</button>
-
-    <hr />
-
-    <div>{{ dataEx.loading }}</div>
-    <div class="balan-wrap">余额：{{ datas }}</div>
-    <div>授权了吗？{{ hasAllow }}</div>
-
-    <div>decimals？？？: {{ decimal }}</div>
-
-    <TestMintContract />
-
-    <TestLp />
-    <!-- <div>{{ balanceObj }}</div> -->
-
-    <el-button>自动导入element按钮</el-button>
-
-    <button>MAX</button>
-
-    <input type="text" @keyup="tempInp" />
+    <bp-button class="px-1 h-1.2" sink @click="doAuth" v-loading="loadDoAuth"
+      >尝试授权write操作</bp-button
+    >
   </div>
 </template>
 
 <style lang="scss" scoped>
-img {
-  width: 1rem;
-}
-.test-page-wrap {
-  div {
-    margin: 0.3rem 0;
-  }
-
-  .click-box {
-    width: 150px;
-    height: 150px;
-  }
-}
-
-.balan-wrap {
-  @include -width-a(3);
+.test-wrap {
+  height: 100vh;
 }
 </style>

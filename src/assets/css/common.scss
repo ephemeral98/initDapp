@@ -45,10 +45,6 @@
   margin: 0.1rem 0;
 }
 
-.cn-font {
-  font-family: fang;
-}
-
 // 按钮通用样式
 .func-btn {
   $color: #07caf0;
@@ -60,16 +56,17 @@
   box-shadow: 0 $range 0 0 $color;
   padding-top: $range;
 
-  &:active {
-    // box-shadow: 0 1px 0 0 #2877c9;
-    box-shadow: 0 0 0 0 $color;
-
-    transform: translateY($range);
+  // 下沉效果
+  &.sink {
+    &:active {
+      // box-shadow: 0 1px 0 0 #2877c9;
+      box-shadow: 0 0 0 0 $color;
+      transform: translateY($range);
+    }
   }
 
   // 置灰
   &.disable {
-    background: rgb(178, 178, 178);
-    box-shadow: 0 $range 0 0 rgb(137, 137, 137);
+    filter: grayscale(99%);
   }
 }

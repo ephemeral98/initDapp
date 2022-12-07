@@ -21,17 +21,10 @@ export function useRouteItem(): ICurRoute {
   // const routerInfo = router.getRoutes();
   // 获取当前地址栏路由
 
-  console.log(
-    'router.options?.history?.state?.current...',
-    router.options?.history?.state?.current
-  );
-
   let curRouterPath = String(router.options?.history?.state?.current);
   curRouterPath = curRouterPath?.replace?.(/\?\S*/, '');
 
   const pathArrs = curRouterPath.split('/').filter((item) => item);
-
-  console.log('pathArrs..', pathArrs);
 
   // 获取所有路由信息
   const allRouter = router?.options?.routes;

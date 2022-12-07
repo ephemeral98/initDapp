@@ -4,6 +4,7 @@ const appStore = useAppStore();
 
 const props = defineProps<{
   disable?: boolean; // 置灰按钮
+  sink: boolean; // 点击下沉效果
 }>();
 
 const emits = defineEmits<{
@@ -22,7 +23,10 @@ async function handleSwitchChain() {
 
 <template>
   <!-- 链不对，文案显示连接钱包 -->
-  <button :class="['write-btn func-btn', { disable: props.disable }]" @click="handleSwitchChain">
+  <button
+    :class="['write-btn func-btn', { disable: props.disable, sink: props.sink }]"
+    @click="handleSwitchChain"
+  >
     <template v-loading="loadSwitch" v-if="!appStore.rightChain || !appStore.defaultAccount">
       <!-- {{ $t('common.1') }} -->
 

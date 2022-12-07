@@ -17,14 +17,14 @@ export const supportedChains: ISupportChains[] = [
   // 以太坊主网
   {
     chainId: '0x1',
-    chainName: 'Binance Smart Chain',
+    chainName: 'Ethereum Mainnet',
     nativeCurrency: {
-      name: 'BNB',
-      symbol: 'BNB',
+      name: 'ETH',
+      symbol: 'ETH',
       decimals: 18,
     },
-    rpcUrls: ['https://bsc-dataseed1.ninicoin.io'],
-    blockExplorerUrls: ['https://bscscan.com/'],
+    rpcUrls: ['https://rpc.ankr.com/eth'],
+    blockExplorerUrls: ['https://etherscan.io'],
   },
   // BSC主网
   {
