@@ -2,7 +2,6 @@ import { defineStore, storeToRefs } from 'pinia';
 import { EMET_TOKEN_CONT } from '@/contracts/address';
 import useCoinToken from '@/contractsApi/useCoinToken';
 import { useRead } from '@/hooks/useAction';
-import { sleep } from '@/utils/tools';
 
 const useTestStore = defineStore('testStore', () => {
   const emetObj = useCoinToken({
@@ -14,7 +13,7 @@ const useTestStore = defineStore('testStore', () => {
     async () => {
       return await emetObj.getBalance();
     },
-    { immediate: false }
+    { immediate: false, default: 0 }
   );
 
   return {

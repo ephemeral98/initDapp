@@ -10,11 +10,12 @@ interface IUseRead {
   loading: boolean; // 加载状态
   status: null | boolean; // 请求结果
   message: string; // 请求结果消息，如果成功，则为 '',
-  refetch: () => Promise<void>; // 重新请求数据
+  refresh: () => Promise<void>; // 重新请求数据
   doCore: () => Promise<void>; // 手动请求方法
 }
 
 interface IEx {
+  default: any; // 默认数据
   interval?: number; // 轮询 间隔时间
   watcher?: any; // 监听者 使用方式和 watch 一致
   immediate?: boolean; // 是否立即执行，默认立即
@@ -23,7 +24,7 @@ interface IEx {
 
 interface IAjax {
   loading: boolean; // 加载状态
-  refetch: () => Promise<void>; // 重新请求数据
+  refresh: () => Promise<void>; // 重新请求数据
 }
 
 /**
@@ -98,10 +99,10 @@ export function useWrite(func): [any, Ref<boolean>] {
     }); 
  * 
  */
-export function useRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead] {
+export function useRead(func: () => Promise<any>, ex: IEx): [Ref<any>, IUseRead] {
   const appStore = useAppStore();
 
-  const datas = ref({}); // 返回值
+  const datas = ref(ex.default); // 返回值
 
   /**
    * core
@@ -149,7 +150,7 @@ export function useRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead
   /**
    * 重新请求
    */
-  async function refetch() {
+  async function refresh() {
     await core();
   }
 
@@ -160,7 +161,7 @@ export function useRead(func: () => Promise<any>, ex?: IEx): [Ref<any>, IUseRead
     loading: false,
     status: null,
     message: '',
-    refetch,
+    refresh,
     doCore,
   });
 
@@ -237,14 +238,14 @@ export function useAjax(func: () => Promise<any>, extra?: { watcher: boolean }):
    */
   const result = reactive<IAjax>({
     loading: false,
-    refetch,
+    refresh,
   });
 
   const datas = ref({}); // 返回值
   /**
    * 重新请求
    */
-  async function refetch() {
+  async function refresh() {
     await core();
   }
 
