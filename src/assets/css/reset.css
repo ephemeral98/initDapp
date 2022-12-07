@@ -206,8 +206,8 @@ body {
 
 /*滚动条 start*/
 ::-webkit-scrollbar {
-  width: 14px;
-  height: 14px;
+  width: 8px;
+  height: 8px;
 
   /* @media (min-width: $pad) {
         &:hover {
