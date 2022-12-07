@@ -11,7 +11,7 @@ const useTestStore = defineStore('testStore', () => {
 
   const [data, dataEx] = useRead(
     async () => {
-      return await emetObj.getBalance();
+      // return await emetObj.getBalance();
     },
     { immediate: false, default: 0 }
   );

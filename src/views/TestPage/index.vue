@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { bpFormat } from '@/utils/bpMath';
-import { useRouteItemRef } from '@/router/useRouterTools';
 import { useRead, useWrite } from '@/hooks/useAction';
 import useCoinToken from '@contApi/useCoinToken';
-import { EMET_TOKEN_CONT } from '@/contracts/address';
+import { EMET_TOKEN_CONT, STAKE_ADDR } from '@/contracts/address';
 import useTestStore from '@/store/testStore';
 
 const testStore = useTestStore();
@@ -25,7 +23,11 @@ const [getDecimal, getDecimalEx] = useRead(
   { default: 18 }
 );
 
-testStore.dataEx.doCore();
+// testStore.dataEx.doCore();
+
+const [doAuth, loadDoAuth] = useWrite(async () => {
+  await emetObj.auth(STAKE_ADDR);
+});
 </script>
 
 <template>
@@ -39,7 +41,15 @@ testStore.dataEx.doCore();
       <div>testStore::{{ testStore.data }}</div>
       <div>testStore...loading??{{ testStore.dataEx.loading }}</div>
     </div>
+
+    <bp-button class="px-1 h-1.2" sink @click="doAuth" v-loading="loadDoAuth"
+      >尝试授权write操作</bp-button
+    >
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.test-wrap {
+  height: 100vh;
+}
+</style>

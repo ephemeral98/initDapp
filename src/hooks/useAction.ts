@@ -167,14 +167,27 @@ export function useRead(func: () => Promise<any>, ex: IEx): [Ref<any>, IUseRead]
 
   if (ex?.immediate === false) {
     // 不立即执行
+    watch(
+      () => [appStore.touchRefreshRead],
+      () => {
+        core();
+      }
+    );
   } else {
     // 立即执行
     if (ex?.noAccount) {
+      // 不依赖钱包
       core();
+      watch(
+        () => [appStore.touchRefreshRead],
+        () => {
+          core();
+        }
+      );
     } else {
       // 需要钱包地址
       watch(
-        () => [appStore.touchAfterWatchAccount],
+        () => [appStore.touchAfterWatchAccount, appStore.touchRefreshRead],
         () => {
           core();
         }
@@ -230,7 +243,10 @@ export function watchAccount(func: () => void): void {
   const resp2 = await $get();
   return resp + resp2;
 }); */
-export function useAjax(func: () => Promise<any>, extra?: { watcher: boolean }): [Ref<any>, IAjax] {
+export function useAjax(
+  func: () => Promise<any>,
+  extra?: { watcher: boolean; default: any }
+): [Ref<any>, IAjax] {
   const appStore = useAppStore();
 
   /**
@@ -241,7 +257,7 @@ export function useAjax(func: () => Promise<any>, extra?: { watcher: boolean }):
     refresh,
   });
 
-  const datas = ref({}); // 返回值
+  const datas = ref(extra.default); // 返回值
   /**
    * 重新请求
    */

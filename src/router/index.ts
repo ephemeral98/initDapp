@@ -13,7 +13,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/TestPage',
     name: 'testPage',
-    component: () => import(/* webpackChunkName: "testPage" */ '@/views/TestPage/TestStore.vue'),
+    component: () => import(/* webpackChunkName: "testPage" */ '@/views/TestPage/index.vue'),
     meta: {
       requireAccount: false, // 依赖钱包
       needChains: curNeedChain(['bsc']), // 依赖的链
