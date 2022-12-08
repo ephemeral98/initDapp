@@ -28,7 +28,6 @@ export default (addressObj: IAddressObj) => {
     const signer = useDefaultRpc();
     try {
       lpObj.value = new ethers.Contract(addressObj.address, addressObj.abi, signer);
-      console.log('lp创建成功？', lpObj.value);
     } catch (error) {
       console.log('构建Lp合约对象失败...');
     }

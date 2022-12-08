@@ -101,10 +101,8 @@ export default (addressObj: IAddressObj) => {
    * @returns {Boolean} true 已经授权，false 没有授权
    */
   async function allow(hoster: string): Promise<boolean> {
-    console.log('coinObj.value...', coinObj.value);
     const allowance =
       (await bpRead(coinObj.value.allowance, appStore.defaultAccount, hoster)) || {};
-    console.log('allowance....', allowance);
     const balance = getBalance() || {};
     const [{ status, datas }, { origin }] = (await Promise.all([allowance, balance])) as any;
 

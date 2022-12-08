@@ -36,7 +36,6 @@ export const maxDirective = (app) => {
 
     // 兼容异步数据
     updated(el, binding, vnode) {
-      console.log('updata...', binding.value);
       el.addEventListener('input', () => {
         updatedValue = binding.value;
         core(el, binding);
