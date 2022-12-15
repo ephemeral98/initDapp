@@ -102,7 +102,7 @@ async function handleLink() {
     </div>
   </div>
   <!-- 移动端菜单 -->
-  <Menu :isShowMenu="isOpenMenu" @hide="isOpenMenu = false" />
+  <Menu :isShowMenu="isOpenMenu" @hide="handleMenu" />
 </template>
 
 <style lang="scss" scoped>

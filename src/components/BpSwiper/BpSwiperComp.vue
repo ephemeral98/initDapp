@@ -75,6 +75,7 @@ defineExpose({
     :observeParents="swiperOptions.observeParents"
     :observeSlideChildren="swiperOptions.observeSlideChildren"
     :centerInsufficientSlides="swiperOptions.centerInsufficientSlides"
+    :pagination="swiperOptions.pagination"
   >
     <slot></slot>
   </swiper>

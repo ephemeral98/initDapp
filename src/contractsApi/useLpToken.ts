@@ -105,8 +105,8 @@ export default (addressObj: IAddressObj) => {
     if (!status) console.log('getReserves...error');
     revObj[0].revOrigin = status ? datas[0] : '0';
     revObj[0].revShow = status ? bpFormat(datas[0], digi) : '0';
-    revObj[1].revOrigin = status ? datas[0] : '0';
-    revObj[1].revShow = status ? bpFormat(datas[0], digi) : '0';
+    revObj[1].revOrigin = status ? datas[1] : '0';
+    revObj[1].revShow = status ? bpFormat(datas[1], digi) : '0';
 
     return revObj;
   }
