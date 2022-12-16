@@ -161,7 +161,6 @@ const useAppStore = defineStore('app', {
 
           clearInterval(this.chainTimer);
           this.chainTimer = setInterval(() => {
-            // console.log('new ethers.providers...', ethers.providers.Web3Provider);
             const newProviderWrap: any = new ethers.providers.Web3Provider(window?.ethereum, 'any');
             // 获取新的chainId
             const newChainId = newProviderWrap?.provider?.chainId;
