@@ -3,7 +3,7 @@
  * 参数：主轴排列、交叉轴排列
  * eg：@include (center, flex-start);
  */
- @mixin flexPos($posX: center, $posY: center) {
+@mixin flexPos($posX: center, $posY: center) {
   display: flex;
   justify-content: $posX;
   align-items: $posY;
@@ -44,7 +44,6 @@
     bottom: $bottom;
   }
 }
-
 
 /**
  * 响应式布局
@@ -125,33 +124,4 @@
   position: absolute;
   left: 0;
   top: 0;
-}
-
-// nftMarket 的图片背景
-@mixin coverNftBg {
-  content: '';
-  position: absolute;
-  width: 101%;
-  height: 101%;
-  left: -1%;
-  top: -1%;
-}
-@mixin nftImgBg {
-  position: relative;
-
-  &::before {
-    @include coverNftBg();
-    opacity: 1;
-    z-index: -1;
-    background-color: rgba(0, 0, 0, 0.7);
-  }
-
-  &::after {
-    @include coverNftBg();
-
-    background-image: url('https://bovine-verse.oss-cn-shenzhen.aliyuncs.com/slideShow/bg-home.png');
-    background-size: cover;
-    background-position: center center;
-    z-index: -2;
-  }
 }

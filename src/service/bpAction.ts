@@ -4,6 +4,7 @@
 import { ElMessage } from 'element-plus';
 import i18n from '@/locales/i18n';
 import { useAppStore } from '@/store/appStore';
+import { getWalletReject } from '@/utils/tools';
 const $t = i18n.global.t;
 
 /**
@@ -66,8 +67,7 @@ export async function bpWrite(msgs: boolean | IMsgs, func, ...param): Promise<IT
         err?.['reason'] || err?.data?.message || err?.error?.message || err?.message || err;
 
       // 点击了拒绝信息
-      const rejectCondiction = info?.includes?.('User denied transaction');
-      if (rejectCondiction) {
+      if (getWalletReject(err)) {
         info = 'User denied transaction';
       }
 
@@ -87,7 +87,8 @@ export async function bpWrite(msgs: boolean | IMsgs, func, ...param): Promise<IT
       return {
         status: false,
         datas: '0',
-        message: err,
+        errorOrigin: err,
+        message: info,
       };
     });
 }
@@ -117,6 +118,7 @@ export async function bpRead(func, ...param: any[]): Promise<ITransStatus> {
       return {
         status: false,
         datas: '0',
+        errorOrigin: err,
         message: err,
       };
     });

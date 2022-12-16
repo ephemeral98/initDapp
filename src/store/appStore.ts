@@ -1,11 +1,11 @@
 import { defineStore, storeToRefs } from 'pinia';
 import { ethers } from 'ethers';
 import { ElMessage } from 'element-plus';
-import i18n from '@/locales/i18n';
+import i18n, { defaultLang } from '@/locales/i18n';
 const $t = i18n.global.t;
 
 import { toRaw } from 'vue';
-import { getChainData } from '@/utils/tools';
+import { getChainData, getWalletReject } from '@/utils/tools';
 
 // ethers默认配置
 const INIT_ETHERS = {
@@ -137,12 +137,15 @@ const useAppStore = defineStore('app', {
             params: [{ chainId: hexChainId }],
           });
         } catch (error) {
-          // 用户没有这条链，则给他添加
-          const chainData = getChainData(chainId);
-          return await providerWrap.provider.request({
-            method: 'wallet_addEthereumChain',
-            params: [chainData],
-          });
+          if (!getWalletReject(error)) {
+            // 不是点击了拒绝引发的
+            // 用户没有这条链，则给他添加
+            const chainData = getChainData(chainId);
+            return await providerWrap.provider.request({
+              method: 'wallet_addEthereumChain',
+              params: [chainData],
+            });
+          }
         }
       }
 
@@ -336,7 +339,7 @@ const useAppStore = defineStore('app', {
   getters: {
     // 获取当前语言: en、cn、kn
     curLang() {
-      return this.lang || window.localStorage.getItem('lang') || 'en';
+      return this.lang || window.localStorage.getItem('lang') || defaultLang;
     },
   },
 });

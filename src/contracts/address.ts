@@ -1,4 +1,4 @@
-export const isTest = true; // 正式合约：false、 测试合约：true
+export const isTest = false; // 正式合约：false、 测试合约：true
 
 let contractObj;
 

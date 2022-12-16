@@ -112,3 +112,17 @@ export function sleep(gap: number) {
     }, gap);
   });
 }
+
+/**
+ * 判断该错误是不是点击钱包的拒绝引起
+ * @param error catch到的错误
+ * @returns true:是点击了拒绝引起，false:其他引起的错误
+ */
+export function getWalletReject(error): boolean {
+  let info =
+    error?.['reason'] || error?.data?.message || error?.error?.message || error?.message || error;
+  // 错误消息中包含这些字眼的都算点击了拒绝
+  let errorKeyTag = ['User denied', 'rejected'];
+  let res = !!errorKeyTag.filter((it) => info?.includes?.(it)).length;
+  return error === 'cancel' || res;
+}

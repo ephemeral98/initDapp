@@ -18,13 +18,16 @@ type ICurRoute = IExtraParam & RouteRecordRaw;
  * @returns
  */
 export function useRouteItem(): ICurRoute {
+  // 获取路由query
+  const curRouteQuery = _queryURLparams(window.location.href);
+
   // const routerInfo = router.getRoutes();
   // 获取当前地址栏路由
 
   let curRouterPath = String(router.options?.history?.state?.current);
   curRouterPath = curRouterPath?.replace?.(/\?\S*/, '');
 
-  const pathArrs = curRouterPath.split('/').filter((item) => item);
+  let curPath;
 
   // 获取所有路由信息
   const allRouter = router?.options?.routes;
@@ -32,8 +35,19 @@ export function useRouteItem(): ICurRoute {
   // 优先寻找首页，匹配首页的子路由
   const homePage = allRouter.find((item) => item.path === '/');
 
+  if (curRouterPath === '/') {
+    // 当前就是首页
+    return {
+      ...homePage,
+      query: curRouteQuery,
+    };
+  }
+
+  // 所有路径
+  const pathArrs = curRouterPath.split('/').filter((item) => item);
+
   // 当前路径
-  const curPath = pathArrs[pathArrs.length - 1];
+  curPath = pathArrs[pathArrs.length - 1];
 
   // 寻找叶子节点
   function _findLeaves(name: string, aLeave) {
@@ -51,27 +65,24 @@ export function useRouteItem(): ICurRoute {
     }
   }
 
-  let atHomePage, atOtherPage;
+  let atHomeLeave, atOtherPageLeave;
   for (let i = 0, len = homePage?.children?.length; i < len; i++) {
     const child = homePage.children[i];
-    // 该路由在首页
-    atHomePage = _findLeaves(curPath, child);
+    // 该路由在首页的叶子上
+    atHomeLeave = _findLeaves(curPath, child);
   }
 
-  if (!atHomePage) {
-    // 不在首页，则在其他路由上
+  if (!atHomeLeave) {
+    // 不在首页，则在其他路由的叶子上
     const otherPath = allRouter.find((item) => {
       const itemPath = item?.path?.split('/').filter((item) => item);
       return pathArrs?.[0] === itemPath[0];
     });
-    atOtherPage = _findLeaves(curPath, otherPath);
+    atOtherPageLeave = _findLeaves(curPath, otherPath);
   }
 
   // 当前路由项
-  const curRouteItem = atHomePage || atOtherPage;
-
-  // 获取路由query
-  const curRouteQuery = _queryURLparams(window.location.href);
+  const curRouteItem = atHomeLeave || atOtherPageLeave;
 
   return {
     ...curRouteItem,

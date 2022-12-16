@@ -36,6 +36,8 @@ export function handleSwitchChain() {
   // 当进入了switchChain这个方法里面的_handleChange方法之后，chainid就对了
   if (!rightChain) {
     nextTick(() => {
+      console.log('对了？', rightChain);
+
       // 这里就不弹出提示了，不然会跳出很多个message，因为有3处执行了，由于执行的时机不同。如果实在需要提示，可以在watchAccount那传入一个参数作为判断，
       // ElMessage.error($t('msg.6'));
       appStore.switchChain(curRouteItem.meta?.needChains[0]);
