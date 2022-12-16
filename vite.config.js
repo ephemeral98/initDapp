@@ -8,6 +8,7 @@ import AutoCps from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import WindiCSS from 'vite-plugin-windicss';
 import postcsspxtoviewport from 'postcss-px-to-viewport';
+import { buildTestnet } from './src/utils/buildTestnet';
 
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
@@ -34,80 +35,95 @@ function getUiVw(size, name) {
   };
 }
 
-export default defineConfig({
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData:
-          '@import "./src/assets/css/var.scss"; @import "./src/assets/css/mixins.scss"; @import "./src/assets/css/mediaSize.scss"; @import "./src/assets/css/mediaUnit.scss"; @import "./src/assets/css/theme.scss";',
+export default ({ mode }) => {
+  // 是否要打包到测试网(生成子路径)
+  const baseUrl = buildTestnet(mode);
+
+  return defineConfig({
+    base: baseUrl,
+
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData:
+            '@import "./src/assets/css/var.scss"; @import "./src/assets/css/mixins.scss"; @import "./src/assets/css/mediaSize.scss"; @import "./src/assets/css/mediaUnit.scss"; @import "./src/assets/css/theme.scss";',
+        },
+      },
+
+      postcss: {
+        plugins: [
+          postcsspxtoviewport(getUiVw(1280, 'pm')),
+          postcsspxtoviewport(getUiVw(1920, 'pw')),
+        ],
       },
     },
-
-    postcss: {
-      plugins: [postcsspxtoviewport(getUiVw(1280, 'pm')), postcsspxtoviewport(getUiVw(1920, 'pw'))],
-    },
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-      '@css': path.resolve(__dirname, './src/assets/css'),
-      '@cps': path.resolve(__dirname, './src/components'),
-      '@img': path.resolve(__dirname, './src/assets/img'),
-      '@hooks': path.resolve(__dirname, './src/hooks'),
-      '@store': path.resolve(__dirname, './src/store'),
-      '@contApi': path.resolve(__dirname, './src/contractsApi'),
-      '@tools': path.resolve(__dirname, './src/utils/tools'),
-      '@bpMath': path.resolve(__dirname, './src/utils/bpMath'),
-    },
-
-    // import时省略后缀
-    extensions: ['.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
-  },
-  plugins: [
-    vue(),
-    viteCommonjs(),
-    ViteRequireContext(),
-    requireTransform({}),
-    viteCompression(),
-    WindiCSS({
-      scan: {
-        dirs: ['.'], // all files in the cwd
-        fileExtensions: ['vue', 'js', 'ts'], // also enabled scanning for js/ts
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src'),
+        '@css': path.resolve(__dirname, './src/assets/css'),
+        '@cps': path.resolve(__dirname, './src/components'),
+        '@img': path.resolve(__dirname, './src/assets/img'),
+        '@hooks': path.resolve(__dirname, './src/hooks'),
+        '@store': path.resolve(__dirname, './src/store'),
+        '@contApi': path.resolve(__dirname, './src/contractsApi'),
+        '@tools': path.resolve(__dirname, './src/utils/tools'),
+        '@bpMath': path.resolve(__dirname, './src/utils/bpMath'),
       },
-    }),
 
-    AutoImport({
-      imports: ['vue', 'vue-router'], // 自动导入vue和vue-router相关函数
-      dts: 'src/auto-import.d.ts', // 生成 auto-import.d.ts 全局声明
-      resolvers: [ElementPlusResolver()],
-    }),
-
-    AutoCps({
-      resolvers: [ElementPlusResolver()],
-    }),
-  ],
-
-  build: {
-    rollupOptions: {
-      // 确保外部化处理那些你不想打包进库的依赖
-      external: ['parallax-js'],
+      // import时省略后缀
+      extensions: ['.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
     },
-    outDir: './dist',
-  },
+    plugins: [
+      vue(),
+      viteCommonjs(),
+      ViteRequireContext(),
+      requireTransform({}),
+      viteCompression(),
+      WindiCSS({
+        scan: {
+          dirs: ['.'], // all files in the cwd
+          fileExtensions: ['vue', 'js', 'ts'], // also enabled scanning for js/ts
+        },
+      }),
 
-  server: {
-    port: 3100,
-    // 是否自动在浏览器打开
-    open: false,
-    // 是否开启 https
-    https: false,
-    host: '0.0.0.0',
-    proxy: {
-      '/api': {
-        target: '',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '/'),
+      AutoImport({
+        imports: ['vue', 'vue-router'], // 自动导入vue和vue-router相关函数
+        dts: 'src/auto-import.d.ts', // 生成 auto-import.d.ts 全局声明
+        resolvers: [ElementPlusResolver()],
+      }),
+
+      AutoCps({
+        resolvers: [ElementPlusResolver()],
+      }),
+    ],
+
+    build: {
+      rollupOptions: {
+        // 确保外部化处理那些你不想打包进库的依赖
+        external: ['parallax-js'],
+      },
+      outDir: './dist',
+    },
+
+    esbuild: {
+      pure: ['console.log'],
+      minify: true,
+    },
+
+    server: {
+      port: 3100,
+      // 是否自动在浏览器打开
+      open: false,
+      // 是否开启 https
+      https: false,
+      host: '0.0.0.0',
+      proxy: {
+        '/api': {
+          target: '',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, '/'),
+        },
       },
     },
-  },
-});
+  });
+};

@@ -8,6 +8,7 @@ import {
 import { useAppStore } from '@/store/appStore';
 import { handleSwitchChain } from './routerHelp';
 import { curNeedChain } from '@/contracts/chains';
+import { buildTestnet } from '@/utils/buildTestnet';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -15,7 +16,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'testPage',
     component: () => import(/* webpackChunkName: "testPage" */ '@/views/TestPage/index.vue'),
     meta: {
-      requireAccount: false, // 依赖钱包
+      requireAccount: true, // 依赖钱包
       needChains: curNeedChain(['bsc']), // 依赖的链
       needTips: true, // 链不对的时候，需不需要提示
     },
@@ -44,8 +45,9 @@ const routes: Array<RouteRecordRaw> = [
   },
 ];
 
+const baseUrl = buildTestnet(import.meta.env.MODE);
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHashHistory(baseUrl),
   routes,
 });
 
