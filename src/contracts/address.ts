@@ -1,4 +1,8 @@
-export const isTest = true; // 正式合约：false、 测试合约：true
+import { getEnv } from "@/utils/buildTestnet";
+
+// 正式合约：false、 测试合约：true
+export const isTest = getEnv(import.meta.env.MODE).contractEnv;
+
 
 let contractObj;
 
@@ -14,9 +18,9 @@ if (isTest) {
 } else {
   // 正式
   contractObj = {
-    LP_ADDR: '0x0dB5FD03908e953e1e54Fdc1a15A748506721814', // lp(测试)
-    MINT_ADDR: '0xfF76d104a313E4eaa09df5bE08FEb2c8fdb9093C', // 铸币(测试)
-    NFT_ADDR: '0xd6793650Ff3933F36444aFc16019B36ec56A0Cb4', // nft合约(测试)
+    LP_ADDR: '', // lp(测试)
+    MINT_ADDR: '', // 铸币(测试)
+    NFT_ADDR: '', // nft合约(测试)
   };
 }
 

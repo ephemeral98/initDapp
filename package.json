@@ -3,10 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
-    "testnet": "vue-tsc --noEmit && vite build --mode initDapp",
-    "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "dev": "vite --mode devTest",
+    "dev:main": "vite --mode devMain",
+    "build:test": "vue-tsc --noEmit && vite build --mode buildTest",
+    "build:main": "vue-tsc --noEmit && vite build --mode buildMain",
+    "build:childTest": "vue-tsc --noEmit && vite build --mode childTest",
+    "build:childMain": "vue-tsc --noEmit && vite build --mode childMain"
   },
   "dependencies": {
     "animate.css": "^4.1.1",

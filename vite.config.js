@@ -8,7 +8,7 @@ import AutoCps from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import WindiCSS from 'vite-plugin-windicss';
 import postcsspxtoviewport from 'postcss-px-to-viewport';
-import { buildTestnet } from './src/utils/buildTestnet';
+import { getEnv } from './src/utils/buildTestnet';
 
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
@@ -35,12 +35,10 @@ function getUiVw(size, name) {
   };
 }
 
-export default ({ mode }) => {
+export default (config) => {
   // 是否要打包到测试网(生成子路径)
-  const baseUrl = buildTestnet(mode);
-
   return defineConfig({
-    base: baseUrl,
+    base: getEnv(config.mode).viteBase,
 
     css: {
       preprocessorOptions: {

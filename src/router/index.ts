@@ -8,7 +8,7 @@ import {
 import { useAppStore } from '@/store/appStore';
 import { handleSwitchChain } from './routerHelp';
 import { curNeedChain } from '@/contracts/chains';
-import { buildTestnet } from '@/utils/buildTestnet';
+import { getEnv } from '@/utils/buildTestnet';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -45,9 +45,9 @@ const routes: Array<RouteRecordRaw> = [
   },
 ];
 
-const baseUrl = buildTestnet(import.meta.env.MODE);
+const env = getEnv(import.meta.env.MODE);
 const router = createRouter({
-  history: createWebHashHistory(baseUrl),
+  history: createWebHashHistory(env.routerBase),
   routes,
 });
 
