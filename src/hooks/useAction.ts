@@ -241,11 +241,11 @@ export function watchAccount(func: () => void): void {
 /* const [data, dataEx] = useAjax(async () => {
   const resp = await $get();
   const resp2 = await $get();
-  return resp + resp2;
+  return 123;
 }); */
 export function useAjax(
   func: () => Promise<any>,
-  extra?: { watcher: boolean; default: any }
+  extra?: { watcher?: boolean; default?: any; immediate?: boolean }
 ): [Ref<any>, IAjax] {
   const appStore = useAppStore();
 
@@ -257,7 +257,7 @@ export function useAjax(
     refresh,
   });
 
-  const datas = ref(extra.default); // 返回值
+  const datas = ref(extra?.default); // 返回值
   /**
    * 重新请求
    */
@@ -266,6 +266,7 @@ export function useAjax(
   }
 
   async function core() {
+    if (result.loading) return;
     result.loading = true;
     const resp = await func().finally(() => {
       result.loading = false;
@@ -285,12 +286,16 @@ export function useAjax(
         core();
       },
       {
-        immediate: true,
+        immediate: extra?.immediate ?? true,
       }
     );
   } else {
     // 不需要钱包的监听
-    core();
+    if (extra?.immediate === false) {
+      // 不立即执行
+    } else {
+      core();
+    }
   }
 
   return [datas, result];

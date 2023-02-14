@@ -12,34 +12,31 @@
  * eg: <input v-max="123" /> // 则输入框最大值不能超过123
  */
 export const maxDirective = (app) => {
-  let mountedValue, updatedValue;
   const core = (el, binding) => {
     // 只能输入数字类型
     const reg = /(\-?\d+\.?\d*)|(\-?\d*\d*)/;
     el.value = el.value.match(reg)[0];
 
-    // 不能超过最大值
-    mountedValue = binding.value;
-    const maxValue = updatedValue || mountedValue;
-
-    if (el.value > maxValue) {
-      el.value = maxValue;
+    if (el.value > binding.value) {
+      el.value = binding.value;
+      const e = new Event('input');
+      el.dispatchEvent(e);
     }
   };
 
+  let handleCore = () => {};
+
   app.directive('max', {
     mounted(el, binding, vnode) {
-      el.addEventListener('input', () => {
-        core(el, binding);
-      });
+      // handleCore.bind(core, el, binding);
+      handleCore = core.bind(this, el, binding);
+      el.addEventListener('keyup', handleCore);
     },
 
     // 兼容异步数据
     updated(el, binding, vnode) {
-      el.addEventListener('input', () => {
-        updatedValue = binding.value;
-        core(el, binding);
-      });
+      handleCore = core.bind(this, el, binding);
+      el.addEventListener('keyup', handleCore);
     },
   });
 };
@@ -49,37 +46,33 @@ export const maxDirective = (app) => {
  * eg: <input v-min="123" /> // 则输入框最小值不能小于123
  */
 export const minDirective = (app) => {
-  let mountedValue, updatedValue;
-
   const core = (el, binding) => {
     // 只能输入数字类型
     const reg = /(\-?\d+\.?\d*)|(\-?\d*\d*)/;
     el.value = el.value.match(reg)[0];
 
-    // 不能小于最小值
-    mountedValue = binding.value;
-    const minValue = updatedValue || mountedValue;
-
-    if (el.value < minValue) {
-      el.value = minValue;
+    if (el.value < binding.value) {
+      el.value = binding.value;
     }
 
     const e = new Event('input');
     el.dispatchEvent(e);
   };
 
+  let handleCore = () => {};
+
   app.directive('min', {
     mounted(el, binding, vnode) {
-      el.addEventListener('keyup', () => {
-        core(el, binding);
-      });
+      handleCore = core.bind(this, el, binding);
+      el.removeEventListener('keyup', handleCore);
+      el.addEventListener('keyup', handleCore);
     },
 
     // 兼容异步数据
     updated(el, binding, vnode) {
-      el.addEventListener('keyup', () => {
-        core(el, binding);
-      });
+      handleCore = core.bind(this, el, binding);
+      el.removeEventListener('keyup', handleCore);
+      el.addEventListener('keyup', handleCore);
     },
   });
 };
