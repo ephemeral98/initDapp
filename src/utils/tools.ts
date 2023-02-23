@@ -1,6 +1,4 @@
-import i18n from '@/locales/i18n';
 import { supportedChains } from '@/contracts/chains';
-const $t = i18n.global.t;
 
 /**
  * 地址略写
@@ -52,41 +50,6 @@ export function clone(obj, deep: boolean) {
     //如果是基本类型
     return obj;
   }
-}
-
-/**
- * 节流
- * @param callback 回调函数
- * @param duration 节流间隔时间
- */
-export function bpThrottle(callback: (e) => void, duration: number = 70) {
-  let throttleTimer;
-  return (e) => {
-    if (throttleTimer) return;
-
-    throttleTimer = setTimeout(() => {
-      callback(e);
-      throttleTimer = null;
-    }, duration);
-  };
-}
-
-/**
- * 防抖
- * @param callback 回调函数
- * @param duration 防抖间隔时间
- */
-export function bpDebounce(callback: (e) => void, duration: number = 70) {
-  let debounceTimer;
-  return (e) => {
-    if (debounceTimer) {
-      clearTimeout(debounceTimer);
-    }
-    debounceTimer = setTimeout(() => {
-      callback(e);
-      debounceTimer = null;
-    }, duration);
-  };
 }
 
 /**

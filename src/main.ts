@@ -25,7 +25,7 @@ import BpButton from '@cps/BpButton';
 
 import BpSwiper from '@cps/BpSwiper';
 import { useAppStore } from './store/appStore';
-import { bpThrottle } from './utils/tools';
+import { bpThrottle } from './hooks/useDeb';
 
 const pinia = createPinia();
 
