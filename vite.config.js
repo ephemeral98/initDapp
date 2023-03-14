@@ -4,14 +4,15 @@ import ViteRequireContext from '@originjs/vite-plugin-require-context';
 import requireTransform from 'vite-plugin-require-transform';
 import viteCompression from 'vite-plugin-compression';
 import AutoImport from 'unplugin-auto-import/vite';
-import AutoCps from 'unplugin-vue-components/vite';
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
+import Components from 'unplugin-vue-components/vite';
+import { ElementPlusResolver, VantResolver } from 'unplugin-vue-components/resolvers';
 import WindiCSS from 'vite-plugin-windicss';
 import postcsspxtoviewport from 'postcss-px-to-viewport';
 import { getEnv } from './src/utils/buildTestnet';
 
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
+import { createStyleImportPlugin, ElementPlusResolve } from 'vite-plugin-style-import';
 
 /**
  * 获取设计稿的vw
@@ -69,7 +70,7 @@ export default (config) => {
       },
 
       // import时省略后缀
-      extensions: ['.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
+      extensions: ['.js', '.ts', '.jsx', '.tsx', '.json', '.vue', '.mjs'],
     },
     plugins: [
       vue(),
@@ -90,8 +91,17 @@ export default (config) => {
         resolvers: [ElementPlusResolver()],
       }),
 
-      AutoCps({
-        resolvers: [ElementPlusResolver()],
+      Components({
+        // allow auto load markdown components under `./src/components/`
+        extensions: ['vue', 'md'], // allow auto import and register components used in markdown
+        include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
+        dts: 'src/components.d.ts',
+        resolvers: [ElementPlusResolver(), VantResolver()],
+      }),
+
+      // 不知道为什么，unplugin-vue-components的element自动导入 样式不生效,所以用这个包补给下
+      createStyleImportPlugin({
+        resolves: [ElementPlusResolve()],
       }),
     ],
 
