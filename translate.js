@@ -143,9 +143,7 @@ async function replaceContent(fileDir, fileContent, regex, pathName, translation
   const promiseRes = await Promise.all(promises);
   if (promiseRes.length) {
     console.log('output...[1,2]', promiseRes);
-    const output = fileContent.replace(regex, (match, p1, p2, p3) => {
-      return promiseRes.shift();
-    });
+    const output = fileContent.replace(regex, promiseRes.shift())
     // console.log('out...', output);
     await writeFileAsync(fileDir, output, 'utf-8');
   }
