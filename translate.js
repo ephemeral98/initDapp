@@ -30,7 +30,7 @@ const i18nFilePath = './src/locales/en.json';
 function readDirRecursive(dirPath, fileList = []) {
   const files = fs.readdirSync(dirPath);
 
-  files.forEach((file) => {
+  files.forEach(file => {
     const filePath = path.join(dirPath, file);
 
     if (ignoreDirs.includes(file) || ignoreFiles.includes(file)) {
@@ -48,8 +48,8 @@ function readDirRecursive(dirPath, fileList = []) {
 }
 
 // 获取需要替换的内容，将它替换为 $t('')
-const getReplacement = (str) => Promise.resolve(`$t('${str}')`);
-const getBaseReplacement = (str) => Promise.resolve(`${str}`);
+const getReplacement = str => Promise.resolve(`$t('${str}')`);
+const getBaseReplacement = str => Promise.resolve(`'${str}'`);
 
 // 匹配所有 i18n 多语言标记并提取翻译
 async function extractTranslations(fileList) {
@@ -140,37 +140,16 @@ async function replaceContent(fileDir, fileContent, regex, pathName, translation
   });
 
   console.log('promises....', promises);
-  return await Promise.all(promises)
-    .then(async (results) => {
-      console.log('output...[1,2]', results);
-      const output = fileContent.replace(regex, async (match, p1, p2, p3) => {
-        console.log('file...', translationsMap[key], p1, p2, p3);
-
-        for (const [inx, value] of Object.entries(translationsMap[key])) {
-          if ([p1, p2, p3].includes(value)) {
-            return results[inx - 1];
-          }
-        }
-
-        // for (const k in translationsMap[key]) {
-        //   if (Object.hasOwnProperty.call(translationsMap[key], k)) {
-        //     const value = translationsMap[key][k];
-        //     // { 1: '首页'}
-
-        //   }
-        // }
-
-        // return results.shift();
-      });
-
-      // [$tx]
-      await writeFileAsync(fileDir, output, 'utf-8');
-      return translationsMap[key];
-    })
-    .catch((err) => {
-      // console.log('content replace error..');
-      return null;
+  const promiseRes = await Promise.all(promises);
+  if (promiseRes.length) {
+    console.log('output...[1,2]', promiseRes);
+    const output = fileContent.replace(regex, (match, p1, p2, p3) => {
+      return promiseRes.shift();
     });
+    // console.log('out...', output);
+    await writeFileAsync(fileDir, output, 'utf-8');
+  }
+  return translationsMap[key];
 }
 
 /**
@@ -180,9 +159,9 @@ async function replaceContent(fileDir, fileContent, regex, pathName, translation
  */
 function doReadExitFile(path_way) {
   return new Promise((resolve, reject) => {
-    fs.access(path_way, async (err) => {
+    fs.access(path_way, async err => {
       if (err) {
-        await writeFileAsync(path_way, '{}', 'utf-8', (e) => {
+        await writeFileAsync(path_way, '{}', 'utf-8', e => {
           console.log('writeFileAsync err..', e);
           reject(false);
         });
