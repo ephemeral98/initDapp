@@ -28,8 +28,6 @@ async function handleSwitchChain() {
     @click="handleSwitchChain"
   >
     <template v-loading="loadSwitch" v-if="!appStore.rightChain || !appStore.defaultAccount">
-      <!-- {{ $t('common.1') }} -->
-
       <slot></slot>
     </template>
 

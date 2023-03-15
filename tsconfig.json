@@ -34,7 +34,7 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "init.d.ts",
+    "init.d.ts", "preFunc/preFunc.tseFunpreFunc/preFunc.tseFunc/preFunc.ts",
   ],
   "exclude": ["node_modules"]
 }

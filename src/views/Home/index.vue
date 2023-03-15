@@ -1,4 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const t = {
+  name: $tx('首页222'),
+};
+</script>
 
 <template>
   <div class="home-wrap">

@@ -87,8 +87,10 @@ export default (config) => {
 
       AutoImport({
         imports: ['vue', 'vue-router'], // 自动导入vue和vue-router相关函数
+        include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/, /\.md$/],
         dts: 'src/auto-import.d.ts', // 生成 auto-import.d.ts 全局声明
         resolvers: [ElementPlusResolver()],
+        dirs: ['./preFunc/**'],
       }),
 
       Components({

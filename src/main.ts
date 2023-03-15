@@ -12,6 +12,7 @@ import watchUrl from './router/watchUrl';
 import '@/utils/initRem';
 import '@css/index.scss';
 import 'virtual:windi.css';
+import '../bpType';
 
 // 一些全局组件
 import BpButton from '@cps/BpButton';
@@ -22,6 +23,10 @@ import { bpThrottle } from './hooks/useDeb';
 const pinia = createPinia();
 
 const vueApp = createApp(App);
+// 多语言翻译标记
+// {{ $tx('内容') }}
+vueApp.config.globalProperties.$tc = (param): string => param;
+
 vueApp.use(router).use(VueI18n).use(pinia).use(BpSwiper).use(BpButton).mount('#app');
 
 // 常用自定义指令
