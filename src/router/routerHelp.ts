@@ -37,7 +37,7 @@ export function handleSwitchChain() {
   if (!rightChain) {
     nextTick(() => {
       // 这里就不弹出提示了，不然会跳出很多个message，因为有3处执行了，由于执行的时机不同。如果实在需要提示，可以在watchAccount那传入一个参数作为判断，
-      // ElMessage.error($tc('网络不正确'));
+      // ElMessage.error($t('router.1'));
       appStore.switchChain(curRouteItem.meta?.needChains[0]);
     });
   }

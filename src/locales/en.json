@@ -1,6 +1,32 @@
 {
   "components": {
-    "1": "首页",
-    "2": "关于"
+    "1": "home",
+    "2": "about",
+    "3": "Connect Wallet",
+    "4": "Coming soon"
+  },
+  "contractsapi": {
+    "1": "Authorized",
+    "2": "Transferred",
+    "3": "Staked"
+  },
+  "hooks": {
+    "1": "Incorrect network",
+    "2": "Please connect your wallet."
+  },
+  "router": {
+    "1": "Incorrect network"
+  },
+  "service": {
+    "1": "Successfully connected wallet",
+    "2": "Transaction has been submitted"
+  },
+  "store": {
+    "1": "Successfully connected wallet",
+    "2": "Wallet connection failed",
+    "3": "Fail to get the wallet address",
+    "4": "Loading",
+    "5": "Switched",
+    "6": "Switching network failed, please switch manually"
   }
 }

@@ -18,7 +18,7 @@ const $emits = defineEmits<{
  */
 function launchTo(menu) {
   if (menu.urlName === '/') {
-    ElMessage.info($tc('即将上线'));
+    ElMessage.info($t('components.4'));
     return;
   }
   router.push({ name: menu.urlName });

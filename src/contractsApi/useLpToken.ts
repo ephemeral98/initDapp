@@ -184,7 +184,7 @@ export default (addressObj: IAddressObj) => {
    */
   async function auth(hoster: string) {
     const { status } = await bpWrite(
-      { success: $tc('授权成功') },
+      { success: $t('contractsapi.1') },
       lpObj.value.approve,
       hoster,
       ethers.constants.MaxUint256
@@ -200,7 +200,7 @@ export default (addressObj: IAddressObj) => {
   async function transfer(recipient: string, amount) {
     const cloneAmount = bpMul(amount, 10 ** decimals.value);
     const { status } = await bpWrite(
-      { success: $tc('转账成功') },
+      { success: $t('contractsapi.2') },
       lpObj.value.transfer,
       recipient,
       cloneAmount
@@ -218,7 +218,7 @@ export default (addressObj: IAddressObj) => {
   async function transferFrom(sender: string, recipient: string, amount) {
     const cloneAmount = bpMul(amount, 10 ** decimals.value);
     const { status } = await bpWrite(
-      { success: $tc('转账成功') },
+      { success: $t('contractsapi.2') },
       lpObj.value.transferFrom,
       sender,
       recipient,

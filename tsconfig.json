@@ -30,11 +30,6 @@
     },
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "init.d.ts", "preFunc/preFunc.tseFunpreFunc/preFunc.tseFunc/preFunc.ts",
-  ],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "init.d.ts"],
   "exclude": ["node_modules"]
 }
