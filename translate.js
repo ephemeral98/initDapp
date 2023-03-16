@@ -23,7 +23,7 @@ const regexFuc =
 // 匹配$t('')内容的正则表达式
 const regexTx = /\$tc\((['"])(.*?)\1\)/g;
 
-const dirPath = './src/components/TopBar';
+const dirPath = './src';
 const i18nFilePath = './src/locales/en.json';
 
 // 递归读取目录，获取匹配的文件路径
@@ -57,16 +57,6 @@ async function extractTranslations(fileList) {
 
   for (const fileDir of fileList) {
     const content = fs.readFileSync(fileDir, 'utf8');
-    /**
-     * 遍历全文获取 $t('') 的内容数组
-     */
-    // const baseMatches = content.match(regexBase);
-    // if (baseMatches) {
-    //   for (let i = 0, len = baseMatches.length; i < len; i++) {
-    //     const item = baseMatches[i];
-    //     baseMatches[i] = item.substring(4, item.length - 2);
-    //   }
-    // }
 
     // 检查文件是否存在于当前目录中、以及是否可写。
     let bakContent = {};
@@ -87,7 +77,9 @@ async function extractTranslations(fileList) {
       .toLocaleLowerCase();
 
     await replaceContent(fileDir, content, regexFuc, pathName, translationsMap, bakContent);
-    await replaceContent(fileDir, content, regexNew, pathName, translationsMap, bakContent);
+    // 重新获取内容再次替换
+    const newContent = fs.readFileSync(fileDir, 'utf8');
+    await replaceContent(fileDir, newContent, regexNew, pathName, translationsMap, bakContent);
   }
 
   return translationsMap;
@@ -139,11 +131,19 @@ async function replaceContent(fileDir, fileContent, regex, pathName, translation
     }
   });
 
-  console.log('promises....', promises);
+  // console.log('promises....', promises);
   const promiseRes = await Promise.all(promises);
   if (promiseRes.length) {
     console.log('output...[1,2]', promiseRes);
-    const output = fileContent.replace(regex, promiseRes.shift())
+    const output = fileContent.replace(regex, (match, p1, p2, p3) => {
+      console.log('p1223....', p1, p2, p3, translationsMap[key]);
+      return promiseRes.shift();
+      // for (const [inx, value] of Object.entries(translationsMap[key])) {
+      //   if ([p1, p2, p3].includes(value)) {
+      //     return translationsMap[key][inx]
+      //   }
+      // }
+    });
     // console.log('out...', output);
     await writeFileAsync(fileDir, output, 'utf-8');
   }

@@ -6,7 +6,7 @@ const t = {
 
 <template>
   <div class="home-wrap">
-    <h1>this is home page...</h1>
+    <h1>{{ $tc('this is home page...') }}</h1>
   </div>
 </template>
 
