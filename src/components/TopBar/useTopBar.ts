@@ -12,14 +12,14 @@ export interface IMemu {
 const menuListValue = reactive<IMemu[]>([
   {
     id: 1,
-    name: $tx('首页'),
+    name: $f('首页'),
     logo: require('@img/holder.png'),
     urlName: 'home',
     active: false,
   },
   {
     id: 2,
-    name: $tx('关于'),
+    name: $f('关于'),
     logo: require('@img/holder.png'),
     urlName: 'testPage',
     active: false,

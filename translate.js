@@ -30,7 +30,7 @@ const i18nFilePath = './src/locales/en.json';
 function readDirRecursive(dirPath, fileList = []) {
   const files = fs.readdirSync(dirPath);
 
-  files.forEach(file => {
+  files.forEach((file) => {
     const filePath = path.join(dirPath, file);
 
     if (ignoreDirs.includes(file) || ignoreFiles.includes(file)) {
@@ -48,8 +48,8 @@ function readDirRecursive(dirPath, fileList = []) {
 }
 
 // 获取需要替换的内容，将它替换为 $t('')
-const getReplacement = str => Promise.resolve(`$t('${str}')`);
-const getBaseReplacement = str => Promise.resolve(`'${str}'`);
+const getReplacement = (str) => Promise.resolve(`$t('${str}')`);
+const getBaseReplacement = (str) => Promise.resolve(`'${str}'`);
 
 // 匹配所有 i18n 多语言标记并提取翻译
 async function extractTranslations(fileList) {
@@ -122,11 +122,9 @@ async function replaceContent(fileDir, fileContent, regex, pathName, translation
     console.log('regex === regexNew...', regex === regexNew);
 
     if (regex === regexNew) {
-      // $tc('')
       promises.push(getReplacement(`${key}.${index}`));
     } else {
       console.log('enter..', getBaseReplacement(`${key}.${index}`));
-      // $tx('')
       promises.push(getBaseReplacement(`${key}.${index}`));
     }
   });
@@ -157,9 +155,9 @@ async function replaceContent(fileDir, fileContent, regex, pathName, translation
  */
 function doReadExitFile(path_way) {
   return new Promise((resolve, reject) => {
-    fs.access(path_way, async err => {
+    fs.access(path_way, async (err) => {
       if (err) {
-        await writeFileAsync(path_way, '{}', 'utf-8', e => {
+        await writeFileAsync(path_way, '{}', 'utf-8', (e) => {
           console.log('writeFileAsync err..', e);
           reject(false);
         });

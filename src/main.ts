@@ -24,7 +24,6 @@ const pinia = createPinia();
 
 const vueApp = createApp(App);
 // 多语言翻译标记
-// {{ $tx('内容') }}
 vueApp.config.globalProperties.$tc = (param): string => param;
 
 vueApp.use(router).use(VueI18n).use(pinia).use(BpSwiper).use(BpButton).mount('#app');

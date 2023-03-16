@@ -1,13 +1,7 @@
-<script setup lang="ts">
-const t = {
-  name: $tx('首页222'),
-};
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div class="home-wrap">
-    <h1>{{ $tc('this is home page...') }}</h1>
-  </div>
+  <div class="home-wrap">this is home page...</div>
 </template>
 
 <style lang="scss" scoped></style>

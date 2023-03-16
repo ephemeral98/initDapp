@@ -24,5 +24,5 @@ declare interface Window {
   chainModalShow;
   bitkeep;
   require;
-  $tx;
+  $f;
 }
