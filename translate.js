@@ -35,7 +35,7 @@ let i18nFilePath = `./src/locales/${language}.json`;
 function readDirRecursive(dirPath, fileList = []) {
   const files = fs.readdirSync(dirPath);
 
-  files.forEach(file => {
+  files.forEach((file) => {
     const filePath = path.join(dirPath, file);
 
     if (ignoreDirs.includes(file) || ignoreFiles.includes(file)) {
@@ -53,8 +53,8 @@ function readDirRecursive(dirPath, fileList = []) {
 }
 
 // 获取需要替换的内容，将它替换为 $t('')
-const getReplacement = str => Promise.resolve(`$t('${str}')`);
-const getBaseReplacement = str => Promise.resolve(`'${str}'`);
+const getReplacement = (str) => Promise.resolve(`$t('${str}')`);
+const getBaseReplacement = (str) => Promise.resolve(`'${str}'`);
 
 // 匹配所有 i18n 多语言标记并提取翻译
 async function extractTranslations(fileList) {
@@ -102,12 +102,10 @@ async function replaceContent(fileDir, fileContent, regex, pathName, translation
     if (translationsMap[key] || bakContent[key]) {
       translationsMap[key] = { ...bakContent[key], ...translationsMap[key] };
       index = Object.keys(translationsMap[key]).length + 1;
-      console.log('merge...', index, bakContent[key], translationsMap[key]);
     }
     // 去重
     if (!Object.values(translationsMap[key]).includes(p1 || p2 || p3)) {
       translationsMap[key][index] = p1 || p2 || p3;
-      console.log('de-weighting...', index, translationsMap[key]);
     } else {
       // 重写index
       for (const [inx, value] of Object.entries(translationsMap[key])) {
@@ -117,13 +115,6 @@ async function replaceContent(fileDir, fileContent, regex, pathName, translation
       }
     }
 
-    console.log(
-      'translationsMap...',
-      index,
-      translationsMap[key],
-      getReplacement(`${key}.${index}`)
-    );
-
     if (regex === regexNew) {
       promises.push(getReplacement(`${key}.${index}`));
     } else {
@@ -131,7 +122,6 @@ async function replaceContent(fileDir, fileContent, regex, pathName, translation
     }
   });
 
-  // console.log('promises....', promises);
   const promiseRes = await Promise.all(promises);
   if (promiseRes.length) {
     console.log('output...[1,2]', promiseRes);
@@ -148,10 +138,9 @@ async function replaceContent(fileDir, fileContent, regex, pathName, translation
  */
 function doReadExitFile(path_way) {
   return new Promise((resolve, reject) => {
-    fs.access(path_way, async err => {
+    fs.access(path_way, async (err) => {
       if (err) {
-        await writeFileAsync(path_way, '{}', 'utf-8', e => {
-          console.log('writeFileAsync err..', e);
+        await writeFileAsync(path_way, '{}', 'utf-8', (e) => {
           reject(false);
         });
       } else {
@@ -177,7 +166,7 @@ async function writeTranslationsToFile(translations, filePath) {
  */
 async function readInpJsonDir() {
   const rl = readline.createInterface({ input, output });
-  const timeoutInSeconds = 5;
+  const timeoutInSeconds = 10;
   setTimeout(() => ac.abort(), timeoutInSeconds * 1000);
   try {
     const lang = await rl.question(
@@ -194,8 +183,6 @@ async function readInpJsonDir() {
     if (err.code === 'ABORT_ERR') {
       message = `You took too long. Try again within ${timeoutInSeconds} seconds.`;
     }
-
-    console.log(message, err.code !== 'ABORT_ERR' ? err : '');
   } finally {
     rl.close();
   }
