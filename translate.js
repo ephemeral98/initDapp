@@ -1,9 +1,12 @@
 const fs = require('fs');
 const path = require('path');
-const readline = require('readline');
+const readline = require('readline/promises');
 const { promisify } = require('util');
 const readFileAsync = promisify(fs.readFile);
 const writeFileAsync = promisify(fs.writeFile);
+const { stdin: input, stdout: output } = require('process');
+const ac = new AbortController();
+const signal = ac.signal;
 
 // 要忽略的文件夹或文件名
 const ignoreDirs = ['node_modules', '.git', 'assets'];
@@ -24,9 +27,9 @@ const regexFuc =
 // 匹配$t('')内容的正则表达式
 const regexTx = /\$p\((['"])(.*?)\1\)/g;
 
-let language = 'en';
+const language = 'en';
 const dirPath = './src';
-const i18nFilePath = `./src/locales/${language}.json`;
+let i18nFilePath = `./src/locales/${language}.json`;
 
 // 递归读取目录，获取匹配的文件路径
 function readDirRecursive(dirPath, fileList = []) {
@@ -171,44 +174,44 @@ async function writeTranslationsToFile(translations, filePath) {
 
 /**
  * 询问生成文件
- * @param {*} event 
  */
-function readInpJsonDir(event) {
-  event.question(`What is the language you want to translate? (Default English)`, lang => {
-    if (!lang) {
-      console.log(`The generated directory will be ${`./src/locales/${lang}.json`}`);
-      event.close();
-    } else {
-      language = lang;
-    }
-    event.question(
-      `The generated directory will be ${`./src/locales/${lang}.json`}, Sure? (Enter to confirm)`,
-      status => {
-        if (!status) {
-          event.close();
-        }
-        readInpJsonDir(event);
-      }
+async function readInpJsonDir() {
+  const rl = readline.createInterface({ input, output });
+  const timeoutInSeconds = 5;
+  setTimeout(() => ac.abort(), timeoutInSeconds * 1000);
+  try {
+    const lang = await rl.question(
+      'What is the language you want to translate? (Default English)',
+      { signal }
     );
+
+    if (lang) {
+      i18nFilePath = `./src/locales/${lang}.json`;
+      console.log(`The generated directory will be ${`./src/locales/${lang}.json`}`);
+    }
+  } catch (err) {
+    let message = 'Error: ';
+    if (err.code === 'ABORT_ERR') {
+      message = `You took too long. Try again within ${timeoutInSeconds} seconds.`;
+    }
+
+    console.log(message, err.code !== 'ABORT_ERR' ? err : '');
+  } finally {
+    rl.close();
+  }
+
+  // listen for close event
+  rl.on('close', () => {
+    console.log('Start to replace...');
+
+    // exit the process
+    process.exit(1);
   });
 }
 
 // 测试代码
 async function main() {
-  const inp = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
-
-  readInpJsonDir(inp);
-
-  // listen for close event
-  inp.on('close', () => {
-    console.log('Start to replace...');
-
-    // exit the process
-    process.exit(0);
-  });
+  await readInpJsonDir();
 
   const fileList = readDirRecursive(dirPath);
   const translations = await extractTranslations(fileList);
