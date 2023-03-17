@@ -12,6 +12,6 @@ export function $f(param: string): string {
  * @param param
  * @returns
  */
-export function $tc(param: string): string {
+export function $p(param: string): string {
   return param;
 }
