@@ -8,7 +8,6 @@ import { bpAdd, bpMul } from 'bp-math';
 console.log(bpAdd(1.366666, 2.2, { deci: -2 })); // 3.5 ? 4
 const res = bpMul('1', 2, { deci: 3, fillZero: true });
 console.log('res..', res);
-alert(res);
 
 const testStore = useTestStore();
 const emetObj = useCoinToken({ address: EMET_TOKEN_CONT.address, abi: EMET_TOKEN_CONT.abi });
