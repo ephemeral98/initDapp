@@ -3,7 +3,7 @@ import { STAKE_CONT } from '@/contracts/address';
 import { useAppStore } from '@store/appStore';
 import i18n from '@/locales/i18n';
 import useDefaultRpc from './useDefaultRpc';
-import { bpFormat, bpMul } from '@/utils/bpMath';
+import { bpFormat, bpMul } from 'bp-math';
 import { bpRead, bpWrite } from '@/service/bpAction';
 import { ElMessage } from 'element-plus';
 import { watchAccount } from '@/hooks/useAction';

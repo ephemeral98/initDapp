@@ -26,7 +26,6 @@
       "@contApi/*": ["./src/contractsApi/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@tools/*": ["./src/tools/*"],
-      "@bpMath/*": ["./src/bpMath/*"]
     },
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
@@ -36,5 +35,5 @@
     "src/**/*.vue",
     "init.d.ts",
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
 }

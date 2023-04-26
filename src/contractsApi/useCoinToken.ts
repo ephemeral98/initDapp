@@ -4,7 +4,7 @@
 import { ethers } from 'ethers';
 import { useAppStore } from '@/store/appStore';
 import i18n from '@/locales/i18n';
-import { bpFormat, bpGt, bpMul } from '@/utils/bpMath';
+import { bpFormat, bpGt, bpMul } from 'bp-math';
 import { bpRead, bpWrite } from '@/service/bpAction';
 import useDefaultRpc from './useDefaultRpc';
 import { reactive, Ref, ref } from 'vue';

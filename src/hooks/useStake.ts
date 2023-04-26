@@ -3,7 +3,7 @@ import { reactive, ref } from 'vue';
 import useStakeContractApi from '@contApi/useStakeContractApi';
 import useLpToken from '@contApi/useLpToken';
 import { LP_CONT, STAKE_CONT, STAKE_ADDR } from '@/contracts/address';
-import { bpMul } from '@/utils/bpMath';
+import { bpMul } from 'bp-math';
 import { ElMessage } from 'element-plus';
 import i18n from '@/locales/i18n';
 const $t = i18n.global.t;

@@ -3,7 +3,7 @@ import { MINT_CONT } from '@/contracts/address';
 import { useAppStore } from '@store/appStore';
 import i18n from '@/locales/i18n';
 import useDefaultRpc from './useDefaultRpc';
-import { bpFormat, bpMul } from '@/utils/bpMath';
+import { bpFormat, bpMul } from 'bp-math';
 import { bpRead, bpWrite } from '@/service/bpAction';
 import { watchAccount } from '@/hooks/useAction';
 const $t = i18n.global.t;
