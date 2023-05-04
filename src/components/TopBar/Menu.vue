@@ -24,7 +24,6 @@ function launchTo(menu) {
   router.push({ name: menu.urlName });
   $emits('hide');
 }
-
 </script>
 
 <template>
@@ -66,8 +65,8 @@ function launchTo(menu) {
   left: 0;
   top: 0;
   overflow: auto;
-  padding-top: calc($mobTopBarHeight + 0.3rem);
-  padding-right: 0.22rem;
+  padding-top: calc($mobTopBarHeight + 30rem);
+  padding-right: 22rem;
   background-color: #e2eeff;
   @include -width(60vw, 400px, 400px);
   width: 60vw;
@@ -78,29 +77,29 @@ function launchTo(menu) {
   .menu-item {
     @include flexPos(flex-start);
     background-color: #4e92ff;
-    border-radius: 0 0.3rem 0.3rem 0;
-    padding-left: 0.33rem;
-    height: 0.44rem;
+    border-radius: 0 30rem 30rem 0;
+    padding-left: 33rem;
+    height: 44rem;
     cursor: pointer;
     &:not(:first-child) {
-      margin-top: 0.1rem;
+      margin-top: 10rem;
     }
 
     .menu-logo {
-      width: 0.25rem;
-      margin-right: 0.11rem;
+      width: 25rem;
+      margin-right: 11rem;
     }
   }
 }
 
 .links-wrap {
   @include flexPos(space-between);
-  margin-top: 0.5rem;
-  padding-left: 0.22rem;
+  margin-top: 50rem;
+  padding-left: 22rem;
 
   .icon-link {
-    width: 0.36rem;
-    height: 0.36rem;
+    width: 36rem;
+    height: 36rem;
   }
 }
 </style>

@@ -87,16 +87,16 @@ const bpSwiper = ref(null);
   width: 100px;
   height: 100px;
   background-color: #008c8c;
-  margin: 0.1rem;
+  margin: 10rem;
 }
 
 // swiper 穿透
 :deep(.swiper) {
   position: relative;
   @include -width-a(650);
-  margin: 0.8rem auto;
+  margin: 80rem auto;
   background-color: skyblue;
-  // min-height: 6.05rem;
+  // min-height: 605rem;
   // background: yellow;
 
   .swiper-wrapper {
@@ -127,7 +127,7 @@ const bpSwiper = ref(null);
     .item-img {
       cursor: pointer;
       @include -width-a(195);
-      border-radius: 0.1rem;
+      border-radius: 10rem;
     }
   }
 }

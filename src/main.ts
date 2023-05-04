@@ -11,7 +11,7 @@ import watchUrl from './router/watchUrl';
 // 初始化一些东西
 import '@/utils/initRem';
 import '@css/index.scss';
-import 'virtual:windi.css';
+import 'virtual:uno.css'
 
 // 一些全局组件
 import BpButton from '@cps/BpButton';

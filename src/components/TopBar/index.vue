@@ -2,7 +2,7 @@
 import { getCurrentInstance, reactive } from 'vue';
 import { useAppStore } from '@store/appStore';
 import { computed, ref } from '@vue/reactivity';
-import { plusXing } from '@/utils/tools';
+import { plusStar } from '@/utils/tools';
 import Menu from './Menu.vue';
 
 const gThis = getCurrentInstance().appContext.config.globalProperties;
@@ -92,7 +92,7 @@ async function handleLink() {
 
       <!-- 已链接钱包展示钱包地址 -->
       <div v-if="appStore.defaultAccount" class="account-address">
-        {{ plusXing(appStore.defaultAccount, 4, 4) }}
+        {{ plusStar(appStore.defaultAccount, 4, 4) }}
       </div>
 
       <!-- 连接钱包 -->
@@ -111,7 +111,7 @@ async function handleLink() {
   height: $mobTopBarHeight;
   background-color: skyblue;
   @include flexPos(space-between);
-  padding: 0 0.15rem;
+  padding: 0 15rem;
   color: #fff;
 }
 
@@ -120,7 +120,7 @@ async function handleLink() {
 
   .account-address,
   .link-btn {
-    margin-left: 0.18rem;
+    margin-left: 18rem;
   }
 
   .lang-container {
@@ -129,8 +129,8 @@ async function handleLink() {
     color: #fff;
 
     .icon-lang {
-      width: 0.32rem;
-      margin-right: 0.1rem;
+      width: 32rem;
+      margin-right: 10rem;
     }
   }
 }

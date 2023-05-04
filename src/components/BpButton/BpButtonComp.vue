@@ -43,6 +43,6 @@ async function handleSwitchChain() {
 <style lang="scss" scoped>
 .write-btn {
   text-align: center;
-  padding-top: 0.07rem;
+  padding-top: 7rem;
 }
 </style>

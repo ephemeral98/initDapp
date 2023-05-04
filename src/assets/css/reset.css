@@ -32,7 +32,7 @@ h5 {
 body {
   background-color: #ffffff;
   font-family: fang;
-  font-size: 0.14rem;
+  font-size: 14rem;
   text-align: left;
 }
 
@@ -47,9 +47,6 @@ table {
 fieldset,
 img {
   border: 0 none;
-}
-
-img {
   display: block;
 }
 
@@ -107,7 +104,7 @@ q:before,
 q:after,
 blockquote:before,
 blockquote:after {
-  content: ””;
+  content: '';
 }
 
 a {
@@ -140,13 +137,11 @@ p {
 
 input,
 textarea {
+  /* 兼容ios */
+  line-height: 1 !important;
   outline: none;
   /* text-size-adjust: none !important; */
   /* -webkit-appearance: none; */
-}
-input {
-  /* 兼容ios */
-  line-height: 1 !important;
 }
 input:focus {
   border: none;
@@ -168,7 +163,7 @@ input[type='week'],
 input[multiple],
 textarea,
 select {
-  font-size: 0.14rem;
+  font-size: 14rem;
   outline: none;
   box-shadow: none;
   padding: 0;
@@ -187,15 +182,6 @@ button {
 }
 
 /*定义滚动条轨道 内阴影+圆角*/
-
-:root {
-  /* height: 100vh; */
-  /* overflow: auto; */
-}
-body {
-  /* background-color: #008c8c; */
-}
-
 #app {
   max-width: 750px;
   margin: 0 auto;
@@ -206,8 +192,8 @@ body {
 
 /*滚动条 start*/
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 5px;
+  height: 5px;
 
   /* @media (min-width: $pad) {
         &:hover {

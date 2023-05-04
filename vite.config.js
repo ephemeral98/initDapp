@@ -6,9 +6,9 @@ import viteCompression from 'vite-plugin-compression';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver, VantResolver } from 'unplugin-vue-components/resolvers';
-import WindiCSS from 'vite-plugin-windicss';
 import postcsspxtoviewport from 'postcss-px-to-viewport';
 import { getEnv } from './src/utils/buildTestnet';
+import UnoCSS from 'unocss/vite'
 
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
@@ -77,12 +77,7 @@ export default (config) => {
       ViteRequireContext(),
       requireTransform({}),
       viteCompression(),
-      WindiCSS({
-        scan: {
-          dirs: ['.'], // all files in the cwd
-          fileExtensions: ['vue', 'js', 'ts'], // also enabled scanning for js/ts
-        },
-      }),
+      UnoCSS(),
 
       AutoImport({
         imports: ['vue', 'vue-router'], // 自动导入vue和vue-router相关函数

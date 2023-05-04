@@ -8,9 +8,9 @@
       if (!clientWidth) return;
       if (clientWidth >= 750) {
         // 如果超过手机设计稿，则按照 pc 固定基本 fontSize
-        docEl.style.fontSize = '100px';
+        docEl.style.fontSize = '1px';
       } else {
-        docEl.style.fontSize = 100 * (clientWidth / 750) + 'px';
+        docEl.style.fontSize = clientWidth / 750 + 'px';
       }
     };
   recalc();

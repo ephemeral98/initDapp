@@ -21,28 +21,16 @@
 
 // vant
 .van-popup {
-  border-radius: 0.16rem;
+  border-radius: 16rem;
   background: transparent !important;
 }
 
 // 通用弹窗
 .em-pop-wrap {
-  width: 3.45rem;
-  border-radius: 0.1rem;
+  width: 345rem;
+  border-radius: 10rem;
   background-color: #eaf4ff !important;
   border: solid 2px #fff;
-}
-
-// 箭头
-.icon-arrow {
-  cursor: pointer;
-}
-
-// 加载中和空数据
-.loading,
-.empty {
-  text-align: center;
-  margin: 0.1rem 0;
 }
 
 // 按钮通用样式

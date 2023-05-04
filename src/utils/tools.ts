@@ -7,7 +7,7 @@ import { supportedChains } from '@/contracts/chains';
  * @param endLen 结尾多少个星星
  * @returns {String}
  */
-export function plusXing(str: string, frontLen: number, endLen: number) {
+export function plusStar(str: string, frontLen: number, endLen: number) {
   if (str?.length === undefined) return '';
   var len = str.length - frontLen - endLen;
   var xing = '';

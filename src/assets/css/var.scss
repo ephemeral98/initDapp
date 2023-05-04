@@ -6,18 +6,14 @@ $pc: 1920px; // pc 端    1280以上
  * 顶部栏高度
  */
 $pcTopBarHeight: 70px; // pc 顶部栏的高度
-$mobTopBarHeight: 0.5rem; // 移动端 顶部栏高度
+$mobTopBarHeight: 50rem; // 移动端 顶部栏高度
 
 /**
  * pc 主体内容高度
  */
-$mainHeight: calc(
-  100vh - (#{$pcTopBarHeight})
-); // pc 主体高度
+$mainHeight: calc(100vh - (#{$pcTopBarHeight}));
 
 /**
  * 移动端 主体内容高度
  */
-$mobMainHeight: calc(
-  100vh - (#{$mobTopBarHeight})
-); // pc 主体高度
+$mobMainHeight: calc(100vh - (#{$mobTopBarHeight}));
