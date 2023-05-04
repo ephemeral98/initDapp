@@ -32,9 +32,10 @@ const [doAuth, loadDoAuth] = useWrite(async () => {
 
 <template>
   <div class="test-wrap">
-    <h1 class="px-20">test wrap page...</h1>
-    <div class="text-20rem">20rem</div>
-    <div class="text-20px">20px</div>
+    <h1 class="px-20 flex">test wrap page...</h1>
+    <div class="text-20">20rem</div>
+    <div class="text-10rem">10rem</div>
+    <div class="text-10px">10px</div>
     <div class="border-r border-[#008c8c] border-3">border-right: solid 3px #008c8c;</div>
     <div class="md:(text-red text-30)">余额： {{ balan }}</div>
 

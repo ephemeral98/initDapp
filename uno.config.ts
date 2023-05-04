@@ -68,5 +68,7 @@ export default defineConfig({
     ['border-b', { 'border-bottom-style': 'solid' }],
     [/^border-([\.\d]+)$/, ([_, num]) => ({ 'border-width': `${num}rem` })],
     [/^rounded-([\.\d]+)$/, ([_, num]) => ({ 'border-radius': `${num}rem` })],
+
+    ['flex-center', { display: 'flex', 'justify-content': 'center', 'align-items': 'center' }],
   ],
 });

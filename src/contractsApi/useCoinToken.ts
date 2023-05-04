@@ -4,12 +4,11 @@
 import { ethers } from 'ethers';
 import { useAppStore } from '@/store/appStore';
 import i18n from '@/locales/i18n';
-import { bpFormat, bpGt, bpMul } from 'bp-math';
+import { bpFormat, bpGt, bpGte, bpMul } from 'bp-math';
 import { bpRead, bpWrite } from '@/service/bpAction';
 import useDefaultRpc from './useDefaultRpc';
-import { reactive, Ref, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { watchAccount } from '@/hooks/useAction';
-import { ElMessage } from 'element-plus';
 
 const $t = i18n.global.t;
 
@@ -111,7 +110,7 @@ export default (addressObj: IAddressObj) => {
       return false;
     }
 
-    hasAllow.value = bpGt(datas, origin);
+    hasAllow.value = bpGte(datas, origin);
     return hasAllow.value;
   }
 
