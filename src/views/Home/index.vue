@@ -1,9 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="home-wrap">
-    <h1>this is home page...</h1>
-  </div>
+  <div class="home-wrap">{{ $p('this is home page...') }}</div>
 </template>
 
 <style lang="scss" scoped></style>

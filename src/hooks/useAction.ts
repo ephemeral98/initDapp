@@ -52,7 +52,7 @@ export function useWrite(func): [any, Ref<boolean>] {
     // 链不对
     if (!appStore.rightChain) {
       // 提示
-      ElMessage.error($t('msg.6'));
+      ElMessage.error($t('hooks.1'));
 
       // 弹窗
       loading.value = true;
@@ -63,7 +63,7 @@ export function useWrite(func): [any, Ref<boolean>] {
 
     // 没有连接钱包
     if (!appStore.defaultAccount) {
-      ElMessage.error($t('msg.7'));
+      ElMessage.error($t('hooks.2'));
       loading.value = true;
       await appStore.linkWallet();
       loading.value = false;

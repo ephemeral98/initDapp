@@ -22,6 +22,9 @@ import { bpThrottle } from './hooks/useDeb';
 const pinia = createPinia();
 
 const vueApp = createApp(App);
+// 多语言翻译标记
+vueApp.config.globalProperties.$p = (param): string => param;
+
 vueApp.use(router).use(VueI18n).use(pinia).use(BpSwiper).use(BpButton).mount('#app');
 
 // 常用自定义指令
