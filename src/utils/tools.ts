@@ -89,3 +89,12 @@ export function getWalletReject(error): boolean {
   let res = !!errorKeyTag.filter((it) => info?.includes?.(it)).length;
   return error === 'cancel' || res;
 }
+
+/**
+ * 获取图片资源
+ * @param name
+ * @returns
+ */
+export function getImage(name: string) {
+  return new URL(`../assets/img/${name}`, import.meta.url).href;
+}

@@ -8,7 +8,7 @@ import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver, VantResolver } from 'unplugin-vue-components/resolvers';
 import postcsspxtoviewport from 'postcss-px-to-viewport';
 import { getEnv } from './src/utils/buildTestnet';
-import UnoCSS from 'unocss/vite'
+import UnoCSS from 'unocss/vite';
 
 import vue from '@vitejs/plugin-vue';
 import path from 'path';

@@ -10,7 +10,7 @@ const signal = ac.signal;
 
 // 要忽略的文件夹或文件名
 const ignoreDirs = ['node_modules', '.git', 'assets'];
-const ignoreFiles = ['.DS_Store', 'tranlate.js'];
+const ignoreFiles = ['.DS_Store', 'translate.js'];
 
 // 匹配文件中存在的 $t('')内容
 const regexBase =

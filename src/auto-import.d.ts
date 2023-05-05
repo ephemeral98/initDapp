@@ -2,7 +2,8 @@
 export {}
 declare global {
   const $f: typeof import('../preFunc/index')['$f']
-  const $tc: typeof import('../preFunc/index')['$tc']
+  const $p: typeof import('../preFunc/index')['$p']
+  const $t: typeof import('../preFunc/index')['$t']
   const EffectScope: typeof import('vue')['EffectScope']
   const computed: typeof import('vue')['computed']
   const createApp: typeof import('vue')['createApp']

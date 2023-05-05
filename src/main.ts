@@ -11,7 +11,8 @@ import watchUrl from './router/watchUrl';
 // 初始化一些东西
 import '@/utils/initRem';
 import '@css/index.scss';
-import 'virtual:uno.css'
+import 'virtual:uno.css';
+import '../bpType';
 
 // 一些全局组件
 import BpButton from '@cps/BpButton';
