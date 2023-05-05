@@ -1,13 +1,8 @@
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
 
-const masterUrl = ''; // 域名https 正式服
-
-// const baseURL = process.env.NODE_ENV == 'development' ? testUrl : '';
-const baseURL = '';
-
 const defaultConfig = {
-  baseURL,
+  baseURL: '', // 这里不建议写基础路径，开发环境写在vite，生成环境写在nginx
   timeout: 30000,
 };
 Object.assign(axios.defaults, defaultConfig);
@@ -51,43 +46,5 @@ axios.interceptors.response.use(
     return Promise.reject(err);
   }
 );
-
-/**
- * get请求
- * @param {Object} params 请求参数query
- * @returns {Promise}
- * @author gzq
- */
-export function $GET(url, params?) {
-  return new Promise((resolve, reject) => {
-    axios
-      .get(url, { params })
-      .then((resp) => {
-        resolve(resp);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-}
-
-/**
- * post请求
- * @param {Object} params 请求参数 body
- * @returns {Promise}
- * @author gzq
- */
-export function $POST(url, params?) {
-  return new Promise((resolve, reject) => {
-    axios
-      .post(url, params)
-      .then((resp) => {
-        resolve(resp);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-}
 
 export default axios;

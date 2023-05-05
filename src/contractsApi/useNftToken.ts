@@ -9,7 +9,7 @@ import { bpRead, bpWrite } from '@/service/bpAction';
 import useDefaultRpc from './useDefaultRpc';
 import { reactive, Ref, ref } from 'vue';
 import { watchAccount } from '@/hooks/useAction';
-import { $GET } from '@/service/request';
+import axios from '@/service/request';
 
 const $t = i18n.global.t;
 
@@ -123,7 +123,7 @@ export default (addressObj: IAddressObj) => {
     const res = await Promise.all(resp);
 
     const metaData = res.map(async (url) => {
-      const resp = await $GET(url);
+      const resp = await axios.get(url);
       return resp;
     });
 
