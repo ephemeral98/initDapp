@@ -12,7 +12,7 @@ const $t = i18n.global.t;
  * @param {*} msgs 交易消息
  * @param {Function} func 交易函数
  * @param 交易参数
- * eg: bpWrite($t('service.1'), mintObj.value.funcName, 参数1, 参数2)
+ * eg: bpWrite($p('连接钱包成功'), mintObj.value.funcName, 参数1, 参数2)
  *
  * 说明：true:默认消息  false:不需要消息; success还可以自定义消息
  * 一般使用默认：bpWrite(true, mintObj.value.funcName, 参数);
@@ -38,7 +38,7 @@ export async function bpWrite(msgs: boolean | IMsgs, func, ...param): Promise<IT
     .then(async (resp) => {
       ElMessage({
         type: 'info',
-        message: $t('service.2'),
+        message: $p('已经提交交易'),
       });
       const { events } = await resp?.wait?.();
       // 处理成功的消息

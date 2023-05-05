@@ -201,6 +201,7 @@ async function main() {
   await readInpJsonDir();
 
   const fileList = readDirRecursive(dirPath);
+  console.log('fileList...', fileList);
   const translations = await extractTranslations(fileList);
   await writeTranslationsToFile(translations, i18nFilePath);
 

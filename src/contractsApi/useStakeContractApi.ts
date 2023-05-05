@@ -57,7 +57,7 @@ export default () => {
    */
   async function stake(amount: BigNumStr, inv: string) {
     const cloneAmount = bpMul(amount, 10 ** 18);
-    const { status } = await bpWrite({ success: $t('contractsapi.3') }, stakeObj.value.stake, {
+    const { status } = await bpWrite({ success: $p('质押成功') }, stakeObj.value.stake, {
       value: cloneAmount,
     });
     return status;
