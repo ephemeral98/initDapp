@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "trans": "node translate.js",
+    "rep": "node conversion.js",
     "dev": "vite --mode devTest",
     "dev:main": "vite --mode devMain",
     "build:test": "vue-tsc --noEmit && vite build --mode buildTest",

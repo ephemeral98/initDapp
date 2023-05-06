@@ -57,8 +57,8 @@ const getReplacement = (str) => Promise.resolve(`$t('${str}')`);
 const getBaseReplacement = (str) => Promise.resolve(`'${str}'`);
 
 // 匹配所有 i18n 多语言标记并提取翻译
-async function extractTranslations(fileList) {
-  const translationsMap = {};
+async function extractConversion(fileList) {
+  const conversionMap = {};
 
   for (const fileDir of fileList) {
     const content = fs.readFileSync(fileDir, 'utf8');
@@ -81,34 +81,34 @@ async function extractTranslations(fileList) {
       .replace(/[\\/]/g, '_') // 将路径分隔符转化为_
       .toLocaleLowerCase();
 
-    await replaceContent(fileDir, content, regexFuc, pathName, translationsMap, bakContent);
+    await replaceContent(fileDir, content, regexFuc, pathName, conversionMap, bakContent);
     // 重新获取内容再次替换
     const newContent = fs.readFileSync(fileDir, 'utf8');
-    await replaceContent(fileDir, newContent, regexNew, pathName, translationsMap, bakContent);
+    await replaceContent(fileDir, newContent, regexNew, pathName, conversionMap, bakContent);
   }
 
-  return translationsMap;
+  return conversionMap;
 }
 
-async function replaceContent(fileDir, fileContent, regex, pathName, translationsMap, bakContent) {
+async function replaceContent(fileDir, fileContent, regex, pathName, conversionMap, bakContent) {
   let index = 1;
   const promises = [];
-  const key = pathName.split('_')[0] || 'src';
+  const key = 'base';
   // 替换内容
   fileContent.replace(regex, async (match, p1, p2, p3) => {
-    translationsMap[key] = { ...translationsMap[key] } || {};
+    conversionMap[key] = { ...conversionMap[key] } || {};
 
     // 合并 bak 文件内容
-    if (translationsMap[key] || bakContent[key]) {
-      translationsMap[key] = { ...bakContent[key], ...translationsMap[key] };
-      index = Object.keys(translationsMap[key]).length + 1;
+    if (conversionMap[key] || bakContent[key]) {
+      conversionMap[key] = { ...bakContent[key], ...conversionMap[key] };
+      index = Object.keys(conversionMap[key]).length + 1;
     }
     // 去重
-    if (!Object.values(translationsMap[key]).includes(p1 || p2 || p3)) {
-      translationsMap[key][index] = p1 || p2 || p3;
+    if (!Object.values(conversionMap[key]).includes(p1 || p2 || p3)) {
+      conversionMap[key][index] = p1 || p2 || p3;
     } else {
       // 重写index
-      for (const [inx, value] of Object.entries(translationsMap[key])) {
+      for (const [inx, value] of Object.entries(conversionMap[key])) {
         if ([p1, p2, p3].includes(value)) {
           index = inx;
         }
@@ -128,7 +128,7 @@ async function replaceContent(fileDir, fileContent, regex, pathName, translation
     const output = fileContent.replace(regex, () => promiseRes.shift());
     await writeFileAsync(fileDir, output, 'utf-8');
   }
-  return translationsMap[key];
+  return conversionMap[key];
 }
 
 /**
@@ -153,10 +153,10 @@ function doReadExitFile(path_way) {
 }
 
 // 将翻译内容写入 JSON 文件
-async function writeTranslationsToFile(translations, filePath) {
+async function writeConversionToFile(conversion, filePath) {
   const curFile = fs.readFileSync(filePath, 'utf8');
   const fileContent = JSON.parse(curFile);
-  const data = { ...fileContent, ...translations };
+  const data = { ...fileContent, ...conversion };
   const jsonData = JSON.stringify(data, null, 2);
   fs.writeFileSync(filePath, jsonData);
 }
@@ -202,8 +202,8 @@ async function main() {
 
   const fileList = readDirRecursive(dirPath);
   console.log('fileList...', fileList);
-  const translations = await extractTranslations(fileList);
-  await writeTranslationsToFile(translations, i18nFilePath);
+  const conversion = await extractConversion(fileList);
+  await writeConversionToFile(conversion, i18nFilePath);
 
   console.log('Done');
 }

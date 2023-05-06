@@ -54,14 +54,14 @@ const useAppStore = defineStore('app', {
         ?.send('eth_requestAccounts', [])
         .then(async () => {
           ElMessage({
-            message: $p('连接钱包成功'),
+            message: $t('base.9'),
             type: 'success',
           });
           await this.getDefaultAccount();
         })
         .catch(() => {
           ElMessage({
-            message: $p('连接钱包失败'),
+            message: $t('base.11'),
             type: 'error',
           });
         });
@@ -93,7 +93,7 @@ const useAppStore = defineStore('app', {
         account = await signer.getAddress();
       } catch (err) {
         ElMessage({
-          message: $p('获取钱包地址失败'),
+          message: $t('base.12'),
           type: 'error',
         });
       }
@@ -156,7 +156,7 @@ const useAppStore = defineStore('app', {
         await _handleChange().then(async () => {
           if (window.ethereum?.isTokenPocket) {
             // TP钱包才给 loading提示，因为PC点了拒绝，也会到这里。。
-            ElMessage.info($p('加载中'));
+            ElMessage.info($t('base.13'));
           }
 
           clearInterval(this.chainTimer);
@@ -177,14 +177,14 @@ const useAppStore = defineStore('app', {
                 window.ethereum.rpc.rpcUrl = chainData.rpcUrls;
               }
               // 确实成功切了链
-              ElMessage.success($p('已成功切换主网'));
+              ElMessage.success($t('base.14'));
 
               clearInterval(this.chainTimer);
             }
           }, 500);
         });
       } catch (error) {
-        ElMessage.error($p('切换网络失败，请手动切换'));
+        ElMessage.error($t('base.15'));
         console.log('切换链错误..', error);
       }
     },

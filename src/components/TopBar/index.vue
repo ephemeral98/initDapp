@@ -97,7 +97,7 @@ async function handleLink() {
 
       <!-- 连接钱包 -->
       <button v-loading="loadLink" v-else class="link-btn" @click="handleLink">
-        {{ $p('连接钱包') }}
+        {{ $t('base.1') }}
       </button>
     </div>
   </div>
