@@ -3,6 +3,8 @@ import { useRead, useWrite } from '@/hooks/useAction';
 import useCoinToken from '@contApi/useCoinToken';
 import { EMET_TOKEN_CONT, STAKE_ADDR } from '@/contracts/address';
 import useTestStore from '@/store/testStore';
+import { sleep } from '@/utils/tools';
+import axios from 'axios';
 
 const testStore = useTestStore();
 const emetObj = useCoinToken({ address: EMET_TOKEN_CONT.address, abi: EMET_TOKEN_CONT.abi });
@@ -17,10 +19,16 @@ const [balan, balanEx] = useRead(
 );
 
 const [getDecimal, getDecimalEx] = useRead(
-  async () => {
-    return await emetObj.getDecimals();
+  async (item) => {
+    // return await emetObj.getDecimals();
+    // console.log('睡眠时间:', item);
+
+    // await sleep(item.sleepTime);
+    // return item.sleepTime;
+    const resp = await axios.get('/api/back/ranking/' + item.text);
+    return resp.data.data;
   },
-  { default: 18 }
+  { default: 18, immediate: false }
 );
 
 // testStore.dataEx.doCore();
@@ -28,24 +36,48 @@ const [getDecimal, getDecimalEx] = useRead(
 const [doAuth, loadDoAuth] = useWrite(async () => {
   await emetObj.auth(STAKE_ADDR);
 });
+
+const list = reactive([
+  {
+    id: 1,
+    text: 'aaa',
+    active: true,
+    sleepTime: 100,
+  },
+  {
+    id: 2,
+    text: 'bbb',
+    active: false,
+    sleepTime: 2500,
+  },
+  {
+    id: 3,
+    text: 'ccc',
+    active: false,
+    sleepTime: 300,
+  },
+]);
+
+const doPick = (item) => {
+  list.forEach((it) => {
+    it.active = item.id === it.id;
+  });
+  getDecimalEx.refresh(item);
+};
 </script>
 
 <template>
   <div class="test-wrap">
-    <h1 class="px-20 flex">test wrap page...</h1>
-    <div class="text-20">20rem</div>
-    <div class="text-10rem">10rem</div>
-    <div class="text-10px">10px</div>
-    <div class="border-r border-[#008c8c] border-3">border-right: solid 3px #008c8c;</div>
-    <div class="md:(text-red text-30)">余额： {{ balan }}</div>
+    <h1>{{ getDecimal }}</h1>
 
-    <div class="md:mt-2 w-99 m-1 text-main-1">精度：{{ getDecimal }}</div>
-
-    <div class="transform translate-y-[30rem]">
-      <bp-button class="px-20 h-42" sink @click="doAuth" v-loading="loadDoAuth"
-        >尝试授权write操作</bp-button
-      >
-    </div>
+    <li
+      @click="doPick(item)"
+      :class="['w-100 h-100 rounded-10 bg-emerald m-20', { '!bg-red': item.active }]"
+      v-for="item in list"
+      :key="item.id"
+    >
+      {{ item.text }}
+    </li>
   </div>
 </template>
 

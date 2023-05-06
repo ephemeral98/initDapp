@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="aaa">1111</div>
+    <script>
+      let abortController;
+      function wait(time) {
+        return new Promise((resolve) => {
+          const timeout = setTimeout(() => {
+            resolve(`Waited for ${time}ms`);
+          }, time);
+
+          // 使用 AbortController 取消定时器
+          abortController = new AbortController();
+          const signal = abortController.signal;
+
+          // 一秒后取消定时器
+          setTimeout(() => {
+            // abortController.abort();
+          }, 1000);
+
+          // 监听信号
+          signal.addEventListener('abort', () => {
+            // clearTimeout(timeout);
+            resolve('Operation cancelled');
+          });
+        });
+      }
+
+      async function test() {
+        console.log(await wait(2000));
+        console.log(await wait(3000));
+      }
+
+      // test();
+
+      wait(2000).then((resp) => {
+        console.log('结束', resp);
+      });
+      aaa.addEventListener('click', () => {
+        abortController.abort();
+      });
+    </script>
+  </body>
+</html>

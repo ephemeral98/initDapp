@@ -10,8 +10,7 @@ interface IUseRead {
   loading: boolean; // 加载状态
   status: null | boolean; // 请求结果
   message: string; // 请求结果消息，如果成功，则为 '',
-  refresh: () => Promise<void>; // 重新请求数据
-  doCore: () => Promise<void>; // 手动请求方法
+  refresh: (e?) => Promise<void>; // 重新请求数据
 }
 
 interface IEx {
@@ -20,11 +19,6 @@ interface IEx {
   watcher?: any; // 监听者 使用方式和 watch 一致
   immediate?: boolean; // 是否立即执行，默认立即
   noAccount?: boolean; // 是否 不依赖钱包
-}
-
-interface IAjax {
-  loading: boolean; // 加载状态
-  refresh: () => Promise<void>; // 重新请求数据
 }
 
 /**
@@ -99,17 +93,50 @@ export function useWrite(func): [any, Ref<boolean>] {
     }); 
  * 
  */
-export function useRead(func: () => Promise<any>, ex: IEx): [Ref<any>, IUseRead] {
+export function useRead(func: (e?) => Promise<any>, ex: IEx): [Ref<any>, IUseRead] {
   const appStore = useAppStore();
 
   const datas = ref(ex.default); // 返回值
 
+  let countFunc: any = [];
+
+  let lastPromise:any = null;
+
   /**
    * core
    */
-  async function core() {
+  async function core(e?) {
     result.loading = true;
-    const resp = await func();
+
+    // const resp = await func(e);
+
+    lastPromise = func(e);
+
+    countFunc.push(lastPromise);
+
+    if(countFunc[countFunc.length - 1] !== lastPromise) {
+
+    }
+
+    let resp;
+
+    // countFunc.push(func(e));
+    // const resp = await countFunc(e);
+    // console.log('countFunc...', countFunc);
+
+    // const temp = await Promise.all(countFunc);
+    // const resp = temp[countFunc.length - 1];
+
+    // console.log('countFunc[countFunc.length - 1]...', countFunc[countFunc.length - 1]);
+
+    // const resp = await countFunc[countFunc.length - 1];
+
+    // const lastPromise = countFunc[countFunc.length - 1];
+
+    // await Promise.race([lastPromise, func(e)]);
+
+    // console.log('countFunc..', countFunc);
+
     if (resp?.status === false) {
       // 返回报错信息
       result.message = resp?.message;
@@ -123,13 +150,12 @@ export function useRead(func: () => Promise<any>, ex: IEx): [Ref<any>, IUseRead]
   }
 
   /**
-   * 手动执行
-   * 默认不依赖
+   * 重新请求
    */
-  async function doCore() {
+  async function refresh(e?) {
     if (ex?.noAccount) {
       // 不依赖钱包
-      core();
+      core(e);
     } else {
       // 依赖钱包
       watch(
@@ -138,20 +164,13 @@ export function useRead(func: () => Promise<any>, ex: IEx): [Ref<any>, IUseRead]
           if (!appStore.defaultAccount || !appStore.ethersObj.chainId || !appStore.netWorkReady)
             return;
 
-          core();
+          core(e);
         },
         {
           immediate: true,
         }
       );
     }
-  }
-
-  /**
-   * 重新请求
-   */
-  async function refresh() {
-    await core();
   }
 
   /**
@@ -162,7 +181,6 @@ export function useRead(func: () => Promise<any>, ex: IEx): [Ref<any>, IUseRead]
     status: null,
     message: '',
     refresh,
-    doCore,
   });
 
   if (ex?.immediate === false) {
