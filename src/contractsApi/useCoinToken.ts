@@ -9,6 +9,7 @@ import { bpRead, bpWrite } from '@/service/bpAction';
 import useDefaultRpc from './useDefaultRpc';
 import { reactive, ref } from 'vue';
 import { watchAccount } from '@/hooks/useAction';
+import { sleep } from '@/utils/tools';
 
 const $t = i18n.global.t;
 
@@ -59,6 +60,8 @@ export default (addressObj: IAddressObj) => {
    * @param addr 查询谁的余额
    */
   async function getBalance(digi: number = 2, addr?: string) {
+    await sleep(2000);
+
     const targetAddr = addr ?? appStore.defaultAccount;
 
     if (!decimals.value) {

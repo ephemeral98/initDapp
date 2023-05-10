@@ -4,6 +4,7 @@ import { useRouteItem } from '@/router/useRouterTools';
 import { useAppStore } from '@store/appStore';
 import i18n from '@/locales/i18n';
 import { checkRightChain } from '@/router/routerHelp';
+import { clone } from '@/utils/tools';
 const $t = i18n.global.t;
 
 interface IUseRead {
@@ -11,6 +12,7 @@ interface IUseRead {
   status: null | boolean; // 请求结果
   message: string; // 请求结果消息，如果成功，则为 '',
   refresh: (e?) => Promise<void>; // 重新请求数据
+  cancel: () => void; // 取消请求
 }
 
 interface IEx {
@@ -95,58 +97,75 @@ export function useWrite(func): [any, Ref<boolean>] {
  */
 export function useRead(func: (e?) => Promise<any>, ex: IEx): [Ref<any>, IUseRead] {
   const appStore = useAppStore();
-
   const datas = ref(ex.default); // 返回值
 
-  let countFunc: any = [];
+  // 该作用域共享这个取消请求的信号
+  let currentController: AbortController, signal: AbortSignal;
 
-  let lastPromise:any = null;
+  /**
+   * 产生取消请求的信号
+   */
+  function createCancelSignal() {
+    const controller = new AbortController();
+    currentController = controller;
+    signal = controller.signal;
+  }
+
+  /**
+   * 取消请求封装体
+   * @param p1
+   * @param signal
+   * @param controller
+   * @returns
+   */
+  function aborter(p1: Promise<any>) {
+    createCancelSignal();
+
+    const p2 = new Promise((resolve, reject) => {
+      /**
+       * 定一个失败的Promise
+       */
+      function cancelPromise() {
+        signal.removeEventListener('abort', cancelPromise);
+        return reject('取消成功');
+      }
+      // 监听取消的状态
+      if (signal) {
+        signal.addEventListener('abort', cancelPromise);
+      }
+    });
+
+    return Promise.race([p1, p2]);
+  }
+
+  /**
+   * 取消请求
+   */
+  const cancel = () => {
+    currentController?.abort?.();
+  };
 
   /**
    * core
    */
   async function core(e?) {
+    cancel();
     result.loading = true;
+    const req = aborter(func(e));
+    const resp = await req.catch(() => false);
 
-    // const resp = await func(e);
-
-    lastPromise = func(e);
-
-    countFunc.push(lastPromise);
-
-    if(countFunc[countFunc.length - 1] !== lastPromise) {
-
-    }
-
-    let resp;
-
-    // countFunc.push(func(e));
-    // const resp = await countFunc(e);
-    // console.log('countFunc...', countFunc);
-
-    // const temp = await Promise.all(countFunc);
-    // const resp = temp[countFunc.length - 1];
-
-    // console.log('countFunc[countFunc.length - 1]...', countFunc[countFunc.length - 1]);
-
-    // const resp = await countFunc[countFunc.length - 1];
-
-    // const lastPromise = countFunc[countFunc.length - 1];
-
-    // await Promise.race([lastPromise, func(e)]);
-
-    // console.log('countFunc..', countFunc);
+    result.loading = false;
+    if (!resp) return;
 
     if (resp?.status === false) {
-      // 返回报错信息
+      // 请求失败，返回报错信息
       result.message = resp?.message;
       result.status = false;
     } else {
       // 请求成功，返回数据
-      datas.value = resp;
+      datas.value = clone(resp, true);
       result.status = true;
     }
-    result.loading = false;
   }
 
   /**
@@ -181,6 +200,7 @@ export function useRead(func: (e?) => Promise<any>, ex: IEx): [Ref<any>, IUseRea
     status: null,
     message: '',
     refresh,
+    cancel,
   });
 
   if (ex?.immediate === false) {

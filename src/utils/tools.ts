@@ -98,3 +98,7 @@ export function getWalletReject(error): boolean {
 export function getImage(name: string) {
   return new URL(`../assets/img/${name}`, import.meta.url).href;
 }
+
+export function getRandom(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
