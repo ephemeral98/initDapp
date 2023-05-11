@@ -152,7 +152,10 @@ export function useRead(func: (e?) => Promise<any>, ex: IEx): [Ref<any>, IUseRea
     cancel();
     result.loading = true;
     const req = aborter(func(e));
-    const resp = await req.catch(() => false);
+    const resp = await req.catch((err) => {
+      console.log(err);
+      return false;
+    });
 
     result.loading = false;
     if (!resp) return;
