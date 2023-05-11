@@ -48,7 +48,7 @@ export function useWrite(func): [any, Ref<boolean>] {
     // 链不对
     if (!appStore.rightChain) {
       // 提示
-      ElMessage.error($p('网络不正确'));
+      ElMessage.error($t('base.8'));
 
       // 弹窗
       loading.value = true;

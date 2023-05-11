@@ -3,7 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "trans": "node translate.js",
+    "rep": "node conversion.js",
+    "excl": "node json2Excel.js",
+    "json": "node excel2Json.js",
     "dev": "vite --mode devTest",
     "dev:main": "vite --mode devMain",
     "build:test": "vue-tsc --noEmit && vite build --mode buildTest",
@@ -46,6 +48,7 @@
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-require-transform": "^1.0.9",
     "vite-plugin-style-import": "^2.0.0",
-    "vue-tsc": "^0.38.4"
+    "vue-tsc": "^0.38.4",
+    "xlsx": "^0.18.5"
   }
 }

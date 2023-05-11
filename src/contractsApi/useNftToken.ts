@@ -85,7 +85,7 @@ export default (addressObj: IAddressObj) => {
    */
   async function setApprovalForAll(addr: string) {
     const { status } = await bpWrite(
-      { success: $p('授权成功') },
+      { success: $t('base.5') },
       nftObj.value.setApprovalForAll,
       addr,
       true
@@ -102,7 +102,7 @@ export default (addressObj: IAddressObj) => {
    */
   async function transferFrom(to: string, tokenId) {
     const { status } = await bpWrite(
-      { success: $p('转账成功') },
+      { success: $t('base.6') },
       nftObj.value.transferFrom,
       appStore.defaultAccount,
       to,
