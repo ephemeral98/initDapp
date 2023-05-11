@@ -1,6 +1,5 @@
 const XLSX = require('xlsx');
 const fs = require('fs');
-const path = require('path');
 const readline = require('readline/promises');
 const { promisify } = require('util');
 const readFileAsync = promisify(fs.readFile);
@@ -10,8 +9,6 @@ const ac = new AbortController();
 const signal = ac.signal;
 
 const language = 'cn';
-const dirPath = './src';
-let isToExcl = true;
 let i18nFilePath = `./src/locales/${language}.json`;
 
 /**
@@ -80,26 +77,27 @@ async function readInpJsonDir() {
 }
 
 
-
 async function main() {
   await readInpJsonDir();
-
-  await json2Excel();
+  await excel2Json();
 }
+
 
 /**
- * 转换Excel
+ * 回填JSON
  */
-async function json2Excel() {
-  const res = await doReadExitFile(i18nFilePath);
-  const data = res.base;
-  let wb = XLSX.utils.book_new();
-  const jsonData = Object.values(data).map(item => [item]);
-  console.log('json2Excel,,', jsonData);
-  let ws = XLSX.utils.aoa_to_sheet([['content', 'translate'], ...jsonData]);
-  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-  XLSX.writeFile(wb, 'data.xlsx');
-}
+async function excel2Json() {
+  const conversionMap = {};
+  const data = XLSX.readFile('./data.xlsx', { type: 'array' });
+  const list = XLSX.utils.sheet_to_json(data.Sheets['Sheet1']);
+  for (let i = 0, len = list.length; i < len; i++) {
+    conversionMap[i + 1] = list[i]['translate'] ?? '';
+  }
+  console.log('excel2Json...', conversionMap);
 
+  const backContent = await doReadExitFile(i18nFilePath);
+  backContent['base'] = conversionMap;
+  writeConversionToFile(backContent, i18nFilePath);
+}
 
 main();
