@@ -66,6 +66,7 @@ export default (config) => {
         '@store': path.resolve(__dirname, './src/store'),
         '@contApi': path.resolve(__dirname, './src/contractsApi'),
         '@tools': path.resolve(__dirname, './src/utils/tools'),
+        'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js'
       },
 
       // import时省略后缀

@@ -1,11 +1,19 @@
 import { supportedChains } from '@/contracts/chains';
 
 /**
+ * 获取随机数
+ * @param min 最小值
+ * @param max 最大值
+ */
+export function getRandom(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+/**
  * 地址略写
- * @param {String} str 全地址
+ * @param str 全地址
  * @param frontLen 前面多少颗星星
  * @param endLen 结尾多少个星星
- * @returns {String}
  */
 export function plusStar(str: string, frontLen: number, endLen: number) {
   if (str?.length === undefined) return '';
@@ -97,8 +105,4 @@ export function getWalletReject(error): boolean {
  */
 export function getImage(name: string) {
   return new URL(`../assets/img/${name}`, import.meta.url).href;
-}
-
-export function getRandom(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
 }

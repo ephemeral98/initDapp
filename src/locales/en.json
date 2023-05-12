@@ -1,4 +1,21 @@
 {
-  "base":{},
+  "base":{
+    "1": "Connect Wallet",
+    "2": "Loading",
+    "3": "home",
+    "4": "about",
+    "5": "Authorized",
+    "6": "Transferred",
+    "7": "Staked",
+    "8": "Incorrect network",
+    "9": "Successfully connected wallet",
+    "10": "Transaction has been submitted",
+    "11": "Wallet connection failed",
+    "12": "Fail to get the wallet address",
+    "13": "Loading",
+    "14": "Switched",
+    "15": "Switching network failed, please switch manually",
+    "16": "here is home page..."
+  },
   "extra":{}
 }

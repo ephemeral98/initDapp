@@ -23,17 +23,6 @@ const routes: Array<RouteRecordRaw> = [
   },
 
   {
-    path: '/TestSwiper',
-    name: 'testSwiper',
-    component: () => import(/* webpackChunkName: "testSwiper" */ '@/views/TestPage/TestSwiper.vue'),
-    meta: {
-      requireAccount: true, // 依赖钱包
-      needChains: curNeedChain(['bsc']), // 依赖的链
-      needTips: true, // 链不对的时候，需不需要提示
-    },
-  },
-
-  {
     path: '/',
     name: 'home',
     component: () => import(/* webpackChunkName: "home" */ '@/views/Home/index.vue'),
