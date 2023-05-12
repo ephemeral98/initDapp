@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "rep": "node conversion.js",
-    "excl": "node json2Excel.js",
+    "excel": "node json2Excel.js",
     "json": "node excel2Json.js",
     "dev": "vite --mode devTest",
     "dev:main": "vite --mode devMain",
