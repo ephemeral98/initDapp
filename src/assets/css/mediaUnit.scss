@@ -2,7 +2,7 @@
 
 @mixin -templateUnit($name, $px) {
   @media (max-width: $phone) {
-    #{$name}: calc(#{$px}rem / 100);
+    #{$name}: calc(#{$px}rem);
   }
 
   @media (min-width: $phone) and (max-width: $pad) {
