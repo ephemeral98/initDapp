@@ -59,7 +59,7 @@ export function useWrite(func): [any, Ref<boolean>] {
 
     // 没有连接钱包
     if (!appStore.defaultAccount) {
-      ElMessage.error($t('hooks.2'));
+      ElMessage.error($t('base.17'));
       loading.value = true;
       await appStore.linkWallet();
       loading.value = false;
