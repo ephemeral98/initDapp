@@ -33,7 +33,7 @@ const [doAuth, loadDoAuth] = useWrite(async () => {
 
     <div>精度：{{ getDecimal }}</div>
 
-    <bp-button class="px-20" sink @click="doAuth" v-loading="loadDoAuth"
+    <bp-button class="px-20" sink @click="doAuth" v-load="loadDoAuth"
       >尝试授权write操作</bp-button
     >
   </div>

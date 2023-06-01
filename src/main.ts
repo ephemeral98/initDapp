@@ -33,6 +33,7 @@ direct.doubleDirective(vueApp);
 direct.numberDirective(vueApp);
 direct.intDirective(vueApp);
 direct.integerDirective(vueApp);
+direct.loadDirective(vueApp);
 
 // 获取当前设备尺寸
 const appStore = useAppStore();

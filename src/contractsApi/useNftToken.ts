@@ -58,7 +58,7 @@ export default (addressObj: IAddressObj) => {
     if (!status) console.log('getBalance...error...');
 
     balanceObj.origin = status ? datas : '0';
-    balanceObj.show = status ? bpFormat(datas, -digi, decimals.value) : '0';
+    balanceObj.show = status ? String(datas) : '0';
 
     return balanceObj;
   }
