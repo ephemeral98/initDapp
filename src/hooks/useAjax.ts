@@ -32,7 +32,11 @@ interface IOption {
  * @param url 请求地址
  * @param options 请求配置项
  */
-function useBaseRequest(method: string, url: string, options: IOption): [Ref<any>, IAjaxEx] {
+function useBaseRequest(
+  method: string,
+  url: string | Ref<string>,
+  options: IOption
+): [Ref<any>, IAjaxEx] {
   const appStore = useAppStore();
   let cancelTokenSource;
 
@@ -49,8 +53,28 @@ function useBaseRequest(method: string, url: string, options: IOption): [Ref<any
   /**
    * 重新请求(手动请求)
    */
-  async function refresh() {
-    await core();
+  async function refresh(): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      if (options.wallet) {
+        watch(
+          () => [appStore.defaultAccount],
+          async () => {
+            if (!+appStore.defaultAccount) {
+              // 但是没有登录的，不发请求
+              return;
+            }
+            await core();
+            resolve();
+          },
+          {
+            immediate: true,
+          }
+        );
+      } else {
+        await core();
+        resolve();
+      }
+    });
   }
 
   /**
@@ -74,13 +98,29 @@ function useBaseRequest(method: string, url: string, options: IOption): [Ref<any
     let params = beforeResp || options.params;
 
     function request(method: string, payload): Promise<IAxiosResp> {
+      // 改写ref类型url
+      const tempUrl = isRef(payload.url) ? payload.url.value : payload.url;
+
+      // 改写参数
+      const tempParams = isRef(payload.params) ? payload.params.value : payload.params;
+
+      // 改写ref类型body数据
+      for (const key in tempParams) {
+        if (Object.prototype.hasOwnProperty.call(tempParams, key)) {
+          const p = tempParams[key];
+          if (isRef(p)) {
+            tempParams[key] = p.value;
+          }
+        }
+      }
+
       if (method === 'get' || method === 'delete') {
-        return axios[method](payload.url, {
-          params: payload.params,
+        return axios[method](tempUrl, {
+          params: tempParams,
           cancelToken: cancelTokenSource.token,
         });
       } else {
-        return axios[method](payload.url, payload.params, {
+        return axios[method](tempUrl, tempParams, {
           cancelToken: cancelTokenSource.token,
         });
       }
@@ -130,7 +170,7 @@ function useBaseRequest(method: string, url: string, options: IOption): [Ref<any
  * @param url 请求地址
  * @param options 请求配置项
  */
-export function useGet(url: string, options: IOption): [Ref<any>, IAjaxEx] {
+export function useGet(url: string | Ref<string>, options: IOption): [Ref<any>, IAjaxEx] {
   return useBaseRequest('get', url, options);
 }
 
@@ -139,7 +179,7 @@ export function useGet(url: string, options: IOption): [Ref<any>, IAjaxEx] {
  * @param url 请求地址
  * @param options 请求配置项
  */
-export function usePost(url: string, options: IOption): [Ref<any>, IAjaxEx] {
+export function usePost(url: string | Ref<string>, options: IOption): [Ref<any>, IAjaxEx] {
   return useBaseRequest('post', url, options);
 }
 
@@ -148,7 +188,7 @@ export function usePost(url: string, options: IOption): [Ref<any>, IAjaxEx] {
  * @param url 请求地址
  * @param options 请求配置项
  */
-export function usePut(url: string, options: IOption): [Ref<any>, IAjaxEx] {
+export function usePut(url: string | Ref<string>, options: IOption): [Ref<any>, IAjaxEx] {
   return useBaseRequest('put', url, options);
 }
 
@@ -157,7 +197,7 @@ export function usePut(url: string, options: IOption): [Ref<any>, IAjaxEx] {
  * @param url 请求地址
  * @param options 请求配置项
  */
-export function usePatch(url: string, options: IOption): [Ref<any>, IAjaxEx] {
+export function usePatch(url: string | Ref<string>, options: IOption): [Ref<any>, IAjaxEx] {
   return useBaseRequest('patch', url, options);
 }
 
@@ -166,6 +206,6 @@ export function usePatch(url: string, options: IOption): [Ref<any>, IAjaxEx] {
  * @param url 请求地址
  * @param options 请求配置项
  */
-export function useDelete(url: string, options: IOption): [Ref<any>, IAjaxEx] {
+export function useDelete(url: string | Ref<string>, options: IOption): [Ref<any>, IAjaxEx] {
   return useBaseRequest('delete', url, options);
 }

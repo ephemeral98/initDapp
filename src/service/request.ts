@@ -40,6 +40,12 @@ axios.interceptors.request.use(
 // 响应拦截器
 axios.interceptors.response.use(
   (resp) => {
+
+    /* return {
+      ...resp.data,
+      success: resp.status === 200,
+    }; */
+
     return resp.data;
   },
   (err) => {
