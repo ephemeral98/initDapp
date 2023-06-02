@@ -178,8 +178,8 @@ export const integerDirective = (app) => {
 };
 
 /**
- * 限制输入框只能输入 整数(包括负数) 类型
- * eg: <input v-integer />
+ * 转圈圈
+ * eg: <button v-load="loadAuth" />
  */
 export const loadDirective = (app: App) => {
   /**
