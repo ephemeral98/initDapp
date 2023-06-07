@@ -11,12 +11,12 @@ interface IUseRead {
   loading: boolean; // 加载状态
   status: null | boolean; // 请求结果
   message: string; // 请求结果消息，如果成功，则为 '',
-  refresh: (e?) => Promise<void>; // 重新请求数据
+  refresh: (e?) => Promise<any>; // 重新请求数据
   cancel: () => void; // 取消请求
 }
 
 interface IEx {
-  default: any; // 默认数据
+  default: unknown; // 默认数据
   interval?: number; // 轮询 间隔时间
   watcher?: any; // 监听者 使用方式和 watch 一致
   immediate?: boolean; // 是否立即执行，默认立即
@@ -118,7 +118,7 @@ export function useRead(func: (e?) => Promise<any>, ex: IEx): [Ref<any>, IUseRea
    * @param controller
    * @returns
    */
-  function aborter(p1: Promise<any>) {
+  async function aborter(p1: Promise<any>) {
     createCancelSignal();
 
     const p2 = new Promise((resolve, reject) => {
@@ -135,7 +135,7 @@ export function useRead(func: (e?) => Promise<any>, ex: IEx): [Ref<any>, IUseRea
       }
     });
 
-    return Promise.race([p1, p2]);
+    return await Promise.race([p1, p2]);
   }
 
   /**
@@ -149,7 +149,7 @@ export function useRead(func: (e?) => Promise<any>, ex: IEx): [Ref<any>, IUseRea
    * core
    */
   async function core(e?) {
-    cancel();
+    // cancel();
     result.loading = true;
     const req = aborter(func(e));
     const resp = await req.catch((err) => {
@@ -158,7 +158,8 @@ export function useRead(func: (e?) => Promise<any>, ex: IEx): [Ref<any>, IUseRea
     });
 
     result.loading = false;
-    if (!resp) return;
+
+    if (!resp) return resp;
 
     if (resp?.status === false) {
       // 请求失败，返回报错信息
@@ -169,30 +170,45 @@ export function useRead(func: (e?) => Promise<any>, ex: IEx): [Ref<any>, IUseRea
       datas.value = clone(resp, true);
       result.status = true;
     }
+    return resp;
   }
 
   /**
    * 重新请求
    */
   async function refresh(e?) {
-    if (ex?.noAccount) {
-      // 不依赖钱包
-      core(e);
-    } else {
-      // 依赖钱包
-      watch(
-        () => [appStore.touchAfterWatchAccount],
-        () => {
-          if (!appStore.defaultAccount || !appStore.ethersObj.chainId || !appStore.netWorkReady)
-            return;
+    return new Promise((resolve, reject) => {
+      if (ex?.noAccount) {
+        // 不依赖钱包
+        core(e)
+          .then(async (resp) => {
+            resolve(resp);
+          })
+          .catch(() => {
+            resolve(false);
+          });
+      } else {
+        // 依赖钱包
+        watch(
+          () => [appStore.touchAfterWatchAccount],
+          () => {
+            if (!appStore.defaultAccount || !appStore.ethersObj.chainId || !appStore.netWorkReady)
+              return;
 
-          core(e);
-        },
-        {
-          immediate: true,
-        }
-      );
-    }
+            core(e)
+              .then(async (resp) => {
+                resolve(resp);
+              })
+              .catch(() => {
+                resolve(false);
+              });
+          },
+          {
+            immediate: true,
+          }
+        );
+      }
+    });
   }
 
   /**

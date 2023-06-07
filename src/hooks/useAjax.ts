@@ -17,7 +17,7 @@ export interface IAxiosResp {
 }
 
 interface IOption {
-  params: object; // 请求参数
+  params?: object; // 请求参数
   before?: (axios) => object | void; // 请求之前
   after?: (resp: IAxiosResp) => any; // 请求之后
   wallet?: boolean; // 是否依赖钱包
