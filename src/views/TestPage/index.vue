@@ -11,7 +11,7 @@ const [balan, balanEx] = useRead(
     console.log('myBalance...', myBalan);
     return myBalan;
   },
-  { default: 0 }
+  { default: { origin: '0', show: '0' } }
 );
 
 const [getDecimal, getDecimalEx] = useRead(
@@ -33,9 +33,7 @@ const [doAuth, loadDoAuth] = useWrite(async () => {
 
     <div>精度：{{ getDecimal }}</div>
 
-    <bp-button class="px-20" sink @click="doAuth" v-load="loadDoAuth"
-      >尝试授权write操作</bp-button
-    >
+    <bp-button class="px-20" sink @click="doAuth" v-load="loadDoAuth">尝试授权write操作</bp-button>
   </div>
 </template>
 

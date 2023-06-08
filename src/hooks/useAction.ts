@@ -1,5 +1,5 @@
 import { ElMessage } from 'element-plus';
-import { reactive, ref, Ref, watch } from 'vue';
+import { reactive, ref, Ref, UnwrapRef, watch } from 'vue';
 import { useRouteItem } from '@/router/useRouterTools';
 import { useAppStore } from '@store/appStore';
 import i18n from '@/locales/i18n';
@@ -7,16 +7,16 @@ import { checkRightChain } from '@/router/routerHelp';
 import { clone } from '@/utils/tools';
 const $t = i18n.global.t;
 
-interface IUseRead {
+interface IUseRead<T> {
   loading: boolean; // 加载状态
   status: null | boolean; // 请求结果
   message: string; // 请求结果消息，如果成功，则为 '',
-  refresh: (e?) => Promise<any>; // 重新请求数据
+  refresh: (e?) => Promise<T>; // 重新请求数据
   cancel: () => void; // 取消请求
 }
 
-interface IEx {
-  default: unknown; // 默认数据
+interface IEx<T> {
+  default: T; // 默认数据
   interval?: number; // 轮询 间隔时间
   watcher?: any; // 监听者 使用方式和 watch 一致
   immediate?: boolean; // 是否立即执行，默认立即
@@ -32,11 +32,13 @@ interface IEx {
  *    const resp = await boxObj.directDepositIt(1);
  *  });
  */
-export function useWrite(func): [any, Ref<boolean>] {
+export function useWrite(
+  func: (...params) => Promise<void>
+): [(...params) => Promise<void>, Ref<boolean>] {
   const route = useRouteItem();
   const appStore = useAppStore();
   const loading = ref(false);
-  async function help(...params) {
+  async function run(...params) {
     if (loading.value) return;
 
     // 没有小狐狸插件，则跳去下载
@@ -67,17 +69,11 @@ export function useWrite(func): [any, Ref<boolean>] {
     }
 
     loading.value = true;
-    const resp = await func(...params);
+    await func(...params);
     loading.value = false;
-    if (resp?.status === false) {
-      // 返回报错信息
-      return resp?.message;
-    }
-    // 请求成功，返回数据
-    return resp;
   }
 
-  return [help as any, loading];
+  return [run, loading];
 }
 
 /**
@@ -95,9 +91,9 @@ export function useWrite(func): [any, Ref<boolean>] {
     }); 
  * 
  */
-export function useRead(func: (e?) => Promise<any>, ex: IEx): [Ref<any>, IUseRead] {
+export function useRead<T>(func: (e?) => Promise<T>, ex: IEx<T>): [Ref<UnwrapRef<T>>, IUseRead<T>] {
   const appStore = useAppStore();
-  const datas = ref(ex.default); // 返回值
+  const datas = ref<T>(ex.default); // 返回值
 
   // 该作用域共享这个取消请求的信号
   let currentController: AbortController, signal: AbortSignal;
@@ -214,7 +210,7 @@ export function useRead(func: (e?) => Promise<any>, ex: IEx): [Ref<any>, IUseRea
   /**
    * 返回状态结构
    */
-  const result = reactive<IUseRead>({
+  const result = reactive<IUseRead<T>>({
     loading: false,
     status: null,
     message: '',
@@ -265,6 +261,10 @@ export function useRead(func: (e?) => Promise<any>, ex: IEx): [Ref<any>, IUseRea
       core();
     }, ex.interval);
   }
+
+  onBeforeUnmount(() => {
+    timer && clearInterval(timer);
+  });
 
   return [datas, result];
 }
