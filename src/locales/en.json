@@ -1,5 +1,5 @@
 {
-  "base":{
+  "base": {
     "1": "Connect Wallet",
     "2": "Loading",
     "3": "Home",
@@ -15,8 +15,8 @@
     "13": "Loading",
     "14": "Switched",
     "15": "Switching network failed, please switch manually",
-    "16": "here is home page...",
-    "17": "Please connect the wallet first"
+    "16": "Please connect the wallet first",
+    "17": "Language"
   },
-  "extra":{}
+  "extra": {}
 }

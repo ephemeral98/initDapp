@@ -170,11 +170,10 @@ export default (addressObj: IAddressObj) => {
 
     if (!status) {
       console.log('allow...error...');
-      hasAllow.value = false;
-      return hasAllow.value;
+      return false;
     }
 
-    hasAllow.value = bpGte(datas, origin);
+    hasAllow.value = +origin ? bpGte(datas, origin) : +datas ? true : false;
     return hasAllow.value;
   }
 

@@ -22,6 +22,17 @@ interface IMsgs {
   success?: string | boolean; // 成功消息
   error?: boolean; // 不给错误消息
 }
+
+/**
+ * 交易通讯状态
+ */
+interface ITransStatus {
+  status: boolean; // 请求是否成功
+  datas: any; // 请求的数据
+  errorOrigin?: string; // 错误时候的消息(源)
+  message?: string; // 错误时候的消息
+}
+
 export async function bpWrite(msgs: boolean | IMsgs, func, ...param): Promise<ITransStatus> {
   console.log('bpWrite入参: ', ...param);
 

@@ -61,7 +61,7 @@ export function useWrite(
 
     // 没有连接钱包
     if (!appStore.defaultAccount) {
-      ElMessage.error($t('base.17'));
+      ElMessage.error($t('base.16'));
       loading.value = true;
       await appStore.linkWallet();
       loading.value = false;
@@ -172,7 +172,7 @@ export function useRead<T>(func: (e?) => Promise<T>, ex: IEx<T>): [Ref<UnwrapRef
   /**
    * 重新请求
    */
-  async function refresh(e?) {
+  async function refresh(e?):Promise<T> {
     return new Promise((resolve, reject) => {
       if (ex?.noAccount) {
         // 不依赖钱包
@@ -180,8 +180,8 @@ export function useRead<T>(func: (e?) => Promise<T>, ex: IEx<T>): [Ref<UnwrapRef
           .then(async (resp) => {
             resolve(resp);
           })
-          .catch(() => {
-            resolve(false);
+          .catch((err) => {
+            resolve(err);
           });
       } else {
         // 依赖钱包
@@ -195,8 +195,8 @@ export function useRead<T>(func: (e?) => Promise<T>, ex: IEx<T>): [Ref<UnwrapRef
               .then(async (resp) => {
                 resolve(resp);
               })
-              .catch(() => {
-                resolve(false);
+              .catch((err) => {
+                resolve(err);
               });
           },
           {

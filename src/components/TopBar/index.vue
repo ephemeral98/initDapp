@@ -1,48 +1,9 @@
 <script setup lang="ts">
-import { getCurrentInstance, reactive } from 'vue';
-import { useAppStore } from '@store/appStore';
-import { computed, ref } from '@vue/reactivity';
-import { plusStar } from '@/utils/tools';
 import Menu from './Menu.vue';
+import WalletBtn from '@cps/WalletBtn/index.vue';
+import { useTopBar } from './useTopBar';
 
-const gThis = getCurrentInstance().appContext.config.globalProperties;
-const appStore = useAppStore();
-
-// 语言栏
-const langList = reactive([
-  {
-    id: 1,
-    name: '中文',
-    target: 'cn',
-    active: false,
-  },
-  {
-    id: 2,
-    name: 'English',
-    target: 'en',
-    active: true,
-  },
-]);
-
-langList.forEach((item) => {
-  item.active = item.target === appStore.curLang;
-});
-
-// 当前选中语言
-const curLang = computed(() => {
-  return langList.find((item) => item.active)?.name ?? langList[1].name;
-});
-
-/**
- * 选择语言
- */
-function pickLang(lang) {
-  gThis.$i18n.locale = lang.target;
-  appStore.setLang(lang.target);
-  langList.forEach((item) => {
-    item.active = lang.id === item.id;
-  });
-}
+const { pickLang, langList, curLang } = useTopBar();
 
 // 菜单是否为开启状态
 const isOpenMenu = ref(false);
@@ -50,17 +11,6 @@ function handleMenu() {
   isOpenMenu.value = !isOpenMenu.value;
   // 控制外部滚动条是否能滚动
   document.body.style.overflow = isOpenMenu.value ? 'hidden' : 'auto';
-}
-
-const loadLink = ref(false);
-/**
- * 连接钱包
- */
-async function handleLink() {
-  if (loadLink.value) return;
-  loadLink.value = true;
-  await appStore.linkWallet();
-  loadLink.value = false;
 }
 </script>
 
@@ -91,18 +41,12 @@ async function handleLink() {
       </el-dropdown>
 
       <!-- 已链接钱包展示钱包地址 -->
-      <div v-if="appStore.defaultAccount" class="account-address">
-        {{ plusStar(appStore.defaultAccount, 4, 4) }}
-      </div>
-
-      <!-- 连接钱包 -->
-      <button v-loading="loadLink" v-else class="link-btn" @click="handleLink">
-        {{ $t('base.1') }}
-      </button>
+      <WalletBtn />
     </div>
+
+    <!-- 移动端菜单 -->
+    <Menu :isShowMenu="isOpenMenu" @hide="handleMenu" />
   </div>
-  <!-- 移动端菜单 -->
-  <Menu :isShowMenu="isOpenMenu" @hide="handleMenu" />
 </template>
 
 <style lang="scss" scoped>
@@ -111,12 +55,18 @@ async function handleLink() {
   height: $mobTopBarHeight;
   background-color: skyblue;
   @include flexPos(space-between);
-  padding: 0 15rem;
+  padding: 0 45rem;
   color: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999;
 }
 
 .top-bar-tools {
   @include flexPos(flex-start);
+  position: absolute;
+  right: 22rem;
 
   .account-address,
   .link-btn {
@@ -127,6 +77,7 @@ async function handleLink() {
     cursor: pointer;
     @include flexPos(flex-start);
     color: #fff;
+    font-size: 24rem;
 
     .icon-lang {
       width: 32rem;
@@ -138,11 +89,14 @@ async function handleLink() {
 .toggle-container {
   $boxHeight: 15px;
   $barHeight: 3px;
-  cursor: pointer;
 
+  cursor: pointer;
   height: 15px;
   @include flexPos(space-between);
   flex-direction: column;
+  z-index: 9999999;
+  position: absolute;
+
   .bar {
     transition: 0.4s;
     width: 20px;

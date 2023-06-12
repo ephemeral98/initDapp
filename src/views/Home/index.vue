@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="home-wrap">{{ $t('base.16') }}</div>
+  <div class="home-wrap">this is home page...</div>
 </template>
 
 <style lang="scss" scoped></style>

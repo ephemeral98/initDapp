@@ -6,7 +6,7 @@ $pc: 1920px; // pc 端    1280以上
  * 顶部栏高度
  */
 $pcTopBarHeight: 70px; // pc 顶部栏的高度
-$mobTopBarHeight: 50rem; // 移动端 顶部栏高度
+$mobTopBarHeight: 80rem; // 移动端 顶部栏高度
 
 /**
  * pc 主体内容高度
@@ -17,3 +17,6 @@ $mainHeight: calc(100vh - (#{$pcTopBarHeight}));
  * 移动端 主体内容高度
  */
 $mobMainHeight: calc(100vh - (#{$mobTopBarHeight}));
+
+// 钱包地址在菜单栏的间隙
+$walletBtnMenuGap: 5rem;

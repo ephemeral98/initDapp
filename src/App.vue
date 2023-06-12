@@ -3,7 +3,7 @@
   <TopBar />
 
   <!-- 各路由 -->
-  <div class="mainContainer">
+  <div id="mainContainer">
     <router-view v-slot="{ Component }">
       <keep-alive>
         <component :is="Component" v-if="$route.meta?.keepAlive" />
@@ -24,4 +24,10 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+#mainContainer {
+  padding-top: $mobTopBarHeight;
+  z-index: 2;
+  position: relative;
+}
+</style>

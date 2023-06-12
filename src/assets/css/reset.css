@@ -1,4 +1,4 @@
-/* TB重置样式改版 */
+/* 重置样式 */
 body,
 dl,
 dt,
@@ -32,7 +32,7 @@ h5 {
 body {
   background-color: #ffffff;
   font-family: fang;
-  font-size: 14rem;
+  font-size: 28rem;
   text-align: left;
 }
 
@@ -164,7 +164,7 @@ input[type='week'],
 input[multiple],
 textarea,
 select {
-  font-size: 14rem;
+  font-size: 28rem;
   outline: none;
   box-shadow: none;
   padding: 0;
@@ -190,6 +190,8 @@ button {
   overflow: auto;
   background-size: 100% 100%;
   background-repeat: no-repeat;
+  position: relative;
+  height: 100vh;
 }
 
 /*滚动条 start*/
