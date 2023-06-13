@@ -9,12 +9,13 @@
 
 import { App, createApp, h } from 'vue';
 import BpLoad from '@cps/BpLoad/BpLoadComp.vue';
+import { ElMessage } from 'element-plus';
 
 /**
  * 限制输入框的最大值
  * eg: <input v-max="123" /> // 则输入框最大值不能超过123
  */
-export const maxDirective = (app) => {
+const maxDirective = (app) => {
   const core = (el, binding) => {
     // 只能输入数字类型
     const reg = /(\-?\d+\.?\d*)|(\-?\d*\d*)/;
@@ -48,7 +49,7 @@ export const maxDirective = (app) => {
  * 限制输入框的最大值
  * eg: <input v-min="123" /> // 则输入框最小值不能小于123
  */
-export const minDirective = (app) => {
+const minDirective = (app) => {
   const core = (el, binding) => {
     // 只能输入数字类型
     const reg = /(\-?\d+\.?\d*)|(\-?\d*\d*)/;
@@ -85,7 +86,7 @@ export const minDirective = (app) => {
  * 兼容iOS type=number 不生效问题
  * eg: <input v-number />
  */
-export const numberDirective = (app) => {
+const numberDirective = (app) => {
   app.directive('number', {
     mounted(el, binding, vnode) {
       const core = () => {
@@ -107,7 +108,7 @@ export const numberDirective = (app) => {
  * eg: <input v-double="2" /> // 限制2位小数
  * eg: <input v-double="-2" /> // 限制2位小数（可以为负数）
  */
-export const doubleDirective = (app) => {
+const doubleDirective = (app) => {
   app.directive('double', {
     mounted(el, binding, vnode) {
       const len = Math.abs(binding.value); // 限制的长度
@@ -139,7 +140,7 @@ export const doubleDirective = (app) => {
  * 限制输入框只能输入 正整数 类型
  * eg: <input v-int />
  */
-export const intDirective = (app) => {
+const intDirective = (app) => {
   app.directive('int', {
     mounted(el, binding, vnode) {
       const core = () => {
@@ -160,7 +161,7 @@ export const intDirective = (app) => {
  * 限制输入框只能输入 整数(包括负数) 类型
  * eg: <input v-integer />
  */
-export const integerDirective = (app) => {
+const integerDirective = (app) => {
   app.directive('integer', {
     mounted(el, binding, vnode) {
       const core = () => {
@@ -181,7 +182,7 @@ export const integerDirective = (app) => {
  * 转圈圈
  * eg: <button v-load="loadAuth" />
  */
-export const loadDirective = (app: App) => {
+const loadDirective = (app: App) => {
   /**
    * 获取新旧绑定状态值
    * @param binding
@@ -287,4 +288,172 @@ export const loadDirective = (app: App) => {
       }
     },
   });
+};
+
+/**
+ * 置灰按钮
+ * eg: <button v-disable="{message: '已经置灰', value: true}" />
+ */
+const disableDirective = (app: App) => {
+  /**
+   * 创建遮罩层
+   * @param el
+   * @param binding
+   */
+  const createMask = (el: HTMLElement, binding) => {
+    const t = document.createElement('div');
+    t.style.position = 'absolute';
+    t.style.top = '0';
+    t.style.left = '0';
+    t.style.width = '100%';
+    t.style.height = '100%';
+    t.style.borderRadius = getComputedStyle(el).borderRadius;
+
+    t.addEventListener('click', (e) => {
+      binding.value?.message && ElMessage.error(binding.value?.message);
+      e.stopPropagation();
+    });
+
+    el.appendChild(t);
+    el.style.position = 'relative';
+    el.style.filter = 'grayscale(98%)';
+  };
+
+  /**
+   * 执行
+   * @param el
+   * @param binding
+   */
+  const run = (el: HTMLElement, binding) => {
+    let activeItem;
+    if (Array.isArray(binding.value)) {
+      activeItem = binding.value.find((item) => item.value);
+    } else if (Object.prototype.toString.call(binding.value) === '[object Object]') {
+      activeItem = binding.value.value ? binding.value : null;
+    } else {
+      activeItem = binding.value ? { value: true } : null;
+    }
+
+    if (activeItem?.value) {
+      createMask(el, binding);
+    }
+  };
+
+  app.directive('disable', {
+    mounted(el, binding, vnode) {
+      run(el, binding);
+    },
+    beforeUpdate(el, binding, vnode) {
+      run(el, binding);
+    },
+  });
+};
+
+/**
+ * 图片懒加载
+ * @param app
+ */
+const imgDirective = (app: App) => {
+  /**
+   * 加载图片资源
+   */
+  function fetchImg(url) {
+    return new Promise((resolve, reject) => {
+      const bgImg = new Image();
+      bgImg.src = url;
+      // 图片加载成功
+      bgImg.onload = () => {
+        resolve(url);
+      };
+      // 图片加载失败
+      bgImg.onerror = () => {
+        reject(url);
+      };
+    });
+  }
+
+  app.directive('img', {
+    mounted(el, binding, vnode) {
+      const originSrc = el.src;
+
+      // 懒加载
+      if (binding.modifiers.lazy) {
+        // 开头瞬间换成lazySrc
+        el.src = binding.value;
+        // 等待图片加载完成后，偷偷替换回来
+        fetchImg(originSrc).then(() => {
+          el.src = originSrc;
+        });
+      }
+
+      // 备用重复请求
+      if (binding.modifiers.backup) {
+        if (Array.isArray(binding.value)) {
+          let len = 0;
+          const maxLen = binding.value.length;
+          const handleFetchImg = (originSrc) => {
+            if (len < maxLen) {
+              fetchImg(binding.value[len])
+                .then((respSrc) => {
+                  el.src = respSrc;
+                })
+                .catch(() => {
+                  len++;
+                  handleFetchImg(originSrc);
+                });
+            }
+          };
+
+          el.addEventListener('error', () => {
+            handleFetchImg(originSrc);
+          });
+        }
+
+        if (typeof binding.value === 'number') {
+          let count = binding.value;
+
+          /**
+           *
+           */
+          const handleFetchImg = (originSrc) => {
+            if (count > 0) {
+              count--;
+
+              fetchImg(originSrc)
+                .then((respSrc) => {
+                  el.src = respSrc;
+                })
+                .catch(() => {
+                  handleFetchImg(originSrc);
+                });
+            }
+          };
+
+          el.addEventListener('error', () => {
+            handleFetchImg(originSrc);
+          });
+        }
+      }
+    },
+  });
+};
+
+/**
+ * 安装指令
+ * @param app
+ */
+const install = (app: App) => {
+  doubleDirective(app);
+  intDirective(app);
+  integerDirective(app);
+  loadDirective(app);
+  disableDirective(app);
+  maxDirective(app);
+  minDirective(app);
+  numberDirective(app);
+  imgDirective(app);
+};
+
+export default {
+  install,
 };
