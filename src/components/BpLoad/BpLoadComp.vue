@@ -7,7 +7,7 @@ const size = computed(() => props.size ?? '30px');
 </script>
 
 <template>
-  <div :class="['bp-load-wrap hidden']">
+  <div :class="['bp-load-wrap']">
     <div></div>
     <div></div>
   </div>
@@ -15,6 +15,13 @@ const size = computed(() => props.size ?? '30px');
 
 <style lang="scss" scoped>
 $size: v-bind(size);
+
+.bp-load-wrap {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
 
 .bp-load-wrap,
 .bp-load-wrap > div {

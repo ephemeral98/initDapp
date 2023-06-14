@@ -7,6 +7,10 @@
 // <input v-int />         // 整数
 // <input v-integer />     // 整数(包括负数)
 
+// <button v-load="loadAuth" />
+// <button v-disable="{message: '已经置灰', value: true}" />
+// <img src="@img/home.png" v-img.lazy="require('@img/holder.png')"/>
+
 import { App, createApp, h } from 'vue';
 import BpLoad from '@cps/BpLoad/BpLoadComp.vue';
 import { ElMessage } from 'element-plus';
@@ -183,6 +187,72 @@ const integerDirective = (app) => {
  * eg: <button v-load="loadAuth" />
  */
 const loadDirective = (app: App) => {
+  app.directive('load', {
+    mounted(el, binding) {
+      createLoad(el, binding);
+      const { newShow } = getShowStatus(binding);
+
+      newShow ? showMask(el) : hideMask(el);
+    },
+
+    beforeUpdate(el, binding) {
+      // 在指令的绑定值更新时，触发下一次更新
+      const { oldShow, newShow } = getShowStatus(binding);
+
+      if (oldShow !== newShow) {
+        newShow ? showMask(el) : hideMask(el);
+      }
+    },
+  });
+
+  /**
+   * 创建转圈圈元素
+   */
+  const createLoad = (el: HTMLElement, binding) => {
+    // 获取主题
+    const theme = binding.modifiers.dark ? 'dark' : 'light';
+
+    let size = '30px'; // 默认30宽高
+    // 可以传递数组设置宽高
+    if (Array.isArray(binding.value)) {
+      size = binding.value?.[1] ?? size;
+    }
+
+    const c = createApp({
+      render() {
+        return h(BpLoad, {
+          class: `${theme}`,
+          size,
+        });
+      },
+    });
+
+    // 添加一个元素作为最外层
+    const wrapper = document.createElement('div');
+    wrapper.className = 'bp-load-wrapper';
+    wrapper.classList.add(theme);
+
+    // 获取元素样式
+    const ELStyle = getComputedStyle(el);
+
+    // 重新设置圆角
+    const rounded = ELStyle.borderRadius;
+    wrapper.style.borderRadius = rounded;
+
+    // 阻止冒泡
+    wrapper.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+    // 挂在并插入到目标元素上
+    c.mount(wrapper);
+    el.appendChild(wrapper);
+
+    // 是否已经设置了定位
+    if (ELStyle.position === 'static') {
+      el.style.position = 'relative';
+    }
+  };
+
   /**
    * 获取新旧绑定状态值
    * @param binding
@@ -201,93 +271,27 @@ const loadDirective = (app: App) => {
   };
 
   /**
-   * 处理显示与隐藏
-   * @param newShow 最新状态
+   * 显示
    * @param el 目标元素
    */
-  const handleShow = (newShow: boolean, el: HTMLElement) => {
-    const pos = getComputedStyle(el).position;
-
-    // 是否已经设置了定位
-    const elPos = pos !== 'static' ? pos : 'relative';
-
-    if (pos === 'static') {
-      // 标记原始定位状态
-      el.setAttribute('pos', pos);
-    }
-
+  const showMask = (el: HTMLElement) => {
     // 判定目标位
-    const wrap = el.querySelector('.bp-load-wrap');
-    const wrapper = el.querySelector('.bp-load-wrapper');
+    const wrapper: HTMLElement = el.querySelector('.bp-load-wrapper');
 
-    if (newShow) {
-      // 展示(loading)
-      el.classList.add(elPos);
-      wrap.classList.remove('hidden');
-      wrapper.classList.remove('hidden');
-    } else {
-      // 隐藏
-      wrapper.classList.add('hidden');
-
-      if (el.getAttribute('pos') === 'static') {
-        el.classList.remove(elPos);
-      }
-    }
+    // 展示(loading)
+    wrapper.style.display = 'block';
   };
 
-  app.directive('load', {
-    mounted(el, binding) {
-      const theme = binding.modifiers.dark ? 'dark' : 'light';
+  /**
+   * 隐藏
+   * @param el
+   */
+  const hideMask = (el: HTMLElement) => {
+    const wrapper: HTMLElement = el.querySelector('.bp-load-wrapper');
 
-      const { newShow } = getShowStatus(binding);
-
-      let size = '30px'; // 默认30宽高
-      // 可以传递数组设置宽高
-      if (Array.isArray(binding.value)) {
-        size = binding.value?.[1] ?? size;
-      }
-
-      const c = createApp({
-        render() {
-          return h(BpLoad, {
-            class: `${theme}`,
-            size,
-          });
-        },
-      });
-
-      // 添加一个元素作为最外层
-      const wrapper = document.createElement('div');
-      wrapper.className = 'bp-load-wrapper';
-      wrapper.classList.add('hidden');
-      wrapper.classList.add(theme);
-
-      // 重新设置圆角
-      const rounded = getComputedStyle(el).borderRadius;
-      wrapper.style.borderRadius = rounded;
-
-      // 阻止冒泡
-      wrapper.addEventListener('click', (e) => {
-        e.stopPropagation();
-      });
-      // 挂在并插入到目标元素上
-      c.mount(wrapper);
-      el.appendChild(wrapper);
-
-      if (newShow) {
-        handleShow(newShow, el);
-      }
-    },
-
-    beforeUpdate(el, binding) {
-      // 在指令的绑定值更新时，触发下一次更新
-      const { oldShow, newShow } = getShowStatus(binding);
-
-      if (oldShow !== newShow) {
-        handleShow(newShow, el);
-      }
-    },
-  });
+    // 隐藏
+    wrapper.style.display = 'none';
+  };
 };
 
 /**
@@ -295,29 +299,15 @@ const loadDirective = (app: App) => {
  * eg: <button v-disable="{message: '已经置灰', value: true}" />
  */
 const disableDirective = (app: App) => {
-  /**
-   * 创建遮罩层
-   * @param el
-   * @param binding
-   */
-  const createMask = (el: HTMLElement, binding) => {
-    const t = document.createElement('div');
-    t.style.position = 'absolute';
-    t.style.top = '0';
-    t.style.left = '0';
-    t.style.width = '100%';
-    t.style.height = '100%';
-    t.style.borderRadius = getComputedStyle(el).borderRadius;
-
-    t.addEventListener('click', (e) => {
-      binding.value?.message && ElMessage.error(binding.value?.message);
-      e.stopPropagation();
-    });
-
-    el.appendChild(t);
-    el.style.position = 'relative';
-    el.style.filter = 'grayscale(98%)';
-  };
+  app.directive('disable', {
+    mounted(el, binding, vnode) {
+      createMask(el, binding);
+      run(el, binding);
+    },
+    beforeUpdate(el, binding, vnode) {
+      run(el, binding);
+    },
+  });
 
   /**
    * 执行
@@ -329,29 +319,74 @@ const disableDirective = (app: App) => {
     if (Array.isArray(binding.value)) {
       activeItem = binding.value.find((item) => item.value);
     } else if (Object.prototype.toString.call(binding.value) === '[object Object]') {
-      activeItem = binding.value.value ? binding.value : null;
+      activeItem = binding.value;
     } else {
       activeItem = binding.value ? { value: true } : null;
     }
 
     if (activeItem?.value) {
-      createMask(el, binding);
+      showMask(el);
+    } else {
+      hideMask(el);
     }
   };
 
-  app.directive('disable', {
-    mounted(el, binding, vnode) {
-      run(el, binding);
-    },
-    beforeUpdate(el, binding, vnode) {
-      run(el, binding);
-    },
-  });
+  /**
+   * 创建遮罩层放在该元素的上方
+   * @param el
+   * @param binding
+   */
+  const createMask = (el: HTMLElement, binding) => {
+    const mask = document.createElement('div');
+    mask.style.position = 'absolute';
+    mask.style.top = '0';
+    mask.style.left = '0';
+    mask.style.width = '100%';
+    mask.style.height = '100%';
+    mask.style.zIndex = '99999';
+    mask.style.borderRadius = getComputedStyle(el).borderRadius;
+    mask.classList.add('bp-disable-mask');
+
+    mask.addEventListener('click', (e) => {
+      binding.value?.message && ElMessage.error(binding.value?.message);
+      e.stopPropagation();
+    });
+
+    el.appendChild(mask);
+    const pos = getComputedStyle(el).position;
+
+    // 是否已经设置了定位
+    if (pos === 'static') {
+      el.style.position = 'relative';
+    }
+  };
+
+  /**
+   * 显示遮罩层
+   * @param el
+   */
+  const showMask = (el: HTMLElement) => {
+    const maskDOM: HTMLElement = el.querySelector('.bp-disable-mask');
+    el.style.filter = 'grayscale(98%)';
+    maskDOM.style.display = 'block';
+  };
+
+  /**
+   * 隐藏遮罩层
+   * @param el
+   */
+  const hideMask = (el: HTMLElement) => {
+    const maskDOM: HTMLElement = el.querySelector('.bp-disable-mask');
+    if (!maskDOM) return;
+    el.style.filter = 'none';
+    maskDOM.style.display = 'none';
+  };
 };
 
 /**
  * 图片懒加载
- * @param app
+ * eg: <img src="@img/home.png" v-img.lazy="require('@img/holder.png')"/>
+ * eg: <img src="@img/home.png" v-img.backup="[require('@img/holder.png')]" />
  */
 const imgDirective = (app: App) => {
   /**
