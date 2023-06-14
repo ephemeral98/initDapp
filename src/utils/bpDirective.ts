@@ -310,11 +310,9 @@ const disableDirective = (app: App) => {
   });
 
   /**
-   * 执行
-   * @param el
-   * @param binding
+   * 计算当前需要置灰的项
    */
-  const run = (el: HTMLElement, binding) => {
+  const calcActiveItem = (binding) => {
     let activeItem;
     if (Array.isArray(binding.value)) {
       activeItem = binding.value.find((item) => item.value);
@@ -323,7 +321,16 @@ const disableDirective = (app: App) => {
     } else {
       activeItem = binding.value ? { value: true } : null;
     }
+    return activeItem;
+  };
 
+  /**
+   * 执行
+   * @param el
+   * @param binding
+   */
+  const run = (el: HTMLElement, binding) => {
+    const activeItem = calcActiveItem(binding);
     if (activeItem?.value) {
       showMask(el);
     } else {
@@ -347,8 +354,10 @@ const disableDirective = (app: App) => {
     mask.style.borderRadius = getComputedStyle(el).borderRadius;
     mask.classList.add('bp-disable-mask');
 
+    const activeItem = calcActiveItem(binding);
+
     mask.addEventListener('click', (e) => {
-      binding.value?.message && ElMessage.error(binding.value?.message);
+      activeItem?.message && ElMessage.error(activeItem?.message);
       e.stopPropagation();
     });
 
