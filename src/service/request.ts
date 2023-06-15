@@ -2,8 +2,7 @@ import axios from 'axios';
 import { ElMessage } from 'element-plus';
 
 const defaultConfig = {
-  baseURL: '', // 这里不建议写基础路径，开发环境写在vite，生成环境写在nginx
-  timeout: 30000,
+  baseURL: '', // 写/api作为标记就好
 };
 Object.assign(axios.defaults, defaultConfig);
 axios.defaults.headers['Content-Type'] = 'application/json';
