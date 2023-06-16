@@ -5,6 +5,7 @@ import { useAppStore } from '@store/appStore';
 import i18n from '@/locales/i18n';
 import { checkRightChain } from '@/router/routerHelp';
 import { clone } from '@/utils/tools';
+
 const $t = i18n.global.t;
 
 interface IUseRead<T> {
@@ -13,6 +14,7 @@ interface IUseRead<T> {
   message: string; // 请求结果消息，如果成功，则为 '',
   refresh: (e?) => Promise<T>; // 重新请求数据
   cancel: () => void; // 取消请求
+  execute: () => Promise<T>; // 执行请求
 }
 
 interface IEx<T> {
@@ -145,7 +147,7 @@ export function useRead<T>(func: (e?) => Promise<T>, ex: IEx<T>): [Ref<UnwrapRef
    * core
    */
   async function core(e?) {
-    // cancel();
+    cancel();
     result.loading = true;
     const req = aborter(func(e));
     const resp = await req.catch((err) => {
@@ -170,9 +172,10 @@ export function useRead<T>(func: (e?) => Promise<T>, ex: IEx<T>): [Ref<UnwrapRef
   }
 
   /**
-   * 重新请求
+   * 手动执行
+   * @param e
    */
-  async function refresh(e?):Promise<T> {
+  async function execute(e?): Promise<T> {
     return new Promise((resolve, reject) => {
       if (ex?.noAccount) {
         // 不依赖钱包
@@ -186,7 +189,7 @@ export function useRead<T>(func: (e?) => Promise<T>, ex: IEx<T>): [Ref<UnwrapRef
       } else {
         // 依赖钱包
         watch(
-          () => [appStore.touchAfterWatchAccount],
+          () => [appStore.defaultAccount, appStore.ethersObj.chainId, appStore.netWorkReady],
           () => {
             if (!appStore.defaultAccount || !appStore.ethersObj.chainId || !appStore.netWorkReady)
               return;
@@ -208,6 +211,21 @@ export function useRead<T>(func: (e?) => Promise<T>, ex: IEx<T>): [Ref<UnwrapRef
   }
 
   /**
+   * 单纯重新请求
+   */
+  async function refresh(e?): Promise<T> {
+    return new Promise((resolve, reject) => {
+      core(e)
+        .then(async (resp) => {
+          resolve(resp);
+        })
+        .catch((err) => {
+          resolve(err);
+        });
+    });
+  }
+
+  /**
    * 返回状态结构
    */
   const result = reactive<IUseRead<T>>({
@@ -216,6 +234,7 @@ export function useRead<T>(func: (e?) => Promise<T>, ex: IEx<T>): [Ref<UnwrapRef
     message: '',
     refresh,
     cancel,
+    execute,
   });
 
   if (ex?.immediate === false) {
@@ -240,8 +259,16 @@ export function useRead<T>(func: (e?) => Promise<T>, ex: IEx<T>): [Ref<UnwrapRef
     } else {
       // 需要钱包地址
       watch(
-        () => [appStore.touchAfterWatchAccount, appStore.touchRefreshRead],
+        () => [
+          appStore.defaultAccount,
+          appStore.ethersObj.chainId,
+          appStore.netWorkReady,
+          appStore.touchRefreshRead,
+        ],
         () => {
+          if (!appStore.defaultAccount || !appStore.ethersObj.chainId || !appStore.netWorkReady)
+            return;
+
           core();
         }
       );
