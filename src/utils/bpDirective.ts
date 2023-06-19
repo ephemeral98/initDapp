@@ -332,9 +332,9 @@ const disableDirective = (app: App) => {
   const run = (el: HTMLElement, binding) => {
     const activeItem = calcActiveItem(binding);
     if (activeItem?.value) {
-      showMask(el);
+      showMask(el, binding);
     } else {
-      hideMask(el);
+      hideMask(el, binding);
     }
   };
 
@@ -374,21 +374,23 @@ const disableDirective = (app: App) => {
    * 显示遮罩层
    * @param el
    */
-  const showMask = (el: HTMLElement) => {
+  const showMask = (el: HTMLElement, binding) => {
     const maskDOM: HTMLElement = el.querySelector('.bp-disable-mask');
-    el.style.filter = 'grayscale(98%)';
-    maskDOM.style.display = 'block';
+    if (binding.modifiers.dark) {
+      el.style.filter = 'grayscale(98%)';
+    }
+    maskDOM && (maskDOM.style.display = 'block');
   };
 
   /**
    * 隐藏遮罩层
    * @param el
    */
-  const hideMask = (el: HTMLElement) => {
+  const hideMask = (el: HTMLElement, binding) => {
     const maskDOM: HTMLElement = el.querySelector('.bp-disable-mask');
     if (!maskDOM) return;
     el.style.filter = 'none';
-    maskDOM.style.display = 'none';
+    maskDOM && (maskDOM.style.display = 'none');
   };
 };
 
