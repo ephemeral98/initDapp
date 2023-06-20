@@ -15,6 +15,7 @@ interface IUseRead<T> {
   refresh: (e?) => Promise<T>; // 重新请求数据
   cancel: () => void; // 取消请求
   execute: () => Promise<T>; // 执行请求
+  stopInterval: () => void; // 停止轮询(如果设置了interval)
 }
 
 interface IEx<T> {
@@ -144,6 +145,19 @@ export function useRead<T>(func: (e?) => Promise<T>, ex: IEx<T>): [Ref<UnwrapRef
   };
 
   /**
+   * 返回状态结构
+   */
+  const result = reactive<IUseRead<T>>({
+    loading: false,
+    status: null,
+    message: '',
+    refresh,
+    cancel,
+    execute,
+    stopInterval: () => {},
+  });
+
+  /**
    * core
    */
   async function core(e?) {
@@ -225,18 +239,6 @@ export function useRead<T>(func: (e?) => Promise<T>, ex: IEx<T>): [Ref<UnwrapRef
     });
   }
 
-  /**
-   * 返回状态结构
-   */
-  const result = reactive<IUseRead<T>>({
-    loading: false,
-    status: null,
-    message: '',
-    refresh,
-    cancel,
-    execute,
-  });
-
   if (ex?.immediate === false) {
     // 不立即执行
     watch(
@@ -287,6 +289,9 @@ export function useRead<T>(func: (e?) => Promise<T>, ex: IEx<T>): [Ref<UnwrapRef
     timer = setInterval(() => {
       core();
     }, ex.interval);
+    result.stopInterval = () => {
+      clearInterval(timer);
+    };
   }
 
   onBeforeUnmount(() => {
