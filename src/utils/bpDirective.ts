@@ -310,11 +310,9 @@ const disableDirective = (app: App) => {
   });
 
   /**
-   * 执行
-   * @param el
-   * @param binding
+   * 计算当前需要置灰的项
    */
-  const run = (el: HTMLElement, binding) => {
+  const calcActiveItem = (binding) => {
     let activeItem;
     if (Array.isArray(binding.value)) {
       activeItem = binding.value.find((item) => item.value);
@@ -323,11 +321,20 @@ const disableDirective = (app: App) => {
     } else {
       activeItem = binding.value ? { value: true } : null;
     }
+    return activeItem;
+  };
 
+  /**
+   * 执行
+   * @param el
+   * @param binding
+   */
+  const run = (el: HTMLElement, binding) => {
+    const activeItem = calcActiveItem(binding);
     if (activeItem?.value) {
-      showMask(el);
+      showMask(el, binding);
     } else {
-      hideMask(el);
+      hideMask(el, binding);
     }
   };
 
@@ -347,8 +354,10 @@ const disableDirective = (app: App) => {
     mask.style.borderRadius = getComputedStyle(el).borderRadius;
     mask.classList.add('bp-disable-mask');
 
+    const activeItem = calcActiveItem(binding);
+
     mask.addEventListener('click', (e) => {
-      binding.value?.message && ElMessage.error(binding.value?.message);
+      activeItem?.message && ElMessage.error(activeItem?.message);
       e.stopPropagation();
     });
 
@@ -365,21 +374,23 @@ const disableDirective = (app: App) => {
    * 显示遮罩层
    * @param el
    */
-  const showMask = (el: HTMLElement) => {
+  const showMask = (el: HTMLElement, binding) => {
     const maskDOM: HTMLElement = el.querySelector('.bp-disable-mask');
-    el.style.filter = 'grayscale(98%)';
-    maskDOM.style.display = 'block';
+    if (binding.modifiers.dark) {
+      el.style.filter = 'grayscale(98%)';
+    }
+    maskDOM && (maskDOM.style.display = 'block');
   };
 
   /**
    * 隐藏遮罩层
    * @param el
    */
-  const hideMask = (el: HTMLElement) => {
+  const hideMask = (el: HTMLElement, binding) => {
     const maskDOM: HTMLElement = el.querySelector('.bp-disable-mask');
     if (!maskDOM) return;
     el.style.filter = 'none';
-    maskDOM.style.display = 'none';
+    maskDOM && (maskDOM.style.display = 'none');
   };
 };
 

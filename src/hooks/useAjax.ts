@@ -1,27 +1,27 @@
-import { reactive, ref, Ref, watch } from 'vue';
+import { reactive, ref, Ref, UnwrapRef, watch } from 'vue';
 import { useAppStore } from '@store/appStore';
 import axios from '@/service/request';
 
-interface IAjaxEx {
+interface IAjaxEx<T> {
   loading: boolean; // 加载状态
-  refresh: () => Promise<void>; // 重新请求数据
+  refresh: () => Promise<UnwrapRef<T>>; // 重新请求数据
   cancel: () => void; // 取消请求
 }
 
-export interface IAxiosResp {
+export interface IAxiosResp<T> {
   code: string; // 请求结果状态码
   msg: string; // 消息
   success: boolean; // 是否成功
-  data?: any; // 响应体数据
+  data?: T; // 响应体数据
   [key: string]: any; // 允许传入其他属性
 }
 
-interface IOption {
-  params?: object; // 请求参数
-  before?: (axios) => object | void; // 请求之前
-  after?: (resp: IAxiosResp) => any; // 请求之后
+interface IOption<T, P> {
+  params?: P; // 请求参数
+  before?: (axios) => Promise<P>; // 请求之前
+  after?: (resp: IAxiosResp<T>) => UnwrapRef<T>; // 请求之后
   wallet?: boolean; // 是否依赖钱包
-  default?: any; // 默认返回值
+  default: T; // 默认返回值
   immediate?: boolean; // 是否立即执行
   noLoadBlock?: boolean; // 转圈圈可以继续请求 (默认不可以)
 }
@@ -32,28 +32,28 @@ interface IOption {
  * @param url 请求地址
  * @param options 请求配置项
  */
-function useBaseRequest(
+function useBaseRequest<T, P>(
   method: string,
   url: string | Ref<string>,
-  options: IOption
-): [Ref<any>, IAjaxEx] {
+  options: IOption<T, P>
+): [Ref<any>, IAjaxEx<T>] {
   const appStore = useAppStore();
   let cancelTokenSource;
 
   /**
    * 返回状态结构
    */
-  const result = reactive<IAjaxEx>({
+  const result = reactive<IAjaxEx<T>>({
     loading: false,
     refresh,
     cancel,
   });
 
-  const datas = ref(options?.default); // 返回值
+  const datas = ref<T>(options?.default); // 返回值
   /**
    * 重新请求(手动请求)
    */
-  async function refresh(): Promise<void> {
+  async function refresh(): Promise<UnwrapRef<T>> {
     return new Promise(async (resolve, reject) => {
       if (options.wallet) {
         watch(
@@ -63,16 +63,16 @@ function useBaseRequest(
               // 但是没有登录的，不发请求
               return;
             }
-            await core();
-            resolve();
+            const resp = await core();
+            resolve(resp);
           },
           {
             immediate: true,
           }
         );
       } else {
-        await core();
-        resolve();
+        const resp = await core();
+        resolve(resp);
       }
     });
   }
@@ -84,7 +84,7 @@ function useBaseRequest(
     cancelTokenSource?.cancel?.();
   }
 
-  async function core() {
+  async function core(): Promise<UnwrapRef<T>> {
     if (result.loading && !options.noLoadBlock) return;
 
     if (options.noLoadBlock) {
@@ -94,10 +94,10 @@ function useBaseRequest(
 
     result.loading = true;
     // 如果before有return，优先取before的
-    const beforeResp = options?.before?.(axios);
+    const beforeResp = await options?.before?.(axios);
     let params = beforeResp || options.params;
 
-    function request(method: string, payload): Promise<IAxiosResp> {
+    function request(method: string, payload): Promise<IAxiosResp<T>> {
       // 改写ref类型url
       const tempUrl = isRef(payload.url) ? payload.url.value : payload.url;
 
@@ -126,12 +126,14 @@ function useBaseRequest(
       }
     }
 
-    request(method, { url, params })
-      .then((resp) => {
-        datas.value = options.after(resp);
+    return await request(method, { url, params })
+      .then(async (resp) => {
+        datas.value = await options.after(resp);
+        return datas.value;
       })
-      .catch((err) => {
-        datas.value = options.after(err);
+      .catch(async (err) => {
+        datas.value = await options.after(err);
+        return datas.value;
       })
       .finally(() => {
         result.loading = false;
@@ -170,8 +172,8 @@ function useBaseRequest(
  * @param url 请求地址
  * @param options 请求配置项
  */
-export function useGet(url: string | Ref<string>, options: IOption): [Ref<any>, IAjaxEx] {
-  return useBaseRequest('get', url, options);
+export function useGet<T, P>(url: string | Ref<string>, options: IOption<T, P>): [Ref<T>, IAjaxEx<T>] {
+  return useBaseRequest<T, P>('get', url, options);
 }
 
 /**
@@ -179,8 +181,8 @@ export function useGet(url: string | Ref<string>, options: IOption): [Ref<any>, 
  * @param url 请求地址
  * @param options 请求配置项
  */
-export function usePost(url: string | Ref<string>, options: IOption): [Ref<any>, IAjaxEx] {
-  return useBaseRequest('post', url, options);
+export function usePost<T, P>(url: string | Ref<string>, options: IOption<T, P>): [Ref<T>, IAjaxEx<T>] {
+  return useBaseRequest<T, P>('post', url, options);
 }
 
 /**
@@ -188,8 +190,8 @@ export function usePost(url: string | Ref<string>, options: IOption): [Ref<any>,
  * @param url 请求地址
  * @param options 请求配置项
  */
-export function usePut(url: string | Ref<string>, options: IOption): [Ref<any>, IAjaxEx] {
-  return useBaseRequest('put', url, options);
+export function usePut<T, P>(url: string | Ref<string>, options: IOption<T, P>): [Ref<T>, IAjaxEx<T>] {
+  return useBaseRequest<T, P>('put', url, options);
 }
 
 /**
@@ -197,8 +199,11 @@ export function usePut(url: string | Ref<string>, options: IOption): [Ref<any>, 
  * @param url 请求地址
  * @param options 请求配置项
  */
-export function usePatch(url: string | Ref<string>, options: IOption): [Ref<any>, IAjaxEx] {
-  return useBaseRequest('patch', url, options);
+export function usePatch<T, P>(
+  url: string | Ref<string>,
+  options: IOption<T, P>
+): [Ref<any>, IAjaxEx<T>] {
+  return useBaseRequest<T, P>('patch', url, options);
 }
 
 /**
@@ -206,6 +211,9 @@ export function usePatch(url: string | Ref<string>, options: IOption): [Ref<any>
  * @param url 请求地址
  * @param options 请求配置项
  */
-export function useDelete(url: string | Ref<string>, options: IOption): [Ref<any>, IAjaxEx] {
-  return useBaseRequest('delete', url, options);
+export function useDelete<T, P>(
+  url: string | Ref<string>,
+  options: IOption<T, P>
+): [Ref<any>, IAjaxEx<T>] {
+  return useBaseRequest<T, P>('delete', url, options);
 }
