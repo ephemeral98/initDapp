@@ -47,7 +47,7 @@ export const supportedChains: ISupportChains[] = [
       symbol: 'tBNB',
       decimals: 18,
     },
-    rpcUrls: ['https://data-seed-prebsc-1-s3.binance.org:8545'],
+    rpcUrls: ['https://data-seed-prebsc-2-s2.binance.org:8545'],
     blockExplorerUrls: ['https://testnet.bscscan.com/'],
   },
   // Polygon主网
@@ -61,6 +61,30 @@ export const supportedChains: ISupportChains[] = [
     },
     rpcUrls: ['https://polygon-rpc.com'], // https://rpc-mainnet.matic.network
     blockExplorerUrls: ['https://polygonscan.com/'],
+  },
+  // Arbitrum Test
+  {
+    chainId: '0x66eed',
+    chainName: 'Arbitrum Goerli Testnet',
+    nativeCurrency: {
+      name: 'ETH',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    rpcUrls: ['https://goerli-rollup.arbitrum.io/rpc'],
+    blockExplorerUrls: ['https://goerli.arbiscan.io/'],
+  },
+  // Arbitrum
+  {
+    chainId: '0xa4b1',
+    chainName: 'Arbitrum One',
+    nativeCurrency: {
+      name: 'ETH',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    rpcUrls: ['https://rpc.ankr.com/arbitrum'],
+    blockExplorerUrls: ['https://arbiscan.io/'],
   },
 ];
 
