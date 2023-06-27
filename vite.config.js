@@ -9,6 +9,7 @@ import { ElementPlusResolver, VantResolver } from 'unplugin-vue-components/resol
 import postcsspxtoviewport from 'postcss-px-to-viewport';
 import { getEnv } from './src/utils/buildTestnet';
 import UnoCSS from 'unocss/vite';
+import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
@@ -66,7 +67,7 @@ export default (config) => {
         '@store': path.resolve(__dirname, './src/store'),
         '@contApi': path.resolve(__dirname, './src/contractsApi'),
         '@tools': path.resolve(__dirname, './src/utils/tools'),
-        'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js'
+        'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
       },
 
       // import时省略后缀
@@ -99,6 +100,69 @@ export default (config) => {
       // 不知道为什么，unplugin-vue-components的element自动导入 样式不生效,所以用这个包补给下
       createStyleImportPlugin({
         resolves: [ElementPlusResolve()],
+      }),
+
+      // 图片压缩
+      ViteImageOptimizer({
+        test: /\.(jpe?g|png|gif|tiff|webp|svg|avif)$/i,
+        exclude: undefined,
+        include: undefined,
+        includePublic: true,
+        logStats: true,
+        ansiColors: true,
+        svg: {
+          multipass: true,
+          plugins: [
+            {
+              name: 'preset-default',
+              params: {
+                overrides: {
+                  cleanupNumericValues: false,
+                  removeViewBox: false, // https://github.com/svg/svgo/issues/1128
+                },
+                cleanupIDs: {
+                  minify: false,
+                  remove: false,
+                },
+                convertPathData: false,
+              },
+            },
+            'sortAttrs',
+            {
+              name: 'addAttributesToSVGElement',
+              params: {
+                attributes: [{ xmlns: 'http://www.w3.org/2000/svg' }],
+              },
+            },
+          ],
+        },
+        png: {
+          // https://sharp.pixelplumbing.com/api-output#png
+          quality: 100,
+        },
+        jpeg: {
+          // https://sharp.pixelplumbing.com/api-output#jpeg
+          quality: 100,
+        },
+        jpg: {
+          // https://sharp.pixelplumbing.com/api-output#jpeg
+          quality: 50,
+        },
+        tiff: {
+          // https://sharp.pixelplumbing.com/api-output#tiff
+          quality: 100,
+        },
+        // gif does not support lossless compression
+        // https://sharp.pixelplumbing.com/api-output#gif
+        gif: {},
+        webp: {
+          // https://sharp.pixelplumbing.com/api-output#webp
+          lossless: true,
+        },
+        avif: {
+          // https://sharp.pixelplumbing.com/api-output#avif
+          lossless: true,
+        } /* pass your config */,
       }),
     ],
 
