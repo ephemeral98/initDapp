@@ -146,7 +146,7 @@ export default (config) => {
         },
         jpg: {
           // https://sharp.pixelplumbing.com/api-output#jpeg
-          quality: 50,
+          quality: 100,
         },
         tiff: {
           // https://sharp.pixelplumbing.com/api-output#tiff
