@@ -36,6 +36,12 @@ const useAppStore = defineStore('app', {
     touchUrl: 0, // 用作监听地址栏的变化
     touchAfterWatchAccount: 0, // 告诉useRead，已重新构建合约对象
     touchRefreshRead: 0, // 全世界的 useRead 重跑
+    isOpenMenu: false,
+    // 切换账号或者切换链的信号
+    changeSignal: {
+      countWallet: 0,
+      countChain: 0,
+    },
   }),
 
   actions: {
@@ -278,12 +284,13 @@ const useAppStore = defineStore('app', {
 
       // 监听切账号
       window.ethereum?.on('accountsChanged', (accounts) => {
+        this.changeSignal.countWallet++;
         this.defaultAccount = accounts[0];
       });
 
       // 监听切链(TP不兼容)
       window.ethereum?.on('chainChanged', async (chainId) => {
-        console.log('链切换了...', chainId);
+        this.changeSignal.countChain++;
         this.ethersObj.chainId = chainId;
       });
 
@@ -297,6 +304,22 @@ const useAppStore = defineStore('app', {
 
       // 断开连接
       window.ethereum?.on('close', () => {}); */
+    },
+
+    /**
+     * 监听钱包or链 的变化
+     * @param cb 回调函数
+     */
+    watchChangeWallet(cb: (val?, oldVal?) => void) {
+      watch(
+        () => this.changeSignal,
+        (val, oldVal) => {
+          cb(val, oldVal);
+        },
+        {
+          deep: true,
+        }
+      );
     },
 
     /**
