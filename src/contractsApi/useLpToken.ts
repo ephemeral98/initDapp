@@ -130,8 +130,8 @@ export default (addressObj: IAddressObj) => {
    * @param tokenB
    */
   async function getTokenReserves(tokenA: string, tokenB: string) {
-    const [token0, token1] = await this.getTokens();
-    const [reserveAObj, reserveBObj] = await this.getReserves();
+    const [token0, token1] = await getTokens();
+    const [reserveAObj, reserveBObj] = await getReserves();
 
     if (token0.toUpperCase() === tokenA.toUpperCase()) {
       // 第一个是token0
