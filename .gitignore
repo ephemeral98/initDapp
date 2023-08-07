@@ -24,6 +24,6 @@ dist-ssr
 *.sw?
 
 package-lock.json
-yarn.lock
+# yarn.lock
 components.d.ts
 auto-import.d.ts
