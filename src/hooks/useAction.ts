@@ -272,6 +272,9 @@ export function useRead<T>(func: (e?) => Promise<T>, ex: IEx<T>): [Ref<UnwrapRef
             return;
 
           core();
+        },
+        {
+          immediate: true,
         }
       );
     }

@@ -58,20 +58,16 @@ export default (addressObj: IAddressObj) => {
    * 获取代币余额（带精度）
    * @param digi 约为几位小数
    * @param addr 查询谁的余额
+   * @param deci 精度（默认18精度）
    */
-  async function getBalance(digi: number = 2, addr?: string) {
-    await sleep(2000);
-
+  async function getBalance(digi: number = 2, addr?: string, deci: number = 18) {
     const targetAddr = addr ?? appStore.defaultAccount;
 
-    if (!decimals.value) {
-      await getDecimals();
-    }
     const { status, datas } = (await bpRead(coinObj.value.balanceOf, targetAddr)) || {};
     if (!status) console.log('getBalance...error...');
 
     balanceObj.origin = status ? datas : '0';
-    balanceObj.show = status ? bpFormat(datas, -digi, decimals.value) : '0';
+    balanceObj.show = status ? bpFormat(datas, -digi, deci) : '0';
 
     return balanceObj;
   }
@@ -84,13 +80,14 @@ export default (addressObj: IAddressObj) => {
   /**
    * 获取totalSupply
    * @param digi 约为几位小数
+   * @param deci 精度（默认18精度）
    */
-  async function totalSupply(digi: number = 2) {
+  async function totalSupply(digi: number = 2, deci: number = 18) {
     const { status, datas } = await bpRead(coinObj.value.totalSupply);
     if (!status) console.log('totalSupply...error...');
 
     totalSupplyObj.origin = status ? datas : '0';
-    totalSupplyObj.show = status ? bpFormat(datas, -digi, decimals.value) : '0';
+    totalSupplyObj.show = status ? bpFormat(datas, -digi, deci) : '0';
 
     return totalSupplyObj;
   }
@@ -136,12 +133,10 @@ export default (addressObj: IAddressObj) => {
    * 主动转账
    * @param recipient 接收者
    * @param amount 数额
+   * @param deci 精度 (默认18)
    */
-  async function transfer(recipient: string, amount) {
-    if (!decimals.value) {
-      await getDecimals();
-    }
-    const cloneAmount = bpMul(amount, 10 ** decimals.value);
+  async function transfer(recipient: string, amount, deci: number = 18) {
+    const cloneAmount = bpMul(amount, 10 ** deci);
     const { status } = await bpWrite(
       { success: $t('base.6') },
       coinObj.value.transfer,
@@ -157,13 +152,11 @@ export default (addressObj: IAddressObj) => {
    * @param sender 转账者
    * @param recipient 接收者
    * @param amount 数额
+   * @param deci 精度 (默认18)
    * @returns
    */
-  async function transferFrom(sender: string, recipient: string, amount) {
-    if (!decimals.value) {
-      await getDecimals();
-    }
-    const cloneAmount = bpMul(amount, 10 ** decimals.value);
+  async function transferFrom(sender: string, recipient: string, amount, deci: number = 18) {
+    const cloneAmount = bpMul(amount, 10 ** deci);
     const { status } = await bpWrite(
       { success: $t('base.6') },
       coinObj.value.transferFrom,

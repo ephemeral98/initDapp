@@ -17,10 +17,6 @@ export default defineConfig({
     },
 
     colors: {
-      main: {
-        1: 'skyblue',
-        2: 'darkblue',
-      },
       green: '#008c8c',
       red: '#f40',
     },

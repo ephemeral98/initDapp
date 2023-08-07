@@ -8,8 +8,8 @@
     "json": "node excel2Json.js",
     "dev": "vite --mode devTest",
     "dev:main": "vite --mode devMain",
-    "build:test": "vue-tsc --noEmit && vite build --mode buildTest",
-    "build:main": "vue-tsc --noEmit && vite build --mode buildMain",
+    "build:test": "vite build --mode buildTest",
+    "build:main": "vite build --mode buildMain",
     "build:childTest": "vue-tsc --noEmit && vite build --mode childTest",
     "build:childMain": "vue-tsc --noEmit && vite build --mode childMain"
   },

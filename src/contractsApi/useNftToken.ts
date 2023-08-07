@@ -17,7 +17,6 @@ export default (addressObj: IAddressObj) => {
   const appStore = useAppStore();
   const created = ref<boolean>(false); // 合约对象是否构建完
   const nftObj = ref<any>({}); // nft合约对象
-  const decimals = ref<number>(18); // 精度
 
   /**
    * 构建代币对象
