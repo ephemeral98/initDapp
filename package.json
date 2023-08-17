@@ -20,7 +20,7 @@
     "consola": "^2.15.3",
     "dayjs": "^1.11.4",
     "element-plus": "^2.3.0",
-    "ethers": "5.7.2",
+    "ethers": "6.7.0",
     "mathjs": "11.8.0",
     "pinia": "^2.0.17",
     "swiper": "8.3.2",
