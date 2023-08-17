@@ -3,6 +3,7 @@ import i18n from '@/locales/i18n';
 import { useRouteItem } from './useRouterTools';
 const $t = i18n.global.t;
 import { nextTick } from 'vue';
+import { ethers } from 'ethers';
 
 /**
  * 检查是否账户或者链正确
@@ -14,7 +15,9 @@ export function checkRightChain(to?, from?) {
   const appStore = useAppStore();
   // 匹配路由中 meta 的依赖项，如果当前链不在meta依赖项中，则链不对
   const { chainId } = appStore.ethersObj;
-  const inclu = targetRoute.meta?.needChains?.includes(chainId);
+  const bigHex = ethers.toBeHex(chainId);
+  const inclu = targetRoute.meta?.needChains?.includes(bigHex);
+
   if (!inclu && targetRoute.meta?.needChains !== undefined) {
     appStore.setRightChain(false);
     return false;

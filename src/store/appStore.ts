@@ -133,8 +133,8 @@ const useAppStore = defineStore('app', {
       /**
        * 切链事件
        */
-      async function _handleChange() {
-        if (Number(ethereum.chainId) == Number(chainId)) {
+      async function _handleChange() { 
+        if (Number(ethereum.chainId) === Number(chainId)) {
           // 如果当前链和想要切换的链一样，则不做操作
           return;
         }
