@@ -60,8 +60,8 @@ const useAppStore = defineStore('app', {
       toRaw(provider)
         .getSigner()
         .then(async (signer) => {
-          this.ethersObj.signerValue = signer
-          console.log('signer。。。', signer);
+          this.ethersObj.signerValue = signer;
+          // console.log('signer。。。', signer);
           ElMessage({
             message: $t('base.9'),
             type: 'success'

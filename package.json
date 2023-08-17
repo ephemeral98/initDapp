@@ -16,7 +16,7 @@
   "dependencies": {
     "animate.css": "^4.1.1",
     "axios": "^0.27.2",
-    "bp-math": "^1.2.3",
+    "bp-math": "^1.2.6",
     "consola": "^2.15.3",
     "dayjs": "^1.11.4",
     "element-plus": "^2.3.0",

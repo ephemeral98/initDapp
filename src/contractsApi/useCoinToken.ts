@@ -9,7 +9,6 @@ import { bpRead, bpWrite } from '@/service/bpAction';
 import useDefaultRpc from './useDefaultRpc';
 import { reactive, ref } from 'vue';
 import { watchAccount } from '@/hooks/useAction';
-import { sleep } from '@/utils/tools';
 
 const $t = i18n.global.t;
 
@@ -124,7 +123,7 @@ export default (addressObj: IAddressObj) => {
       { success: $t('base.5') },
       coinObj.value.approve,
       hoster,
-      ethers.constants.MaxUint256
+      ethers.MaxUint256
     );
     return status;
   }

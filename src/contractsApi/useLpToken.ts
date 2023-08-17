@@ -186,7 +186,7 @@ export default (addressObj: IAddressObj) => {
       { success: $t('base.5') },
       lpObj.value.approve,
       hoster,
-      ethers.constants.MaxUint256
+      ethers.MaxUint256
     );
     return status;
   }
