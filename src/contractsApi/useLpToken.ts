@@ -173,7 +173,7 @@ export default (addressObj: IAddressObj) => {
       return false;
     }
 
-    hasAllow.value = +origin ? bpGte(datas, origin) : +datas ? true : false;
+    hasAllow.value = origin ? bpGte(datas, origin) : datas ? true : false;
     return hasAllow.value;
   }
 

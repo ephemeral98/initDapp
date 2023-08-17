@@ -10,10 +10,6 @@ const [balan, balanEx] = useRead(
   async () => {
     const myBalan = await emetObj.getBalance();
 
-    // const sub = ethers.parseEther('3.14') * ethers.parseEther('1')  / ethers.parseEther('2');
-    // const hexSub = ethers.formatUnits(sub, 18)
-
-    // console.log('myBalance...',sub, hexSub);
     return myBalan;
   },
   { default: { origin: '0', show: '0' } }

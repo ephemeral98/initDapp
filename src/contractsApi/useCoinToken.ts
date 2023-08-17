@@ -44,7 +44,7 @@ export default (addressObj: IAddressObj) => {
   async function getDecimals(): Promise<number> {
     const { datas, status } = await bpRead(coinObj.value.decimals);
     if (!status) console.log('getDecimals...error...');
-    decimals.value = +datas || 18;
+    decimals.value = datas || 18;
     return decimals.value;
   }
 
@@ -109,7 +109,7 @@ export default (addressObj: IAddressObj) => {
       return false;
     }
 
-    hasAllow.value = +origin ? bpGte(datas, origin) : +datas ? true : false;
+    hasAllow.value = origin ? bpGte(datas, origin) : datas ? true : false;
     return hasAllow.value;
   }
 
