@@ -1,29 +1,31 @@
 <script setup lang="ts">
 import { useRead, useWrite } from '@/hooks/useAction';
-import useCoinToken from '@contApi/useCoinToken';
-import { EMET_TOKEN_CONT, STAKE_ADDR } from '@/contracts/address';
+import useLpToken from '@contApi/useLpToken';
+import { LP_CONT, STAKE_ADDR } from '@/contracts/address';
 import { ethers } from 'ethers';
 
-const emetObj = useCoinToken({ address: EMET_TOKEN_CONT.address, abi: EMET_TOKEN_CONT.abi });
+const lpObj = useLpToken({ address: LP_CONT.address, abi: LP_CONT.abi });
 
 const [balan, balanEx] = useRead(
   async () => {
-    const myBalan = await emetObj.getBalance();
+    const myBalan = await lpObj.getBalance();
 
     return myBalan;
   },
   { default: { origin: '0', show: '0' } }
 );
 
-const [getDecimal, getDecimalEx] = useRead(
+const [getTokenReserves, getTokenReservesEx] = useRead(
   async () => {
-    return await emetObj.getDecimals();
+    const res = await lpObj.getTokenReserves('0x496d66a9f36c04cca4a9bd4352c1ca6e7bc4ccf3', '0x7181270023030fcfe34b3a21eec16855aa169f83');
+    console.log('res...', res);
+    
   },
-  { default: 18 }
+  { default: null }
 );
 
 const [doAuth, loadDoAuth] = useWrite(async () => {
-  await emetObj.auth(STAKE_ADDR);
+  await lpObj.auth(STAKE_ADDR);
 });
 </script>
 
@@ -32,7 +34,6 @@ const [doAuth, loadDoAuth] = useWrite(async () => {
     <h1>test wrap page...</h1>
     <div >余额： {{ balan.origin }}</div>
 
-    <div>精度：{{ getDecimal }}</div>
 
     <bp-button class="px-20" sink @click="doAuth" v-load="loadDoAuth">尝试授权write操作</bp-button>
   </div>
