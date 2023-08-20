@@ -1,86 +1,50 @@
 <script setup lang="ts">
-import useScrollAnimate from './useScrollAnimate';
-const app = document.getElementById('app');
+// import FormInp from '@/components/FormComp/FormInp.vue';
+// import FormBtn from '@/components/FormComp/FormBtn.vue';
+import BpInp from '@cps/BpForm/BpInp.vue';
+import BpForm from '@cps/BpForm/index.vue';
+import BpSubmit from '@cps/BpForm/BpSubmit.vue';
 
-const { playgroundRef, boxItemRef, listRef, setItemRef, updateAnimate, updateMap } =
-  useScrollAnimate();
+const emailInp = ref('123');
+const validEmail = () => {
+  return true;
+};
 
-/**
- * 监听滚动
- */
-onMounted(() => {
-  updateMap();
-  app.addEventListener('scroll', () => {
-    updateAnimate();
-  });
-});
-onBeforeMount(() => {
-  app.removeEventListener('scroll', updateAnimate);
-});
+const doSubmit = () => {
+  console.log('提交。。');
+};
 </script>
 
 <template>
-  <div class="scroll-animate-wrap">
-    <header class="h-200 bg-blue flex-center text-52">这个是滚动测试😄</header>
-    <!-- 主要模块 -->
-    <main class="ani-playground" ref="playgroundRef">
-      <!-- 动画展示模块 -->
-      <div class="ani-container">
-        <!-- 要展示动画的列表 -->
-        <div class="list" ref="listRef">
-          <div :ref="setItemRef" data-order="0" class="item-box"></div>
-          <div :ref="setItemRef" data-order="1" class="item-box"></div>
-          <div :ref="setItemRef" data-order="2" class="item-box"></div>
-          <div :ref="setItemRef" data-order="3" class="item-box"></div>
-          <div :ref="setItemRef" data-order="2" class="item-box"></div>
-          <div :ref="setItemRef" data-order="1" class="item-box"></div>
-          <div :ref="setItemRef" data-order="0" class="item-box"></div>
-          <div :ref="setItemRef" data-order="0" class="item-box"></div>
-          <div :ref="setItemRef" data-order="1" class="item-box"></div>
-          <div :ref="setItemRef" data-order="2" class="item-box"></div>
-          <div :ref="setItemRef" data-order="3" class="item-box"></div>
-          <div :ref="setItemRef" data-order="2" class="item-box"></div>
-          <div :ref="setItemRef" data-order="1" class="item-box"></div>
-          <div :ref="setItemRef" data-order="0" class="item-box"></div>
-        </div>
-      </div>
-    </main>
-    <!-- 路人模块 -->
-    <section class="flex-center h-800px">路人模块😁</section>
-    <footer class="h-200 bg-pink flex-center text-52">这个是滚动测试😄结束</footer>
+  <div class="test-wrap pt-200" form-wrap="test-wrap">
+    <div>{{ emailInp }}</div>
+
+    <!-- <FormInp
+      dataSame="forgetEmail"
+      dataName="email"
+      class="mt-14rem"
+      v-model:value="emailInp"
+      :holder="$t('login.7')"
+      require
+      no-tag
+      :requireMsg="$t('login.8')"
+      :rules="[{ valid: () => validEmail(), message: 'invalid email!' }]"
+    />
+
+    <FormBtn data-same="forgetEmail" class="login-btn hover-color-btn mx-auto" @click="doSubmit">
+      提交
+    </FormBtn> -->
+
+    <BpForm>
+      <BpInp
+        name="email"
+        v-model:value="emailInp"
+        require
+        :rules="[{ valid: () => validEmail(), message: 'invalid email!' }]"
+      />
+      <BpSubmit name="submit" @submit="doSubmit"> 提交 </BpSubmit>
+    </BpForm>
   </div>
 </template>
 
-<style lang="scss" scoped>
-.ani-playground {
-  width: 100%;
-  height: 200vh;
-  background-color: #008c8c;
-}
-
-.ani-container {
-  width: 100vw;
-  height: 120vh;
-  background-color: rgba(255, 0, 72, 0.995);
-  position: sticky;
-  left: 0;
-  top: 0;
-  @include flexPos(center);
-}
-
-.list {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  place-items: center;
-  grid-gap: 150rem 0;
-
-  .item-box {
-    width: 100px;
-    height: 100px;
-    background-color: orange;
-    border-radius: 16rem;
-    opacity: 0;
-  }
-}
-</style>
+<style lang="scss" scoped></style>
