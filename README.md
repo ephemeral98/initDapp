@@ -13,4 +13,4 @@ https://github.com/ephemeral98/initDapp/wiki
 
 ## 组件文档地址:
 
-https://flashback2005.github.io/
+https://restless-wildflower-3069.on.fleek.co/

@@ -1349,10 +1349,10 @@ boolbase@^1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==
 
-bp-math@^1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/bp-math/-/bp-math-1.2.3.tgz#40deb94402b08ee2d16d80987c5618f399e8b1ed"
-  integrity sha512-VQ0VxGDW5EK7uB518QOsO40wl/7egh/88QGksxocbJBey+JSRDYZxtlggipZt395qitweGOCi04TYlhPYCAxlA==
+bp-math@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/bp-math/-/bp-math-1.3.0.tgz#6240059c4f99c5c6f082eaa208d756289aa85644"
+  integrity sha512-c8HmwoIkVLUBineeSlsv/j5KUDdXqXdLF0beC92qSU1s4qkcGFVVjrgBU/eROv4rWxiP2lByVGYPXBPe9BO/0w==
 
 brace-expansion@^1.1.7:
   version "1.1.11"
