@@ -4,11 +4,11 @@
 import { ethers } from 'ethers';
 import { useAppStore } from '@/store/appStore';
 import i18n from '@/locales/i18n';
-import { bpFormat, bpGt, bpGte, bpMul } from 'bp-math';
+import { bpDiv, bpFormat, bpGt, bpGte, bpMul } from 'bp-math';
 import { bpRead, bpWrite } from '@/service/bpAction';
 import useDefaultRpc from './useDefaultRpc';
-import { reactive, Ref, ref } from 'vue';
 import { watchAccount } from '@/hooks/useAction';
+import { getMultiCallResults } from '@hooks/useMultiCall';
 
 const $t = i18n.global.t;
 
@@ -44,7 +44,7 @@ export default (addressObj: IAddressObj) => {
   // 代币余额
   const balanceObj = reactive({
     origin: '0',
-    show: '0',
+    show: '0'
   });
   /**
    * 获取代币余额（源数据和展示数据）
@@ -89,12 +89,12 @@ export default (addressObj: IAddressObj) => {
   const revObj = reactive<IRev[]>([
     {
       revOrigin: '0',
-      revShow: '0',
+      revShow: '0'
     },
     {
       revOrigin: '0',
-      revShow: '0',
-    },
+      revShow: '0'
+    }
   ]);
   /**
    * 获取lp 两个token 对应的两个reserves
@@ -116,13 +116,13 @@ export default (addressObj: IAddressObj) => {
     {
       token: '',
       revOrigin: '',
-      revShow: '',
+      revShow: ''
     },
     {
       token: '',
       revOrigin: '',
-      revShow: '',
-    },
+      revShow: ''
+    }
   ]);
   /**
    * 获取lp 两个token 对应的两个reserves
@@ -130,29 +130,65 @@ export default (addressObj: IAddressObj) => {
    * @param tokenB
    */
   async function getTokenReserves(tokenA: string, tokenB: string) {
-    const [token0, token1] = await getTokens();
-    const [reserveAObj, reserveBObj] = await getReserves();
+    const lpInterface = new ethers.Interface(addressObj.abi);
+    const funcList = [];
+    funcList.push(
+      {
+        target: addressObj.address,
+        func: 'token0',
+        args: [],
+        interface: lpInterface
+      },
+      {
+        target: tokenA,
+        func: 'decimals',
+        args: [],
+        interface: lpInterface
+      },
+      {
+        target: addressObj.address,
+        func: 'token1',
+        args: [],
+        interface: lpInterface
+      },
+      {
+        target: tokenB,
+        func: 'decimals',
+        args: [],
+        interface: lpInterface
+      },
+      {
+        target: addressObj.address,
+        func: 'getReserves',
+        args: [],
+        interface: lpInterface
+      }
+    );
+    const lpResults = await bpRead(getMultiCallResults, true, funcList);
+    console.log('res...', lpResults);
+    
 
-    if (token0.toUpperCase() === tokenA.toUpperCase()) {
+    if (lpResults.datas[0][0].toUpperCase() === tokenA.toUpperCase()) {
       // 第一个是token0
-      tokenRevs[0].token = token0;
-      tokenRevs[0].revOrigin = reserveAObj.revOrigin;
-      tokenRevs[0].revShow = reserveAObj.revShow;
+      tokenRevs[0].token = lpResults.datas[0][0];
+      tokenRevs[0].revOrigin = lpResults.datas[4][0];
+      tokenRevs[0].revShow = bpDiv(lpResults.datas[4][0], 10 ** Number(lpResults.datas[1][0]));
 
-      tokenRevs[1].token = token1;
-      tokenRevs[1].revOrigin = reserveBObj.revOrigin;
-      tokenRevs[1].revShow = reserveBObj.revShow;
+      tokenRevs[1].token = lpResults.datas[2][0];
+      tokenRevs[1].revOrigin = lpResults.datas[4][1];
+      tokenRevs[1].revShow = bpDiv(lpResults.datas[4][1], 10 ** Number(lpResults.datas[3][0]));
     } else {
       // 第二个是token0
-      tokenRevs[1].token = token0;
-      tokenRevs[1].revOrigin = reserveAObj.revOrigin;
-      tokenRevs[1].revShow = reserveAObj.revShow;
+      tokenRevs[1].token = lpResults.datas[0][0];
+      tokenRevs[1].revOrigin = lpResults.datas[4][0];
+      tokenRevs[1].revShow = bpDiv(lpResults.datas[4][0], 10 ** Number(lpResults.datas[1][0]));
 
-      tokenRevs[0].token = token1;
-      tokenRevs[0].revOrigin = reserveBObj.revOrigin;
-      tokenRevs[0].revShow = reserveBObj.revShow;
+      tokenRevs[0].token = lpResults.datas[2][0];
+      tokenRevs[0].revOrigin = lpResults.datas[4][1];
+      tokenRevs[0].revShow = bpDiv(lpResults.datas[4][1], 10 ** Number(lpResults.datas[3][0]));
     }
 
+    console.log('token...',lpResults.datas[4][0], Number(lpResults.datas[1][0]), 10 ** Number(lpResults.datas[1][0]), bpDiv(lpResults.datas[4][0], 10 ** Number(lpResults.datas[1][0])));
     return tokenRevs;
   }
 
@@ -243,6 +279,6 @@ export default (addressObj: IAddressObj) => {
     allow,
     auth,
     transfer,
-    transferFrom,
+    transferFrom
   };
 };
