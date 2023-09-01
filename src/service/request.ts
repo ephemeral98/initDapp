@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
+import useSign from '@/hooks/useSign';
+import { localMemory } from 'localmemory';
 
 const defaultConfig = {
   baseURL: '', // 写/api作为标记就好
@@ -9,7 +11,7 @@ axios.defaults.headers['Content-Type'] = 'application/json';
 
 // 请求拦截器
 axios.interceptors.request.use(
-  (config) => {
+  async (config) => {
     // 在发送请求之前做些什么
     /* const uid = localMemory.getItem('uid') || ''
 
@@ -28,6 +30,26 @@ axios.interceptors.request.use(
         ...params,
       };
     } */
+    const { doSign } = useSign();
+
+    // 如果请求参数有auth标记，则携带上token
+    if (config.params.auth) {
+      const token = localMemory.getItem('token');
+      if (token) {
+        config.headers = {
+          auth: JSON.stringify(token),
+        };
+      } else {
+        const resp = await doSign();
+        if (resp) {
+          config.headers = {
+            auth: JSON.stringify(resp),
+          };
+        }
+      }
+      delete config.params.auth;
+    }
+
     return config;
   },
   (err) => {
@@ -39,7 +61,6 @@ axios.interceptors.request.use(
 // 响应拦截器
 axios.interceptors.response.use(
   (resp) => {
-
     /* return {
       ...resp.data,
       success: resp.status === 200,

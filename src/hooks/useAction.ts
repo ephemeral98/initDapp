@@ -5,6 +5,7 @@ import { useAppStore } from '@store/appStore';
 import i18n from '@/locales/i18n';
 import { checkRightChain } from '@/router/routerHelp';
 import { clone } from '@/utils/tools';
+import axios from 'axios';
 
 const $t = i18n.global.t;
 

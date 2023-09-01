@@ -188,7 +188,7 @@ export default (config) => {
       host: '0.0.0.0',
       proxy: {
         '/api': {
-          target: 'http://localhost:9800',
+          target: 'http://localhost:4399',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, '/'),
         },

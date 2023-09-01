@@ -1,22 +1,25 @@
 import { defineStore, storeToRefs } from 'pinia';
-import { Signer, ethers } from 'ethers';
+import { Provider, Signer, ethers } from 'ethers';
 import { ElMessage } from 'element-plus';
 import i18n, { defaultLang } from '@/locales/i18n';
+import { localMemory } from 'localmemory';
+
 const $t = i18n.global.t;
 
 import { toRaw } from 'vue';
 import { getChainData, getWalletReject } from '@/utils/tools';
+import useSign from '@/hooks/useSign';
 
 // ethers默认配置
 const INIT_ETHERS = {
   ethers: ethers,
   instance: null,
-  provider: {},
+  provider: {} as any,
   signerValue: null, // 这个导出的时候是 proxy，需要用vue的toRaw转一下signer
   connected: false,
   cachedProvider: null,
   baseGasPrice: 0, // 基础gasPrice，后面设置gasPrice的时候，+= 此值
-  chainId: ''
+  chainId: '',
   // tips:
   // const appStore = useAppStore();
   // const { ethers, signerValue } = appStore.ethersObj;
@@ -29,7 +32,6 @@ const useAppStore = defineStore('app', {
     lang: '', // 语言
     curDevice: 'pad',
     rightChain: true, // 当前页面是否在对的链
-    loadRead: '', // 是否在读取链上方法中
     ethersObj: INIT_ETHERS,
     chainTimer: null, // 切链timer
     netWorkReady: false, // 成功获取链和钱包等准备工作
@@ -40,8 +42,8 @@ const useAppStore = defineStore('app', {
     // 切换账号或者切换链的信号
     changeSignal: {
       countWallet: 0,
-      countChain: 0
-    }
+      countChain: 0,
+    },
   }),
 
   actions: {
@@ -49,6 +51,8 @@ const useAppStore = defineStore('app', {
      * 连接小狐狸钱包
      */
     async linkWallet(): Promise<void | boolean> {
+      console.log('this.defaultAccount...', this.defaultAccount);
+
       // 已经连接了钱包
       if (this.defaultAccount) {
         return true;
@@ -57,23 +61,23 @@ const useAppStore = defineStore('app', {
       await this.setEthersObj();
 
       const { provider } = this.ethersObj;
-      toRaw(provider)
+      await toRaw(provider)
         .getSigner()
         .then(async (signer) => {
           this.ethersObj.signerValue = signer;
-          // console.log('signer。。。', signer);
+          console.log('this.defaultAccount...', this.defaultAccount);
           ElMessage({
             message: $t('base.9'),
-            type: 'success'
+            type: 'success',
           });
           await this.getDefaultAccount();
         })
         .catch((e) => {
-          console.log('发生了什么',e);
-          
+          console.log('发生了什么', e);
+
           ElMessage({
             message: $t('base.11'),
-            type: 'error'
+            type: 'error',
           });
         });
 
@@ -103,7 +107,7 @@ const useAppStore = defineStore('app', {
       } catch (err) {
         ElMessage({
           message: $t('base.12'),
-          type: 'error'
+          type: 'error',
         });
       }
       this.setAccount(account);
@@ -133,7 +137,7 @@ const useAppStore = defineStore('app', {
       /**
        * 切链事件
        */
-      async function _handleChange() { 
+      async function _handleChange() {
         if (Number(ethereum.chainId) === Number(chainId)) {
           // 如果当前链和想要切换的链一样，则不做操作
           return;
@@ -144,7 +148,7 @@ const useAppStore = defineStore('app', {
           // const hexChainId = ethers.hexlify(chainId);
           return await ethereum.request({
             method: 'wallet_switchEthereumChain',
-            params: [{ chainId: chainId }]
+            params: [{ chainId: chainId }],
           });
         } catch (error) {
           if (!getWalletReject(error)) {
@@ -153,7 +157,7 @@ const useAppStore = defineStore('app', {
             const chainData = getChainData(chainId);
             return await ethereum.request({
               method: 'wallet_addEthereumChain',
-              params: [chainData]
+              params: [chainData],
             });
           }
         }
@@ -249,7 +253,7 @@ const useAppStore = defineStore('app', {
         });
       }
 
-      await _waiting().catch(err => console.log(err));
+      await _waiting().catch((err) => console.log(err));
 
       let provider;
       try {
@@ -271,15 +275,8 @@ const useAppStore = defineStore('app', {
       this.ethersObj = {
         ...this.ethersObj,
         ethers,
-        provider
+        provider,
       };
-    },
-
-    /**
-     * 设置加载读方法
-     */
-    setLoadRead(status) {
-      this.loadRead = status;
     },
 
     /**
@@ -290,15 +287,16 @@ const useAppStore = defineStore('app', {
     async subscribeProvider() {
       // const { provider } = this.ethersObj;
       // console.log('provider.on....', provider.on);
+      const { doSign } = useSign();
 
       // 监听切账号
-      window.ethereum?.on('accountsChanged', accounts => {
+      window.ethereum?.on('accountsChanged', (accounts) => {
         this.changeSignal.countWallet++;
         this.defaultAccount = accounts[0];
       });
 
       // 监听切链(TP不兼容)
-      window.ethereum?.on('chainChanged', async chainId => {
+      window.ethereum?.on('chainChanged', async (chainId) => {
         this.changeSignal.countChain++;
         this.ethersObj.chainId = chainId;
       });
@@ -326,7 +324,7 @@ const useAppStore = defineStore('app', {
           cb(val, oldVal);
         },
         {
-          deep: true
+          deep: true,
         }
       );
     },
@@ -364,15 +362,15 @@ const useAppStore = defineStore('app', {
      */
     setTouchUrl(count: number) {
       this.touchUrl = count;
-    }
+    },
   },
 
   getters: {
     // 获取当前语言: en、cn、kn
     curLang() {
       return this.lang || window.localStorage.getItem('lang') || defaultLang;
-    }
-  }
+    },
+  },
 });
 
 export { storeToRefs, useAppStore };

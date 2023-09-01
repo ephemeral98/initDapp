@@ -1916,6 +1916,11 @@ local-pkg@^0.4.2, local-pkg@^0.4.3:
   resolved "https://registry.yarnpkg.com/local-pkg/-/local-pkg-0.4.3.tgz#0ff361ab3ae7f1c19113d9bb97b98b905dbc4963"
   integrity sha512-SFppqq5p42fe2qcZQqqEOiVRXl+WCP1MdT6k7BDEW1j++sp5fIY+/fdRQitvKgB5BrBcmrs5m/L0v2FrU5MY1g==
 
+localmemory@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmmirror.com/localmemory/-/localmemory-1.0.1.tgz#8b8ba8052f4cf7fb252f32c547a43bb98bfa8195"
+  integrity sha512-Uh8eyEjK4ittAD/h1OBEcLx3aKA9Osqb3lDMmRUUPPX83iJjq/Txw3BLoiEBNglu6MCqn76wlSMNdXovTzhSWw==
+
 locate-path@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/locate-path/-/locate-path-6.0.0.tgz#55321eb309febbc59c4801d931a72452a681d286"

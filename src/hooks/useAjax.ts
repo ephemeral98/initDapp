@@ -1,6 +1,8 @@
 import { reactive, ref, Ref, UnwrapRef, watch } from 'vue';
 import { useAppStore } from '@store/appStore';
 import axios from '@/service/request';
+import { bpEmpty } from 'bp-math';
+import { AxiosRequestHeaders } from 'axios';
 
 interface IAjaxEx<T> {
   loading: boolean; // 加载状态
@@ -172,7 +174,10 @@ function useBaseRequest<T, P>(
  * @param url 请求地址
  * @param options 请求配置项
  */
-export function useGet<T, P>(url: string | Ref<string>, options: IOption<T, P>): [Ref<T>, IAjaxEx<T>] {
+export function useGet<T, P>(
+  url: string | Ref<string>,
+  options: IOption<T, P>
+): [Ref<T>, IAjaxEx<T>] {
   return useBaseRequest<T, P>('get', url, options);
 }
 
@@ -181,7 +186,10 @@ export function useGet<T, P>(url: string | Ref<string>, options: IOption<T, P>):
  * @param url 请求地址
  * @param options 请求配置项
  */
-export function usePost<T, P>(url: string | Ref<string>, options: IOption<T, P>): [Ref<T>, IAjaxEx<T>] {
+export function usePost<T, P>(
+  url: string | Ref<string>,
+  options: IOption<T, P>
+): [Ref<T>, IAjaxEx<T>] {
   return useBaseRequest<T, P>('post', url, options);
 }
 
@@ -190,7 +198,10 @@ export function usePost<T, P>(url: string | Ref<string>, options: IOption<T, P>)
  * @param url 请求地址
  * @param options 请求配置项
  */
-export function usePut<T, P>(url: string | Ref<string>, options: IOption<T, P>): [Ref<T>, IAjaxEx<T>] {
+export function usePut<T, P>(
+  url: string | Ref<string>,
+  options: IOption<T, P>
+): [Ref<T>, IAjaxEx<T>] {
   return useBaseRequest<T, P>('put', url, options);
 }
 
@@ -216,4 +227,59 @@ export function useDelete<T, P>(
   options: IOption<T, P>
 ): [Ref<any>, IAjaxEx<T>] {
   return useBaseRequest<T, P>('delete', url, options);
+}
+
+/**
+ * get请求
+ */
+export function $GET(url: string, params: object, headers?: AxiosRequestHeaders) {
+  if (!bpEmpty(headers)) {
+    // 设置了请求头
+    axios.head(url, {
+      headers,
+    });
+  }
+
+  return new Promise((resolve, reject) => {
+    axios
+      .get(url, { params })
+      .then((resp) => {
+        resolve(resp);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
+
+/**
+ * post请求
+ */
+export function $POST(url: string, params: object) {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(url, params)
+      .then((resp) => {
+        resolve(resp);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
+
+/**
+ * put请求
+ */
+export function $PUT(url: string, params: object) {
+  return new Promise((resolve, reject) => {
+    axios
+      .put(url, params)
+      .then((resp) => {
+        resolve(resp);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
 }
