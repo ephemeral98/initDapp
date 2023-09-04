@@ -2,7 +2,7 @@ import { reactive, ref, Ref, UnwrapRef, watch } from 'vue';
 import { useAppStore } from '@store/appStore';
 import axios from '@/service/request';
 import { bpEmpty } from 'bp-math';
-import { AxiosRequestHeaders } from 'axios';
+import { AxiosRequestHeaders, AxiosResponse } from 'axios';
 
 interface IAjaxEx<T> {
   loading: boolean; // 加载状态
@@ -232,7 +232,11 @@ export function useDelete<T, P>(
 /**
  * get请求
  */
-export function $GET(url: string, params: object, headers?: AxiosRequestHeaders) {
+export function $GET(
+  url: string,
+  params: object,
+  headers?: AxiosRequestHeaders
+): Promise<IAxiosResp<any>> {
   if (!bpEmpty(headers)) {
     // 设置了请求头
     axios.head(url, {
@@ -243,7 +247,7 @@ export function $GET(url: string, params: object, headers?: AxiosRequestHeaders)
   return new Promise((resolve, reject) => {
     axios
       .get(url, { params })
-      .then((resp) => {
+      .then((resp: any) => {
         resolve(resp);
       })
       .catch((err) => {

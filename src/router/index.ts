@@ -11,6 +11,7 @@ import { curNeedChain } from '@/contracts/chains';
 import { getEnv } from '@/utils/buildTestnet';
 import useSign from '@/hooks/useSign';
 import { $GET } from '@/hooks/useAjax';
+import { ElMessage } from 'element-plus';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -47,29 +48,30 @@ router.beforeEach(
   async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
     // 每次进来，先拿一下钱包
     const appStore = useAppStore();
-    // const { doSign } = useSign();
-
     if (to.meta.auth) {
       // 需要签名认证
       await appStore.linkWallet();
       handleSwitchChain();
       appStore.setNetWorkReady(true);
 
-      console.log('defalult...', appStore.defaultAccount);
-
       const isLogin = await $GET('/api/test/whoami', {
-        auth: true,
+        auth: false,
         other: 'hello',
       });
 
-      console.log('isLogin..', isLogin);
-      // await doSign();
-    } else {
-      appStore.linkWallet().then(() => {
-        handleSwitchChain();
-        appStore.setNetWorkReady(true);
-      });
+      if (!isLogin.success) {
+        ElMessage.error($p('你不是管理员'));
+        next(false);
+        return;
+      }
+      next(true);
+      return;
     }
+
+    appStore.linkWallet().then(() => {
+      handleSwitchChain();
+      appStore.setNetWorkReady(true);
+    });
 
     if (to.matched.length === 0) {
       //如果未匹配到路由
