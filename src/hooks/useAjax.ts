@@ -231,6 +231,9 @@ export function useDelete<T, P>(
 
 /**
  * get请求
+ * @param url 请求url
+ * @param params 请求参数
+ * @param headers 请求头
  */
 export function $GET(
   url: string,
@@ -258,12 +261,14 @@ export function $GET(
 
 /**
  * post请求
+ * @param url 请求url
+ * @param params 请求参数
  */
-export function $POST(url: string, params: object) {
+export function $POST(url: string, params: object): Promise<IAxiosResp<any>> {
   return new Promise((resolve, reject) => {
     axios
       .post(url, params)
-      .then((resp) => {
+      .then((resp: any) => {
         resolve(resp);
       })
       .catch((err) => {
@@ -274,12 +279,32 @@ export function $POST(url: string, params: object) {
 
 /**
  * put请求
+ * @param url 请求url
+ * @param params 请求参数
  */
-export function $PUT(url: string, params: object) {
+export function $PUT(url: string, params: object): Promise<IAxiosResp<any>> {
   return new Promise((resolve, reject) => {
     axios
       .put(url, params)
-      .then((resp) => {
+      .then((resp: any) => {
+        resolve(resp);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
+
+/**
+ * delete请求
+ * @param url 请求url
+ * @param params 请求参数
+ */
+export function $DELETE(url: string, params: object): Promise<IAxiosResp<any>> {
+  return new Promise((resolve, reject) => {
+    axios
+      .delete(url, { params })
+      .then((resp: any) => {
         resolve(resp);
       })
       .catch((err) => {

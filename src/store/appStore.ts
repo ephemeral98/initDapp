@@ -3,12 +3,12 @@ import { Provider, Signer, ethers } from 'ethers';
 import { ElMessage } from 'element-plus';
 import i18n, { defaultLang } from '@/locales/i18n';
 import { localMemory } from 'localmemory';
-
-const $t = i18n.global.t;
-
 import { toRaw } from 'vue';
 import { getChainData, getWalletReject } from '@/utils/tools';
 import useSign from '@/hooks/useSign';
+import { useRouteMeta } from '@/router/useRouterTools';
+
+const $t = i18n.global.t;
 
 // ethers默认配置
 const INIT_ETHERS = {
@@ -285,14 +285,14 @@ const useAppStore = defineStore('app', {
      * @returns
      */
     async subscribeProvider() {
-      // const { provider } = this.ethersObj;
-      // console.log('provider.on....', provider.on);
-      const { doSign } = useSign();
-
       // 监听切账号
       window.ethereum?.on('accountsChanged', (accounts) => {
         this.changeSignal.countWallet++;
         this.defaultAccount = accounts[0];
+
+        console.log('切换了账号');
+
+        localMemory.removeItem('ethereumSign');
       });
 
       // 监听切链(TP不兼容)

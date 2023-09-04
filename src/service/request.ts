@@ -34,7 +34,7 @@ axios.interceptors.request.use(
 
     // 如果请求参数有auth标记，则携带上token
     if (config.params.auth) {
-      const token = localMemory.getItem('token');
+      const token = localMemory.getItem('ethereumSign');
       if (token) {
         config.headers = {
           auth: JSON.stringify(token),

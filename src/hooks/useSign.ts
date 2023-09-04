@@ -27,23 +27,30 @@ export default () => {
       } catch (err) {
         ElMessage.error($p('你没有权限'));
         reject();
+        return;
       }
+
       signRes = {
         messageBody,
         signature,
       };
-      console.log('signRes..', signRes);
 
-      const decodedAddress = ethers.verifyMessage(messageBody, signature);
-      console.log('decodedAddress...', decodedAddress);
-
-      localMemory.setItem({ name: 'token', value: signRes });
-
+      setSign(signRes);
       resolve(signRes);
     });
   };
 
+  const setSign = (signRes: ISignRes) => {
+    localMemory.setItem({ name: 'ethereumSign', value: signRes });
+  };
+
+  const getSign = (): ISignRes => {
+    return localMemory.getItem('ethereumSign');
+  };
+
   return {
     doSign,
+    setSign,
+    getSign,
   };
 };

@@ -10,8 +10,9 @@ import { handleSwitchChain } from './routerHelp';
 import { curNeedChain } from '@/contracts/chains';
 import { getEnv } from '@/utils/buildTestnet';
 import useSign from '@/hooks/useSign';
-import { $GET } from '@/hooks/useAjax';
 import { ElMessage } from 'element-plus';
+import { allowAccounts } from '@/utils/allowAccounts';
+import { ethers } from 'ethers';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -53,21 +54,21 @@ router.beforeEach(
       await appStore.linkWallet();
       handleSwitchChain();
       appStore.setNetWorkReady(true);
+      const { doSign, getSign } = useSign();
 
-      const isLogin = await $GET('/api/test/whoami', {
-        auth: false,
-        other: 'hello',
-      });
-
-      if (!isLogin.success) {
+      let ethereumSign = getSign();
+      // 之前没有签名验证的话，先签一下名
+      if (!ethereumSign) {
+        ethereumSign = await doSign();
+      }
+      const address = ethers.verifyMessage(ethereumSign.messageBody, ethereumSign.signature);
+      const allow = allowAccounts(address);
+      if (!allow) {
         ElMessage.error($p('你不是管理员'));
         next(false);
         return;
       }
-      next(true);
-      return;
     }
-
     appStore.linkWallet().then(() => {
       handleSwitchChain();
       appStore.setNetWorkReady(true);
